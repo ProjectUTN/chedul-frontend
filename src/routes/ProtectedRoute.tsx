@@ -1,16 +1,16 @@
 import { Navigate, Outlet } from "react-router";
-
-type AuthUser = { id: string; name: string };
+import { useAuth } from "../context/authProvider";
 
 type ProtectedRouteProps = {
-  user: AuthUser | null;
   redirectPath?: string;
 };
 
-export const ProtectedRoute = ({ user, redirectPath = "/" }: ProtectedRouteProps) => {
+export const ProtectedRoute = ({ redirectPath = "/" }: ProtectedRouteProps) => {
+  const { user } = useAuth();
+
   if (!user) {
     return <Navigate to={redirectPath} replace />;
   }
 
-  return <Outlet/>;
+  return <Outlet />;
 };
