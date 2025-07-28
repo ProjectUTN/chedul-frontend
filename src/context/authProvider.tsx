@@ -67,11 +67,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = useCallback(
     async (email: string, password: string) => {
       try {
-        const response: AxiosResponse<LoginSuccessResponse> = await loginAlumno(
-          { email, password }
-        );
+        const response: LoginSuccessResponse = await loginAlumno({
+          email,
+          password,
+        });
 
-        if (!response || !response.data) {
+        console.log("Axios Response completa:", response); // <-- Nuevo log
+        console.log("Axios Response data:", response.accessToken);
+
+        if (!response) {
           console.error(
             "Login response or response data is undefined:",
             response
@@ -79,8 +83,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           throw new Error("Respuesta de login inválida del servidor.");
         }
 
-        const receivedAccessToken = response.data.accessToken;
-        const receivedUser = response.data.user;
+        const receivedAccessToken = response.accessToken;
+        const receivedUser = response.user;
+
+        console.log("receivedAccessToken:", receivedAccessToken);
+        console.log("receivedUser:", receivedUser);
 
         if (receivedAccessToken) {
           setAccessToken(receivedAccessToken);
