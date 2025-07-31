@@ -72,9 +72,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           password,
         });
 
-        console.log("Axios Response completa:", response); // <-- Nuevo log
-        console.log("Axios Response data:", response.accessToken);
-
         if (!response) {
           console.error(
             "Login response or response data is undefined:",
@@ -85,9 +82,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         const receivedAccessToken = response.accessToken;
         const receivedUser = response.user;
-
-        console.log("receivedAccessToken:", receivedAccessToken);
-        console.log("receivedUser:", receivedUser);
 
         if (receivedAccessToken) {
           setAccessToken(receivedAccessToken);
@@ -120,13 +114,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         try {
           const response: AxiosResponse<{ accessToken: string }> =
-            await api.post(
-              `/api/v1/refresh-token`,
-              {},
-              {
-                withCredentials: true,
-              }
-            );
+            await api.post(`/refresh-token`, {});
           if (!response || !response.data) {
             console.error(
               "Refresh token response or response data is undefined:",
@@ -193,7 +181,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           try {
             console.log("Access Token expirado. Intentando refrescar...");
             const response: AxiosResponse<{ accessToken: string }> =
-              await api.post(`/api/v1/refresh-token`, {});
+              await api.post(`/refresh-token`, {});
 
             if (!response || !response.data) {
               console.error(
@@ -232,14 +220,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       api.interceptors.response.eject(refreshInterceptor);
     };
   }, [clearAuth]);
-
-  const contextValue = {
-    accessToken: accessToken ?? null,
-    user: user,
-    isLoading: accessToken === undefined,
-    login,
-    logout,
-  };
 
   return (
     <AuthContext.Provider

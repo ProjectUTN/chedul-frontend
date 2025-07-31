@@ -1,0 +1,26 @@
+.layout {
+  display: grid;
+  grid-template-columns: 232px auto;
+  grid-template-rows: auto 1fr;
+  height: 100dvh;
+  transition: all 0.2s ease;
+}
+
+.main-content {
+  padding: 2rem;
+  overflow-y: auto;
+  background-color: var(--clr-bg-800);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 0px auto;
+  }
+
+  .main-content {
+    padding: 1rem;
+  }
+}

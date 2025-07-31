@@ -1,0 +1,176 @@
+.tabla-form {
+  background-color: var(--clr-bg-600);
+  border-radius: 1rem;
+}
+
+.tabla-materias {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 1rem;
+}
+
+.tabla-materias th,
+.tabla-materias td {
+  text-align: left;
+}
+
+.tabla-materias th:first-child,
+.tabla-materias td:first-child {
+  text-align: center;
+}
+
+.tabla-materias th:last-child,
+.tabla-materias td:last-child {
+  text-align: center;
+}
+
+td:has(.estado-label) {
+  width: 110px;
+}
+
+td:has(.table-icon) {
+  width: 100px;
+}
+
+td:has(.table-icon) a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+td:first-child {
+  width: 40px;
+}
+
+.tabla-materias thead th {
+  background-color: transparent;
+  color: var(--clr-text-200);
+  font-weight: 400;
+}
+
+.estado-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  background-color: #2a2d40;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 110px;
+}
+
+.estado-label:hover {
+  background-color: #3a3d55;
+}
+
+.estado-label input[type="radio"] {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #3d8bfd;
+  background-color: #0f111a;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.estado-label input[type="radio"]:checked {
+  background-color: #3d8bfd;
+}
+
+.estado-label span {
+  font-size: 0.875rem;
+  color: #d4d4d4;
+}
+
+.table-icon {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #aaa;
+  transition: color 0.2s;
+}
+
+.table-icon:hover {
+  color: #fff;
+}
+
+.estado-select,
+::picker(select) {
+  appearance: base-select;
+}
+
+.estado-select {
+  width: auto;
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid #3a3e55;
+  background-color: #2a2d40;
+  color: var(--clr-text-100);
+  outline: none;
+}
+
+.estado-select::picker-icon {
+  color: var(--clr-text-100);
+  transition: 0.4s transform;
+  margin-inline: 8px;
+  display: none;
+}
+
+.estado-select:open::picker-icon {
+  color: var(--clr-text-100);
+  transform: rotate(180deg);
+}
+
+::picker(select) {
+  border: none;
+  border-radius: 8px;
+  background-color: #2a2d40;
+  color: var(--clr-text-100);
+  border: 1px solid #3a3e55;
+  margin-block: 4px;
+}
+
+option::checkmark {
+  display: none;
+}
+
+option {
+  padding: 8px;
+}
+
+.tabla-form-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.headerMateria {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.cardMateria {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--clr-bg-600);
+  border-radius: 16px;
+}
+
+.condiciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.condiciones .estado-label {
+  flex: 1;
+}

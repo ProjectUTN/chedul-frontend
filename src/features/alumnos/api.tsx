@@ -5,7 +5,7 @@ export interface getAlumnoRequest {
 }
 
 export const getAlumno = async (data: getAlumnoRequest) => {
-  const response = await api.get(`/get/${data.id}`);
+  const response = await api.get(`/${data.id}`);
 
   return response.data;
 };

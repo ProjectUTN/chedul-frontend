@@ -1,0 +1,139 @@
+.navigation {
+  display: flex;
+  flex-direction: column;
+
+  gap: 16px;
+  height: 100dvh;
+  padding: 16px 24px;
+
+  background-color: var(--clr-bg-400);
+  overflow: hidden;
+}
+
+.salirBtn {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  color: var(--text-200);
+  padding: 16px 0;
+  transition: all 0.45s ease-out;
+}
+
+.navigation__link {
+  all: unset;
+  display: flex;
+
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  color: var(--clr-text-secondary);
+
+  border-radius: 8px;
+
+  position: relative;
+  isolation: isolate;
+  transition: all 350ms ease;
+  z-index: 50;
+}
+
+.navigation__link:active {
+  scale: 0.95;
+}
+
+.navigation__link:hover {
+  color: var(--clr-text-primary);
+}
+
+.paginaActual {
+  all: unset;
+  display: flex;
+  gap: 16px;
+  cursor: pointer;
+  z-index: 50;
+  border-radius: 8px;
+
+  position: relative;
+  isolation: isolate;
+  color: var(--clr-text-primary);
+  align-items: center;
+}
+
+.navigation__link:hover .tooltipNav,
+.paginaActual:hover .tooltipNav {
+  transform: scale(1);
+  opacity: 1;
+  left: calc(100% + 2rem);
+}
+
+.tooltipNav {
+  position: absolute;
+  white-space: nowrap;
+
+  padding: 0.5rem 1rem;
+
+  transform-origin: center left;
+  transform: scale(1);
+  opacity: 0;
+  transform: 0.1s ease;
+  background-color: var(--clr-neutral-250);
+  border-radius: 4px;
+  display: none;
+
+  -webkit-box-shadow: 3px 3px 3px -1px rgba(24, 24, 24, 0.29);
+  -moz-box-shadow: 3px 3px 3px -1px rgba(24, 24, 24, 0.29);
+  box-shadow: 3px 3px 3px -1px rgba(24, 24, 24, 0.29);
+}
+
+.tooltipNav::before {
+  content: " ";
+  display: block;
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  background-color: var(--clr-neutral-250);
+  left: -5px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  border-radius: 3px;
+  z-index: 999;
+}
+
+.navigation__menu {
+  all: unset;
+  display: grid;
+  gap: 16px;
+  text-wrap: nowrap;
+  list-style: none;
+}
+
+.navigation__options {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 16px;
+  justify-content: space-between;
+  padding-top: 32px;
+}
+
+.logo {
+  width: 130px;
+}
+.logoSm {
+  display: none;
+}
+
+.icon-size {
+  font-size: 1.5rem;
+}
+
+.descrip-menu {
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .navigation {
+    padding: 0;
+  }
+}

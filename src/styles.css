@@ -1,6 +1,18 @@
-#root {
+:root {
   --ff-primary: "Space Grotesk", serif;
-  --gray-400: ;
+
+  --clr-bg-900: #0c1016; /*Color alternativo que esta bueno #2a2d40*/
+  --clr-bg-600: #1e1f23; /*Color alternativo que esta bueno #1a1d2e*/
+  --clr-bg-400: #26282c; /*Color alternativo que esta bueno  #0f111a*/
+  --clr-bg-300: #2a2a2a;
+  --clr-bg-200: #3e3e3e;
+
+  --clr-text-100: #fcfdfe;
+  --clr-text-200: #a8aaae;
+  --clr-text-300: #8e9094;
+
+  --clr-primary-300: #4f87f8;
+  --clr-primary-600: rgb(3, 26, 74);
 }
 
 /* 1. Use a more-intuitive box-sizing model */
@@ -28,6 +40,10 @@ body {
   /* 5. Improve text rendering */
   -webkit-font-smoothing: antialiased;
   font-family: var(--ff-primary);
+  background-color: var(--clr-bg-900);
+  color: var(--clr-text-100);
+  overflow: hidden;
+  font-size: 0.875rem;
 }
 
 /* 6. Improve media defaults */
@@ -57,7 +73,7 @@ h4,
 h5,
 h6 {
   overflow-wrap: break-word;
-  font-family: var(--ff-primary);
+  font-family: inherit;
 }
 
 /* 9. Improve line wrapping */
