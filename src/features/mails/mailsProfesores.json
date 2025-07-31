@@ -1,0 +1,1003 @@
+[
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "toledo damian alejandro",
+    "materia": "Algebra y Geometría Analítica",
+    "email": ""
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "mocciutti celia teresa",
+    "materia": "Algebra y Geometría Analítica",
+    "email": ""
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "montenegro ana maría",
+    "materia": "Algebra y Geometría Analítica",
+    "email": "ana.montenegro@nbch.com.ar"
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "robles estela beatriz",
+    "materia": "Algebra y Geometría Analítica",
+    "email": "estelabrobles@yahoo.com.ar"
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "vera martin marcela soledad",
+    "materia": "Algebra y Geometría Analítica",
+    "email": ""
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "voelki laura marina",
+    "materia": "Algebra y Geometría Analítica",
+    "email": ""
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "1ro",
+    "profesor": "bolatti diego angelo",
+    "materia": "Algoritmos y Estructura de Datos",
+    "email": "diegobolatti@yahoo.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "1ro",
+    "profesor": "colcombet juan esteban",
+    "materia": "Algoritmos y Estructura de Datos",
+    "email": "quinont@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "1ro",
+    "profesor": "giovannini mirtha eve",
+    "materia": "Algoritmos y Estructura de Datos",
+    "email": "giovannini@frre.utn.edu.ar; meg_c51@yahoo.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "1ro",
+    "profesor": "hodapp ilse gisela",
+    "materia": "Algoritmos y Estructura de Datos",
+    "email": "ilseh@arnet.com.ar; ilsegh@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "1ro",
+    "profesor": "pinto noelia soledad",
+    "materia": "Algoritmos y Estructura de Datos",
+    "email": "ns.pinto@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "1ro",
+    "profesor": "tortosa nicolas gabriel",
+    "materia": "Algoritmos y Estructura de Datos",
+    "email": "nicotortosa@gmail.com"
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "amarilla mariela rosana",
+    "materia": "Análisis Matemático I",
+    "email": "albager2@arnet.com.ar"
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "arriola edgardo alberto",
+    "materia": "Análisis Matemático I",
+    "email": "earriola2006@yahoo.com.ar"
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "jovanovich ethel ramona",
+    "materia": "Análisis Matemático I",
+    "email": ""
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "luque alicia graciela",
+    "materia": "Análisis Matemático I",
+    "email": ""
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "mata eduardo jose",
+    "materia": "Análisis Matemático I",
+    "email": ""
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "mazzaferro gerardo alberto",
+    "materia": "Análisis Matemático I",
+    "email": ""
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "zening cristina isabel",
+    "materia": "Análisis Matemático I",
+    "email": ""
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "duarte sergio sebastian",
+    "materia": "Física I",
+    "email": "sduarte@ing.unne.edu.ar"
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "figueredo gustavo raul",
+    "materia": "Física I",
+    "email": "grfigueredo@gmail.com"
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "garcia martha leonor",
+    "materia": "Física I",
+    "email": "malegarcia@yahoo.com.ar"
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "gomez sergio gustavo adolfo",
+    "materia": "Física I",
+    "email": ""
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "mason leoncio",
+    "materia": "Física I",
+    "email": "ingenieromason@hotmail.com"
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "zuazquita yanina maria",
+    "materia": "Física I",
+    "email": "yaninazuazquita@yahoo.com.ar"
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "zurlo hugo daniel",
+    "materia": "Física I",
+    "email": "hzurlo@gmail.com"
+  },
+  {
+    "area": "Básicas",
+    "curso": "1ro",
+    "profesor": "graciano de fortín, teresa beatriz",
+    "materia": "Inglés I",
+    "email": "tb_graciano@hotmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "1ro",
+    "profesor": "aguilar nancy francisca",
+    "materia": "Matemática Discreta",
+    "email": "nfaguilar13@yahoo.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "1ro",
+    "profesor": "del valle carmen",
+    "materia": "Matemática Discreta",
+    "email": "cgdelvalle2002@yahoo.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "1ro",
+    "profesor": "montenegro ana maria",
+    "materia": "Matemática Discreta",
+    "email": "ana.montenegro@nbch.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "1ro",
+    "profesor": "vargas carolina ileana",
+    "materia": "Matemática Discreta",
+    "email": "civargasar@yahoo.com.ar; ingcivargas@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "1ro",
+    "profesor": "cernadas maria alejandra",
+    "materia": "Sistemas y Organizaciones (Int.)",
+    "email": "ma_cernadas@hotmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "1ro",
+    "profesor": "correa patricia elisabet",
+    "materia": "Sistemas y Organizaciones (Int.)",
+    "email": "patricorrea2003@yahoo.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "1ro",
+    "profesor": "martin andrea soledad",
+    "materia": "Sistemas y Organizaciones (Int.)",
+    "email": "ing.andreamartin@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "1ro",
+    "profesor": "palavecino romeu melissa nuri",
+    "materia": "Sistemas y Organizaciones (Int.)",
+    "email": "m.palavecino@chaco.gov.ar; mpalaromeu@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "1ro",
+    "profesor": "sanchez oscar fabian",
+    "materia": "Sistemas y Organizaciones (Int.)",
+    "email": "ofsanchez@frre.utn.edu.ar; ofsanchez@arnet.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "1ro",
+    "profesor": "soria ojeda claudia",
+    "materia": "Sistemas y Organizaciones (Int.)",
+    "email": "caso@frre.utn.edu.ar; claudia.soriaojeda@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "barrios teresita haidee",
+    "materia": "Análisis de Sistemas (Int.)",
+    "email": "barriosth@hotmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "cernadas maria alejandra",
+    "materia": "Análisis de Sistemas (Int.)",
+    "email": "ma_cernadas@hotmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "chica nanci beatriz",
+    "materia": "Análisis de Sistemas (Int.)",
+    "email": "nbchica@hotmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "gaona german",
+    "materia": "Análisis de Sistemas (Int.)",
+    "email": "gg_rcia@yahoo.com.ar"
+  },
+  {
+    "area": "Básicas",
+    "curso": "2do",
+    "profesor": "altamirano bibiana",
+    "materia": "Análisis Matemático II",
+    "email": "bibialtamirano@hotmail.com"
+  },
+  {
+    "area": "Básicas",
+    "curso": "2do",
+    "profesor": "bernaola gustavo",
+    "materia": "Análisis Matemático II",
+    "email": "gustavo@edesycc.com.ar"
+  },
+  {
+    "area": "Básicas",
+    "curso": "2do",
+    "profesor": "curi luciano",
+    "materia": "Análisis Matemático II",
+    "email": "luciano_curi@hotmail.com"
+  },
+  {
+    "area": "Básicas",
+    "curso": "2do",
+    "profesor": "flores arnaldo cesar",
+    "materia": "Análisis Matemático II",
+    "email": "arnaldocflores@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "bruic cynthia evelin",
+    "materia": "Arquitectura de Computadoras",
+    "email": "cynthiabruic@hotmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "maurokefalidis demetrio gustavo",
+    "materia": "Arquitectura de Computadoras",
+    "email": "gmaurok@arnet.com.ar; maurokefalidis@hotmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "mendez graciela leonor",
+    "materia": "Arquitectura de Computadoras",
+    "email": "glmendez@arnet.com.ar; glmendez@frre.utn.edu.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "rodrigues da fonseca claudio",
+    "materia": "Arquitectura de Computadoras",
+    "email": "dafonseca@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "vicente matin sebastian",
+    "materia": "Arquitectura de Computadoras",
+    "email": "vicentemartin2009@hotmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "vigil rodrigo",
+    "materia": "Arquitectura de Computadoras",
+    "email": "rodrigovigil@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "acuña cesar",
+    "materia": "Complejidad y Técnicas de Diseño de Algoritmos (Electiva)",
+    "email": "csr.acn@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "fernandez juan carlos",
+    "materia": "Complejidad y Técnicas de Diseño de Algoritmos (Electiva)",
+    "email": "fernandez.juanca@gmail.com"
+  },
+  {
+    "area": "Básicas",
+    "curso": "2do",
+    "profesor": "arzamendia luis",
+    "materia": "Física II",
+    "email": "luisarzamendia@yahoo.com.ar"
+  },
+  {
+    "area": "Básicas",
+    "curso": "2do",
+    "profesor": "degregorio david",
+    "materia": "Física II",
+    "email": ""
+  },
+  {
+    "area": "Básicas",
+    "curso": "2do",
+    "profesor": "galarza julio",
+    "materia": "Física II",
+    "email": ""
+  },
+  {
+    "area": "Básicas",
+    "curso": "2do",
+    "profesor": "garcía marta",
+    "materia": "Física II",
+    "email": "malegarcia@yahoo.com.ar"
+  },
+  {
+    "area": "Básicas",
+    "curso": "2do",
+    "profesor": "gonzales thomas arturo",
+    "materia": "Física II",
+    "email": "arturogt@gmail.com"
+  },
+  {
+    "area": "Básicas",
+    "curso": "2do",
+    "profesor": "rodríguez ulises",
+    "materia": "Física II",
+    "email": "ulisesrodriguez@arnet.com.ar, abelulises@yahoo.com"
+  },
+  {
+    "area": "Básicas",
+    "curso": "2do",
+    "profesor": "schefer fernando",
+    "materia": "Física II",
+    "email": "scheferfernando@yahoo.com.ar"
+  },
+  {
+    "area": "Básicas",
+    "curso": "2do",
+    "profesor": "cazorla",
+    "materia": "Inglés II",
+    "email": "teacher_cazorla@hotmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "bernal ruben alfredo",
+    "materia": "Paradigmas de Programación",
+    "email": "rbernal73@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "cuevas carlos alberto",
+    "materia": "Paradigmas de Programación",
+    "email": "cacuevas@gmail.com; cac@frre.u tn.edu.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "pizzi cesar javier",
+    "materia": "Paradigmas de Programación",
+    "email": "cesarjpizzi@yahoo.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "pizzi cesar javier",
+    "materia": "Sintaxis y Semántica de los Lenguajes",
+    "email": "cesarjpizzi@yahoo.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "tomaselli gabriela patricia",
+    "materia": "Sintaxis y Semántica de los Lenguajes",
+    "email": "gabriela.tomaselli@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "tortosa nicolas gabriel",
+    "materia": "Sintaxis y Semántica de los Lenguajes",
+    "email": "nicotortosa@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "vigil rodrigo",
+    "materia": "Sintaxis y Semántica de los Lenguajes",
+    "email": "rodrigovigil@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "cuenca pletsch liliana raquel",
+    "materia": "Sistemas Operativos",
+    "email": "cplr@frre.utn.edu.ar; liliana.cuencap@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "gramajo sergio daniel",
+    "materia": "Sistemas Operativos",
+    "email": "sergiogramajo@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "2do",
+    "profesor": "ristoff alberto antonio",
+    "materia": "Sistemas Operativos",
+    "email": "ristoffalberto@hotmail.com; ristoffalberto@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "3ro",
+    "profesor": "fantin andres pablo",
+    "materia": "Base de Datos Aplicada (Electiva)",
+    "email": "andres.fantin@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "3ro",
+    "profesor": "perez carlos alberto",
+    "materia": "Base de Datos Aplicada (Electiva)",
+    "email": "logica10@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "3ro",
+    "profesor": "castarea arturo ruben mariano",
+    "materia": "Comunicaciones",
+    "email": "acastano@resistenciacna.net"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "3ro",
+    "profesor": "la red martinez david luis",
+    "materia": "Comunicaciones",
+    "email": "laredmartinez@gigared.com; david_luis958@hotmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "3ro",
+    "profesor": "scapinni reinaldo jose ramon",
+    "materia": "Comunicaciones",
+    "email": "rscappini@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "3ro",
+    "profesor": "castarea arturo ruben mariano",
+    "materia": "Comunicaciones y Redes",
+    "email": "arcastano@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "3ro",
+    "profesor": "fantin andres pablo",
+    "materia": "Comunicaciones y Redes",
+    "email": "andres.fantin@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "3ro",
+    "profesor": "gaona german",
+    "materia": "Diseño de Sistemas (Int.)",
+    "email": "gg_rcia@yahoo.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "3ro",
+    "profesor": "sandobal veron valeria celeste",
+    "materia": "Diseño de Sistemas (Int.)",
+    "email": "valeriasandobal@hotmail.com; valesandobal@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "3ro",
+    "profesor": "torossi gustavo marcelo",
+    "materia": "Diseño de Sistemas (Int.)",
+    "email": "gmtorossi@yahoo.com.ar"
+  },
+  {
+    "area": "Básicas",
+    "curso": "3ro",
+    "profesor": "abramovich mauro",
+    "materia": "Economía",
+    "email": "mauro.abramovich@gmail.com"
+  },
+  {
+    "area": "Básicas",
+    "curso": "3ro",
+    "profesor": "duarte miguel",
+    "materia": "Economía",
+    "email": "mduarte@Argentina.com"
+  },
+  {
+    "area": "Básicas",
+    "curso": "3ro",
+    "profesor": "lugo",
+    "materia": "Economía",
+    "email": "nlugo@arnet.com.ar"
+  },
+  {
+    "area": "Básicas",
+    "curso": "3ro",
+    "profesor": "piceda horacio",
+    "materia": "Economía",
+    "email": "hpiceda@frre.utn.edu.ar; hnmfc@arnet.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "3ro",
+    "profesor": "eiman luis andres",
+    "materia": "Gestión de Datos",
+    "email": "luiseiman@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "3ro",
+    "profesor": "fenandez juan carlos",
+    "materia": "Gestión de Datos",
+    "email": "fernandez.juanca@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "3ro",
+    "profesor": "orcola ana carolina",
+    "materia": "Gestión de Datos",
+    "email": "carorcola@gmail.com"
+  },
+  {
+    "area": "Básicas",
+    "curso": "3ro",
+    "profesor": "corvalan orlando levy",
+    "materia": "Ingeniería y Sociedad",
+    "email": "levycor@hotmail.com"
+  },
+  {
+    "area": "Básicas",
+    "curso": "3ro",
+    "profesor": "dure diana analia",
+    "materia": "Ingeniería y Sociedad",
+    "email": "dianidure@hotmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "3ro",
+    "profesor": "garcia claudia roxana",
+    "materia": "Matemática Superior",
+    "email": "claurg369@hotmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "3ro",
+    "profesor": "napoles valdes juan",
+    "materia": "Matemática Superior",
+    "email": "jnapoles@frre.utn.edu.ar, jnapoles@exa.unne.edu.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "3ro",
+    "profesor": "ardanaz maria isabel",
+    "materia": "Planificación (Electiva)",
+    "email": "mabelardanaz@hotmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "3ro",
+    "profesor": "persia daniela",
+    "materia": "Planificación (Electiva)",
+    "email": "danielapersia@yahoo.com.ar"
+  },
+  {
+    "area": "Básicas",
+    "curso": "3ro",
+    "profesor": "caseres",
+    "materia": "Probabilidades y Estadísticas",
+    "email": "lmarielc@yahoo.com.ar"
+  },
+  {
+    "area": "Básicas",
+    "curso": "3ro",
+    "profesor": "castro hugo guillermo",
+    "materia": "Probabilidades y Estadísticas",
+    "email": "castrohgui@gmail.com; hugoguillermo_castro@yahoo.com.ar"
+  },
+  {
+    "area": "Básicas",
+    "curso": "3ro",
+    "profesor": "maldonado jorge ramón",
+    "materia": "Probabilidades y Estadísticas",
+    "email": "jorgeemaldonado@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "ramirez rosina",
+    "materia": "Administración de Recursos (Int.)",
+    "email": "rosina@frre.utn.edu.ar; rosina@internea.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "roa jorge alejandro",
+    "materia": "Administración de Recursos (Int.)",
+    "email": "jorge@internea.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "soria ojeda claudia",
+    "materia": "Administración de Recursos (Int.)",
+    "email": "caso@frre.utn.edu.ar; claudia.soriaojeda@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "perez carlos alberto",
+    "materia": "Aplicaciones Cliente Servidor (Electiva)",
+    "email": "logica10@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "villaverde jorge",
+    "materia": "Aplicaciones Cliente Servidor (Electiva)",
+    "email": "jorgevillaverde@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "acuña cesar",
+    "materia": "Calidad del Producto y del Proceso Software (Electiva)",
+    "email": "csr.acn@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "pinto noelia soledad",
+    "materia": "Calidad del Producto y del Proceso Software (Electiva)",
+    "email": "ns.pinto@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "balbastro alicia maria alejandra",
+    "materia": "Habilitación Profesional",
+    "email": "balbastroale@hotmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "chica nanci beatriz",
+    "materia": "Habilitación Profesional",
+    "email": "nbchica@hotmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "escalante rocio susana",
+    "materia": "Ingeniería de software",
+    "email": "rociosescalante@yahoo.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "screpnik claudia raquel",
+    "materia": "Ingeniería de software",
+    "email": "claudiascrep@hotmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "roa jorge alejandro",
+    "materia": "Inteligencia Artificial",
+    "email": "jorge@internea.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "screpnik claudia raquel",
+    "materia": "Investigación Operativa",
+    "email": "claudiascrep@hotmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "vera jorge ariel",
+    "materia": "Investigación Operativa",
+    "email": "j_a_vera@yahoo.com"
+  },
+  {
+    "area": "Básicas",
+    "curso": "4to",
+    "profesor": "brener miriam",
+    "materia": "Legislación",
+    "email": ""
+  },
+  {
+    "area": "Básicas",
+    "curso": "4to",
+    "profesor": "tarlovsky miryam",
+    "materia": "Legislación",
+    "email": "consultoramcucueff@yahoo.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "romero gilda",
+    "materia": "Practica Supervisada (P.S.)",
+    "email": "gilda.romero@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "vargas carolina ileana",
+    "materia": "Practica Supervisada (P.S.)",
+    "email": "civargasar@yahoo.com.ar; ingcivargas@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "calcagno ricardo javier",
+    "materia": "Redes de Información",
+    "email": "rcalcagno@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "scapinni reinaldo jose ramon",
+    "materia": "Redes de Información",
+    "email": "rscappini@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "aquino dominga concepción",
+    "materia": "Simulación",
+    "email": "domyaquino@yahoo.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "escalante rocio susana",
+    "materia": "Simulación",
+    "email": "rociosescalante@yahoo.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "vecchi carlos",
+    "materia": "Simulación",
+    "email": "cavecchi@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "hodapp ilse gisela",
+    "materia": "Sistemas de Información Geográficos (Electiva)",
+    "email": "ilseh@arnet.com.ar; ilsegh@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "valdes rodrigo",
+    "materia": "Sistemas de Información Geográficos (Electiva)",
+    "email": "ro.valdes@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "bolatti veronica andrea",
+    "materia": "Técnicas de Desarrollo de Software Ágil",
+    "email": "vbollati@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "minoli mariano",
+    "materia": "Técnicas de Desarrollo de Software Ágil",
+    "email": "mminoli@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "aquino dominga concepción",
+    "materia": "Teoría de Control",
+    "email": "domyaquino@yahoo.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "4to",
+    "profesor": "perez carlos alberto",
+    "materia": "Teoría de Control",
+    "email": "logica10@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "5to",
+    "profesor": "lovey carlos",
+    "materia": "Administración Gerencial",
+    "email": "calovey@arnet.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "5to",
+    "profesor": "vargas carolina ileana",
+    "materia": "Administración Gerencial",
+    "email": "gerencial_isi@yahoo.com.ar; ingcivargas@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "5to",
+    "profesor": "donnet ana maria",
+    "materia": "Auditoría de Sistemas (Electiva)",
+    "email": "amdonnet@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "5to",
+    "profesor": "vera jorge ariel",
+    "materia": "Auditoría de Sistemas (Electiva)",
+    "email": "j_a_vera@yahoo.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "5to",
+    "profesor": "correa patricia elisabet",
+    "materia": "Formación de Emprendedores (Electiva)",
+    "email": "patricorrea2003@yahoo.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "5to",
+    "profesor": "montero analia haidee",
+    "materia": "Formación de Emprendedores (Electiva)",
+    "email": "montero.ah@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "5to",
+    "profesor": "bolatti diego angelo",
+    "materia": "Gestión de Seguridad de la Información (Electiva)",
+    "email": "diegobolatti@yahoo.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "5to",
+    "profesor": "fantin andres pablo",
+    "materia": "Gestión de Seguridad de la Información (Electiva)",
+    "email": "andres.fantin@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "5to",
+    "profesor": "dusek javier eduardo",
+    "materia": "Gestión de Servicios e Infraestructuras de TI (Electiva)",
+    "email": "javierdusek@yahoo.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "5to",
+    "profesor": "oraison humberto",
+    "materia": "Gestión de Servicios e Infraestructuras de TI (Electiva)",
+    "email": "horaison@desarrollosnea.com.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "5to",
+    "profesor": "karanik marcelo javier",
+    "materia": "Inteligencia Artificial",
+    "email": "mkaranik@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "5to",
+    "profesor": "acuña cesar",
+    "materia": "Proyecto Final (Int.)",
+    "email": "csr.acn@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "5to",
+    "profesor": "mendez graciela leonor",
+    "materia": "Proyecto Final (Int.)",
+    "email": "glmendez@arnet.com.ar; glmendez@frre.utn.edu.ar"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "5to",
+    "profesor": "montero analia haidee",
+    "materia": "Sistemas de Gestión",
+    "email": "montero.ah@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "5to",
+    "profesor": "sandobal veron valeria celeste",
+    "materia": "Sistemas de Gestión",
+    "email": "valeriasandobal@hotmail.com; valesandobal@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "5to",
+    "profesor": "fantin andres pablo",
+    "materia": "Sistemas de Inteligencia de Negocios y Soporte de Decisiones (Electiva)",
+    "email": "andres.fantin@gmail.com"
+  },
+  {
+    "area": "I.S.I.",
+    "curso": "5to",
+    "profesor": "perez carlos alberto",
+    "materia": "Sistemas de Inteligencia de Negocios y Soporte de Decisiones (Electiva)",
+    "email": "logica10@gmail.com"
+  }
+]

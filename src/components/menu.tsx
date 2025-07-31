@@ -18,7 +18,7 @@ const navigation = [
 
   {
     title: "Mails",
-    href: "/mails",
+    href: "/correos",
     icon: "mail",
   },
 ];

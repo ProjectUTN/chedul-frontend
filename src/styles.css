@@ -11,8 +11,35 @@
   --clr-text-200: #a8aaae;
   --clr-text-300: #8e9094;
 
+  /* viejo chedul colors */
+
+  --clr-neutral-100: rgb(104, 103, 103);
+  --clr-neutral-400: #151c23;
+  --clr-neutral-500: rgb(46, 47, 48);
+
   --clr-primary-300: #4f87f8;
   --clr-primary-600: rgb(3, 26, 74);
+
+  --clr-primary-900: rgb(3, 26, 74);
+  --clr-primary-900-rgba: 3, 26, 74;
+  --clr-green: #62db37;
+  --clr-green-400: #32a458;
+  --clr-green-900: #083f1a;
+  --clr-yellow: #edd444;
+  --clr-yellow-400: #d7b90e;
+  --clr-yellow-900: #4f4404;
+
+  --clr-orange-400: #fd7c2d;
+  --clr-orange-900: #481d02;
+
+  --clr-lila: #d489ef;
+  --clr-morado: #9030b3;
+
+  --clr-assent-100: #75a3ff;
+  --clr-assent: #4f87f8;
+
+  --clr-error: #f30b0b;
+  --clr-error-900: #40040a;
 }
 
 /* 1. Use a more-intuitive box-sizing model */

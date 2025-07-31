@@ -5,6 +5,7 @@ import Inicio from "../pages/Inicio";
 import { ProtectedRoute } from "./ProtectedRoute";
 import Estado from "../pages/Estado";
 import Layout from "../layouts/Layout";
+import Mails from "../pages/Mails";
 
 export const AppRouter = () => {
   return (
@@ -17,6 +18,7 @@ export const AppRouter = () => {
         <Route element={<Layout />}>
           <Route path="/inicio" element={<Inicio />} />
           <Route path="/estado" element={<Estado />} />
+          <Route path="/correos" element={<Mails />} />
         </Route>
 
         {/* Rutas Privadas
