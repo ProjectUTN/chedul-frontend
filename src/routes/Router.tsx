@@ -24,12 +24,12 @@ export const AppRouter = () => {
         {/* Rutas Privadas
         TODO: por ahora lo saco */}
 
-        {/* <Route element={<ProtectedRoute redirectPath="/login" />}>
-          <Route element={<Layout />}>
-            <Route path="/inicio" element={<Inicio />} />
-            <Route path="/estado" element={<Estado />} />
-          </Route>
-        </Route> */}
+        // <Route element={<ProtectedRoute redirectPath="/login" />}>
+        //   <Route element={<Layout />}>
+        //     <Route path="/inicio" element={<Inicio />} />
+        //     <Route path="/estado" element={<Estado />} />
+        //   </Route>
+        // </Route> 
 
         {/* Ruta para 404*/}
         <Route path="*" element={<h1>404: Página no encontrada</h1>} />

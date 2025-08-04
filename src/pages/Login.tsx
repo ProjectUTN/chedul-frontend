@@ -29,7 +29,6 @@ function Login() {
 
       console.log("Login exitoso");
 
-      // TODO: verificar si la primer ruta será inicio, home o dashboard
       navigate("/inicio");
     } catch (err: any) {
       setError("Credenciales inválidas");

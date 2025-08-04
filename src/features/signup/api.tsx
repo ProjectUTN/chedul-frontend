@@ -8,7 +8,9 @@ export interface SignUpRequest {
 }
 
 export const signup = async (data: SignUpRequest) => {
-  const response = await api.post("/signup", data);
+  const response = await api.post("signup", data, {
+    withCredentials : true
+  });
 
   return response.data;
 };

@@ -112,6 +112,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setUser(JSON.parse(storedUser));
         }
 
+        if (!storedUser) {
+          setAccessToken(null);
+          return;
+        }
+
         try {
           const response: AxiosResponse<{ accessToken: string }> =
             await api.post(`/refresh-token`, {});
@@ -139,7 +144,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     };
     initializeAuth();
-  }, [clearAuth]);
+  }, [clearAuth]); // Remove location.pathname dependency
 
   useLayoutEffect(() => {
     const authInterceptor = api.interceptors.request.use((config) => {
