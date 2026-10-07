@@ -12,6 +12,10 @@
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
+  /* Un brillo suave arriba para que el fondo no sea tan plano */
+  background:
+    radial-gradient(60rem 28rem at 100% -10%, color-mix(in srgb, #7c6cff 14%, transparent), transparent 70%),
+    radial-gradient(40rem 22rem at 0% -15%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%);
 }
 
 .main-content > * {

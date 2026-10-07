@@ -33,7 +33,9 @@
 
 .nav-link.activo {
   color: var(--accent-text);
-  background-color: var(--accent-soft);
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--accent-soft), color-mix(in srgb, #7c6cff 10%, transparent));
+  box-shadow: inset 3px 0 0 var(--accent);
 }
 
 .nav-link.activo .material-symbols-rounded {

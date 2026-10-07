@@ -3,7 +3,9 @@
    se activa con data-theme="light" en <html> (ver hooks/useTema.ts). */
 
 :root {
-  --ff-primary: "Space Grotesk", system-ui, sans-serif;
+  --ff-primary: "DM Sans", system-ui, sans-serif;
+  --ff-titulos: "Bricolage Grotesque", "DM Sans", system-ui, sans-serif;
+  --degradado: linear-gradient(135deg, #5b8cff 0%, #7c6cff 55%, #b46cff 100%);
   color-scheme: dark;
 
   --bg: #0b0f17;
@@ -218,10 +220,11 @@ a {
 }
 
 .page-header h1 {
-  font-size: 1.875rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
+  font-family: var(--ff-titulos);
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
 }
 
 .page-header p {
@@ -434,7 +437,7 @@ a {
   }
 
   .page-header h1 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
 
   .page-header p {
@@ -448,4 +451,77 @@ a {
 
 ::selection {
   background-color: var(--accent-soft);
+}
+
+/* ---------- Toque visual ----------
+   Titulos con Bricolage, boton principal con degradado, tarjetas que se
+   levantan al pasar el mouse y una entrada suave al cambiar de pagina. */
+
+h2,
+h3 {
+  font-family: var(--ff-titulos);
+  letter-spacing: -0.02em;
+}
+
+.btn {
+  border-radius: 0.75rem;
+  transition: background-color 150ms ease, opacity 150ms ease, transform 120ms ease, box-shadow 150ms ease;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.btn-primario {
+  background: var(--degradado);
+  box-shadow: 0 6px 20px -6px rgba(124, 108, 255, 0.6);
+}
+
+.btn-primario:hover:not(:disabled) {
+  background: var(--degradado);
+  box-shadow: 0 10px 28px -6px rgba(124, 108, 255, 0.75);
+  transform: translateY(-1px);
+}
+
+.campo input,
+.campo select,
+.campo textarea,
+.control {
+  border-radius: 0.75rem;
+}
+
+.card {
+  border-radius: 1.25rem;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.card:hover {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+  box-shadow: var(--shadow), 0 14px 32px -18px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+.chip-azul {
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .main-content > * {
+    /* backwards: al terminar no deja transform, asi los desplegables quedan arriba */
+    animation: entrar 320ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  }
+
+  .main-content > :nth-child(2) {
+    animation-delay: 40ms;
+  }
+
+  .main-content > :nth-child(n + 3) {
+    animation-delay: 80ms;
+  }
+}
+
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 }
