@@ -40,6 +40,17 @@ export const getAporte = async (id: number) => {
   return response.data;
 };
 
+export interface ConfigAportes {
+  subida_archivos: boolean;
+  max_mb: number;
+}
+
+// Si la API corre sin disco (Cloud Run), los aportes son solo links
+export const getConfigAportes = async () => {
+  const response = await api.get<ConfigAportes>("/aportes/config");
+  return response.data;
+};
+
 export const getTags = async () => {
   const response = await api.get<AporteTag[]>("/aportes/tags");
   return response.data;

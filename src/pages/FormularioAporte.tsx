@@ -5,6 +5,7 @@ import {
   crearAporte,
   editarAporte,
   getAporte,
+  getConfigAportes,
   getTags,
   type DatosAporte,
 } from "../features/aportes/api";
@@ -45,6 +46,8 @@ function FormularioAporte() {
 
   const [materias, setMaterias] = useState<Materia[]>([]);
   const [tags, setTags] = useState<AporteTag[]>([]);
+  // null mientras se consulta a la API si se pueden subir archivos
+  const [subidaArchivos, setSubidaArchivos] = useState<boolean | null>(null);
 
   const [errores, setErrores] = useState<ErroresCampo>({});
   const [error, setError] = useState("");
@@ -57,6 +60,9 @@ function FormularioAporte() {
     if (!user) return;
     getMaterias(user.carrera).then(setMaterias).catch((err) => setError(mensajeDeError(err)));
     getTags().then(setTags).catch((err) => setError(mensajeDeError(err)));
+    getConfigAportes()
+      .then((config) => setSubidaArchivos(config.subida_archivos))
+      .catch(() => setSubidaArchivos(false));
   }, [user]);
 
   useEffect(() => {
@@ -126,7 +132,7 @@ function FormularioAporte() {
     if (datos.link.trim() && !/^https?:\/\/\S+$/i.test(datos.link.trim())) {
       e.link = "El link tiene que empezar con http:// o https://";
     } else if (!datos.link.trim() && !tieneArchivo) {
-      e.link = "Subí un archivo o agregá un link.";
+      e.link = subidaArchivos ? "Subí un archivo o agregá un link." : "Pegá el link al material.";
     }
     return e;
   };
@@ -169,14 +175,15 @@ function FormularioAporte() {
         <div>
           <h1>{editando ? "Editar aporte" : "Subir aporte"}</h1>
           <p>
-            Compartí un archivo (PDF, imagen, Word, etc.) o un link a Drive,
-            YouTube o donde lo tengas.
+            {subidaArchivos
+              ? "Compartí un archivo (PDF, imagen, Word, etc.) o un link a Drive, YouTube o donde lo tengas."
+              : "Compartí el link a tu material: Drive, YouTube, GitHub o donde lo tengas."}
           </p>
         </div>
       </div>
 
       <form className="form form-aporte card" onSubmit={handleSubmit} noValidate>
-        {!editando && (
+        {!editando && subidaArchivos && (
           <div className="campo">
             <span>Archivo</span>
             {archivo ? (
