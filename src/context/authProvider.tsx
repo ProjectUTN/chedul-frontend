@@ -17,6 +17,7 @@ interface AuthContextType {
   // true mientras se intenta recuperar la sesion al cargar la pagina
   cargando: boolean;
   login: (email: string, password: string) => Promise<void>;
+  loginGoogle: (credential: string) => Promise<void>;
   logout: () => Promise<void>;
   setUser: (user: Alumno) => void;
 }
@@ -122,6 +123,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(data.user);
   }, []);
 
+  const loginGoogle = useCallback(async (credential: string) => {
+    const data = await authApi.loginGoogle(credential);
+    accessToken.current = data.accessToken;
+    setUser(data.user);
+  }, []);
+
   const logout = useCallback(async () => {
     try {
       await authApi.logout();
@@ -131,7 +138,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [limpiarSesion]);
 
   return (
-    <AuthContext.Provider value={{ user, cargando, login, logout, setUser }}>
+    <AuthContext.Provider value={{ user, cargando, login, loginGoogle, logout, setUser }}>
       {children}
     </AuthContext.Provider>
   );

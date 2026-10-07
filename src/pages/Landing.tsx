@@ -211,7 +211,7 @@ function Landing() {
 
       <footer className="landing-pie">
         <img src={logo} alt="Chedul" className="landing-pie__logo" />
-        <span>Hecho por Eduardo Ramírez para alumnos de la UTN FRRe.</span>
+        <span>Hecho por estudiantes de la UTN FRRe, para estudiantes.</span>
       </footer>
     </div>
   );

@@ -23,6 +23,17 @@ export const login = async (email: string, password: string) => {
   return response.data;
 };
 
+// Login con Google: el boton devuelve un ID token que la API verifica
+export const getGoogleClientId = async () => {
+  const response = await api.get<{ client_id: string }>("/auth/google");
+  return response.data.client_id;
+};
+
+export const loginGoogle = async (credential: string) => {
+  const response = await api.post<SesionResponse>("/auth/google", { credential });
+  return response.data;
+};
+
 export const refresh = async () => {
   const response = await api.post<SesionResponse>("/refresh-token");
   return response.data;

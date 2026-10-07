@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import BotonGoogle from "../features/auth/BotonGoogle";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getCarreras, signup } from "../features/auth/api";
@@ -229,6 +230,8 @@ function SignUp() {
             {enviando ? "Creando cuenta..." : "Registrarse"}
           </button>
         </form>
+
+        <BotonGoogle texto="signup_with" />
       </div>
     </div>
   );

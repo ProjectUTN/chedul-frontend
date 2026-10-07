@@ -1,4 +1,5 @@
 import { useState } from "react";
+import BotonGoogle from "../features/auth/BotonGoogle";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authProvider";
 import { mensajeDeError } from "../api/client";
@@ -84,6 +85,8 @@ function Login() {
             {enviando ? "Ingresando..." : "Iniciar sesión"}
           </button>
         </form>
+
+        <BotonGoogle texto="continue_with" />
       </div>
     </div>
   );
