@@ -1,7 +1,8 @@
 import axios, { AxiosError } from "axios";
 
+// En produccion la API va por el proxy del mismo dominio (vercel.json)
 export const API_URL: string =
-  import.meta.env.VITE_API_URL ?? "http://localhost:8080/api/v1";
+  import.meta.env.VITE_API_URL ?? (import.meta.env.PROD ? "/api/v1" : "http://localhost:8080/api/v1");
 
 export const api = axios.create({
   baseURL: API_URL,
