@@ -7,6 +7,14 @@ académico, mapa de correlativas, aportes (subir, buscar, favoritos), calendario
 (vista de mes con eventos y vista de semana con el horario de cursada) y mails
 de profesores.
 
+## Capturas
+
+![Inicio](docs/capturas/chedul-inicio.png)
+![Calendario semanal](docs/capturas/chedul-calendario-semana.png)
+![Mapa de correlativas](docs/capturas/chedul-correlativas-oscuro.png)
+
+Más en [docs/capturas](docs/capturas).
+
 ## Desarrollo
 
 ```sh
