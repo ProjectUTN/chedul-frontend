@@ -26,11 +26,12 @@ pnpm lint
 
 ## Deploy en Vercel
 
-1. En `vercel.json`, reemplazar `REEMPLAZAR-CON-LA-URL-DE-CLOUD-RUN.run.app`
-   por la URL de la API (la muestra `scripts/deploy-cloudrun.sh` de
-   chedul-core al terminar) y commitear.
+1. `vercel.json` ya apunta a la API en Cloud Run
+   (`chedul-api-753152353813.southamerica-east1.run.app`). Si la API cambia
+   de URL, se cambia ahi y en `public/_redirects`.
 2. En Vercel: **Add New → Project**, importar este repo. Detecta Vite solo.
-3. Agregar la variable de entorno `VITE_API_URL=/api/v1` y desplegar.
+3. Desplegar. En produccion el front usa `/api/v1` por defecto, no hace
+   falta ninguna variable de entorno.
 
 Vercel hace de proxy: el navegador le pide `/api/...` al mismo dominio del
 front y Vercel se lo pasa a Cloud Run. Así la cookie de sesión es del mismo

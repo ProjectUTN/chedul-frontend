@@ -120,3 +120,16 @@ export interface Clase {
   aula: string;
   materia: MateriaResumen | null;
 }
+
+export interface HorarioComision {
+  dia: number; // 1 = lunes ... 7 = domingo
+  hora_inicio: string;
+  hora_fin: string;
+}
+
+export interface Comision {
+  id: number;
+  codigo: string;
+  cuatrimestre: string;
+  horarios: HorarioComision[];
+}

@@ -36,6 +36,7 @@ function MapaCorrelativas() {
   const [error, setError] = useState("");
   const [cargando, setCargando] = useState(true);
   const [guardando, setGuardando] = useState(false);
+  const [conElectivas, setConElectivas] = useState(false);
 
   const [seleccionada, setSeleccionada] = useState<number | null>(null);
   const [encima, setEncima] = useState<number | null>(null);
@@ -58,7 +59,12 @@ function MapaCorrelativas() {
       .finally(() => setCargando(false));
   }, [user, cargarEstado]);
 
-  const grafo = useMemo(() => armarGrafo(materias), [materias]);
+  // Las electivas se muestran a pedido para que el mapa no quede tan cargado
+  const visibles = useMemo(
+    () => (conElectivas ? materias : materias.filter((m) => m.tipo !== "Electiva")),
+    [materias, conElectivas]
+  );
+  const grafo = useMemo(() => armarGrafo(visibles), [visibles]);
 
   // La materia activa es la que tiene el mouse encima o, si no, la elegida
   const activa = encima ?? seleccionada;
@@ -69,9 +75,11 @@ function MapaCorrelativas() {
 
   const conteo = useMemo(() => {
     const c = new Map<EstadoMapa, number>();
-    estados.forEach((estado) => c.set(estado, (c.get(estado) ?? 0) + 1));
+    estados.forEach((estado, id) => {
+      if (grafo.nodos.has(id)) c.set(estado, (c.get(estado) ?? 0) + 1);
+    });
     return c;
-  }, [estados]);
+  }, [estados, grafo]);
 
   const elegir = (id: number) => {
     const nueva = seleccionada === id ? null : id;
@@ -123,7 +131,7 @@ function MapaCorrelativas() {
     }
   };
 
-  const habilitaDirecto = materia ? materias.filter((m) => m.correlativas.some((c) => c.materia_id === materia.id)) : [];
+  const habilitaDirecto = materia ? visibles.filter((m) => m.correlativas.some((c) => c.materia_id === materia.id)) : [];
 
   return (
     <>
@@ -158,6 +166,19 @@ function MapaCorrelativas() {
             <line x1="0" y1="4" x2="28" y2="4" className="arista arista--regular" />
           </svg>
           Pide regular
+        </li>
+        <li className="mapa-leyenda__electivas">
+          <label>
+            <input
+              type="checkbox"
+              checked={conElectivas}
+              onChange={(e) => {
+                setConElectivas(e.target.checked);
+                setSeleccionada(null);
+              }}
+            />
+            Mostrar electivas
+          </label>
         </li>
       </ul>
 
