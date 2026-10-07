@@ -40,7 +40,11 @@ function ClaseForm({ clase, diaInicial, materias, onGuardado }: Props) {
     let vigente = true;
     getComisiones(datos.materia_id)
       .then((lista) => {
-        if (vigente) setComisiones(comisionesVigentes(lista));
+        if (!vigente) return;
+        const vigentes = comisionesVigentes(lista);
+        setComisiones(vigentes);
+        // Con una sola comision ya queda elegida y se cargan sus horarios
+        if (vigentes.length === 1) setComisionId(vigentes[0].id);
       })
       .catch(() => {
         // Sin comisiones se carga a mano, no hace falta avisar
