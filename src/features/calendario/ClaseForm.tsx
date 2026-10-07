@@ -3,6 +3,8 @@ import { toast } from "react-toastify";
 import { borrarClase, crearClase, editarClase, getComisiones, type DatosClase } from "./api";
 import { DIAS, DIAS_CORTOS } from "./fechas";
 import { erroresDeCampo, mensajeDeError, type ErroresCampo } from "../../api/client";
+import SelectorMateria from "../../components/SelectorMateria";
+import { confirmar } from "../../components/confirmar";
 import type { Clase, Comision, Materia } from "../../api/types";
 
 interface Props {
@@ -118,7 +120,14 @@ function ClaseForm({ clase, diaInicial, materias, onGuardado }: Props) {
   };
 
   const borrar = async () => {
-    if (!clase || !confirm(`¿Sacar "${clase.titulo}" del horario?`)) return;
+    if (!clase) return;
+    const ok = await confirmar({
+      titulo: "¿Sacar esta clase del horario?",
+      mensaje: `"${clase.titulo}" deja de aparecer en tu semana.`,
+      aceptar: "Sacar",
+      peligro: true,
+    });
+    if (!ok) return;
     setEnviando(true);
     try {
       await borrarClase(clase.id);
@@ -134,14 +143,12 @@ function ClaseForm({ clase, diaInicial, materias, onGuardado }: Props) {
     <form className="form" onSubmit={guardar} noValidate>
       <label className="campo">
         <span>Materia</span>
-        <select value={datos.materia_id} onChange={(e) => elegirMateria(Number(e.target.value))}>
-          <option value={0}>Ninguna</option>
-          {materias.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.nombre}
-            </option>
-          ))}
-        </select>
+        <SelectorMateria
+          materias={materias}
+          value={datos.materia_id}
+          onChange={elegirMateria}
+          opcionVacia="Ninguna"
+        />
         {errores.materia_id && <small className="campo-error">{errores.materia_id}</small>}
       </label>
 

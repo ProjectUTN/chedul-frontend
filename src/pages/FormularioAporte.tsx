@@ -18,6 +18,7 @@ import {
 } from "../features/aportes/formato";
 import { useAuth } from "../context/authProvider";
 import { erroresDeCampo, mensajeDeError, type ErroresCampo } from "../api/client";
+import SelectorMateria from "../components/SelectorMateria";
 import type { Aporte, AporteTag, Materia } from "../api/types";
 import "../features/aportes/aportes.css";
 
@@ -165,9 +166,6 @@ function FormularioAporte() {
     }
   };
 
-  const materiasPorNivel = [1, 2, 3, 4, 5]
-    .map((nivel) => ({ nivel, materias: materias.filter((m) => m.nivel === nivel) }))
-    .filter((g) => g.materias.length > 0);
 
   return (
     <>
@@ -261,20 +259,11 @@ function FormularioAporte() {
         <div className="form-aporte__fila">
           <label className="campo">
             <span>Materia</span>
-            <select name="materia_id" value={datos.materia_id} onChange={handleChange}>
-              <option value={0} disabled>
-                Elegí la materia
-              </option>
-              {materiasPorNivel.map((grupo) => (
-                <optgroup key={grupo.nivel} label={`${grupo.nivel}° año`}>
-                  {grupo.materias.map((m) => (
-                    <option key={m.id} value={m.id}>
-                      {m.nombre}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
+            <SelectorMateria
+              materias={materias}
+              value={datos.materia_id}
+              onChange={(id) => setDatos((d) => ({ ...d, materia_id: id }))}
+            />
             {errores.materia_id && (
               <small className="campo-error">{errores.materia_id}</small>
             )}

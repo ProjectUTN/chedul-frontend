@@ -11,6 +11,7 @@ import {
 } from "../features/estado_academico/api";
 import { useAuth } from "../context/authProvider";
 import { mensajeDeError } from "../api/client";
+import { confirmar } from "../components/confirmar";
 import type { Condicion, CondicionPorAlumno, Materia } from "../api/types";
 import "../styles.css";
 
@@ -66,9 +67,15 @@ function Estado() {
       toast.info(`Todas las materias de ${nombreNivel} ya están en ${estado.toLowerCase()}`);
       return;
     }
-    if (!confirm(`¿Marcar las ${aCambiar.length} materias de ${nombreNivel} que faltan como ${estado.toLowerCase()}?`)) {
-      return;
-    }
+    const ok = await confirmar({
+      titulo: `¿Marcar ${nombreNivel} como ${estado.toLowerCase()}?`,
+      mensaje:
+        aCambiar.length === 1
+          ? `Se cambia 1 materia de ${nombreNivel}. Las que ya estaban así no se tocan.`
+          : `Se cambian ${aCambiar.length} materias de ${nombreNivel}. Las que ya estaban así no se tocan.`,
+      aceptar: "Marcar todas",
+    });
+    if (!ok) return;
 
     const condicion = condiciones.find((c) => c.condicion === estado);
     setMarcando(true);

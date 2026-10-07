@@ -4,6 +4,7 @@ import AporteCard from "../features/aportes/AporteCard";
 import { getAportes, getTags, type FiltroAportes } from "../features/aportes/api";
 import { getMaterias } from "../features/estado_academico/api";
 import SearchBar from "../features/mails/SearchBar";
+import SelectorMateria from "../components/SelectorMateria";
 import { useAuth } from "../context/authProvider";
 import useDebounce from "../hooks/useDebounce";
 import { mensajeDeError } from "../api/client";
@@ -123,18 +124,12 @@ function Aportes() {
           onSearchChange={(e) => cambiarFiltro(() => setBusqueda(e.target.value))}
           placeholder="Buscar por título, descripción o materia..."
         />
-        <select
-          className="control"
-          aria-label="Materia"
+        <SelectorMateria
+          materias={materias}
           value={materiaId}
-          onChange={(e) => cambiarFiltro(() => setMateriaId(Number(e.target.value)))}>
-          <option value={0}>Todas las materias</option>
-          {materias.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.nivel}° · {m.nombre}
-            </option>
-          ))}
-        </select>
+          onChange={(id) => cambiarFiltro(() => setMateriaId(id))}
+          opcionVacia="Todas las materias"
+        />
         <select
           className="control"
           aria-label="Tipo de aporte"
