@@ -125,6 +125,7 @@ export interface HorarioComision {
   dia: number; // 1 = lunes ... 7 = domingo
   hora_inicio: string;
   hora_fin: string;
+  aula: string;
 }
 
 export interface Comision {

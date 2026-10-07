@@ -14,6 +14,19 @@ interface Props {
   onGuardado: () => void;
 }
 
+// De agosto en adelante se cursa el 2do cuatrimestre
+const cuatrimestreActual = () => (new Date().getMonth() >= 7 ? "2C" : "1C");
+
+const NOMBRE_CUATRIMESTRE: Record<string, string> = { "1C": "1° cuatr.", "2C": "2° cuatr.", Anual: "anual" };
+
+// Si hay comisiones cargadas para el cuatrimestre que se esta cursando se
+// muestran solo esas, asi no se mezclan con horarios de otro cuatrimestre.
+const comisionesVigentes = (lista: Comision[]) => {
+  const conHorario = lista.filter((c) => c.horarios.length > 0);
+  const actuales = conHorario.filter((c) => c.cuatrimestre === cuatrimestreActual());
+  return actuales.length > 0 ? actuales : conHorario;
+};
+
 const resumenHorarios = (comision: Comision) =>
   comision.horarios.map((h) => `${DIAS_CORTOS[h.dia - 1]} ${h.hora_inicio}–${h.hora_fin}`).join(", ");
 
@@ -42,7 +55,7 @@ function ClaseForm({ clase, diaInicial, materias, onGuardado }: Props) {
     let vigente = true;
     getComisiones(datos.materia_id)
       .then((lista) => {
-        if (vigente) setComisiones(lista.filter((c) => c.horarios.length > 0));
+        if (vigente) setComisiones(comisionesVigentes(lista));
       })
       .catch(() => {
         // Sin comisiones se carga a mano, no hace falta avisar
@@ -69,16 +82,11 @@ function ClaseForm({ clase, diaInicial, materias, onGuardado }: Props) {
   };
 
   const elegirComision = (id: number) => {
-    const anterior = comision?.codigo;
-    const nueva = comisiones.find((c) => c.id === id);
     setComisionId(id);
-    // El aula sigue a la comision mientras el alumno no la haya cambiado
-    setDatos((d) => ({
-      ...d,
-      aula: !d.aula.trim() || d.aula === anterior ? (nueva?.codigo ?? "") : d.aula,
-    }));
   };
 
+  // Cada clase lleva el aula de su horario; si la comision no la tiene, el
+  // codigo de la comision (K1.1) para saber cual es
   const guardarComision = async (elegida: Comision) => {
     for (const horario of elegida.horarios) {
       await crearClase({
@@ -86,6 +94,7 @@ function ClaseForm({ clase, diaInicial, materias, onGuardado }: Props) {
         dia: horario.dia,
         hora_inicio: horario.hora_inicio,
         hora_fin: horario.hora_fin,
+        aula: datos.aula.trim() || horario.aula || elegida.codigo,
       });
     }
     const cantidad = elegida.horarios.length;
@@ -159,7 +168,7 @@ function ClaseForm({ clase, diaInicial, materias, onGuardado }: Props) {
             <option value={0}>Cargar el horario a mano</option>
             {comisiones.map((c) => (
               <option key={c.id} value={c.id}>
-                {c.codigo} · {resumenHorarios(c)}
+                {c.codigo} ({NOMBRE_CUATRIMESTRE[c.cuatrimestre] ?? c.cuatrimestre}) · {resumenHorarios(c)}
               </option>
             ))}
           </select>
@@ -184,6 +193,7 @@ function ClaseForm({ clase, diaInicial, materias, onGuardado }: Props) {
             {comision.horarios.map((h) => (
               <li key={`${h.dia}-${h.hora_inicio}`}>
                 <b>{DIAS[h.dia - 1]}</b> de {h.hora_inicio} a {h.hora_fin}
+                {h.aula && <> · {h.aula}</>}
               </li>
             ))}
           </ul>
@@ -225,7 +235,7 @@ function ClaseForm({ clase, diaInicial, materias, onGuardado }: Props) {
           value={datos.aula}
           onChange={(e) => cambiar("aula", e.target.value)}
           maxLength={60}
-          placeholder="Aula 305, K1051"
+          placeholder={comision ? "Vacío: se usa el aula de cada horario" : "Aula 305, K1051"}
         />
         {errores.aula && <small className="campo-error">{errores.aula}</small>}
       </label>
