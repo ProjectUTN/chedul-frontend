@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignUp from "../pages/SignUp";
 import Login from "../pages/Login";
 import Inicio from "../pages/Inicio";
@@ -10,6 +10,7 @@ import Aportes from "../pages/Aportes";
 import FormularioAporte from "../pages/FormularioAporte";
 import Calendario from "../pages/Calendario";
 import MapaCorrelativas from "../pages/MapaCorrelativas";
+import Landing from "../pages/Landing";
 
 export const AppRouter = () => {
   return (
@@ -17,6 +18,7 @@ export const AppRouter = () => {
       <Routes>
         {/* Rutas públicas */}
         <Route element={<PublicOnlyRoute />}>
+          <Route path="/" element={<Landing />} />
           <Route path="/registro" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
         </Route>
@@ -34,8 +36,6 @@ export const AppRouter = () => {
             <Route path="/correos" element={<Mails />} />
           </Route>
         </Route>
-
-        <Route path="/" element={<Navigate to="/inicio" replace />} />
 
         {/* Ruta para 404 */}
         <Route path="*" element={<h1 className="no-encontrada">404: Página no encontrada</h1>} />

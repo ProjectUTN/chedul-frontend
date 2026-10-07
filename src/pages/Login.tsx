@@ -44,7 +44,9 @@ function Login() {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <img className="auth-logo" src={logo} alt="Chedul" />
+        <Link to="/" aria-label="Volver al inicio de Chedul">
+          <img className="auth-logo" src={logo} alt="Chedul" />
+        </Link>
         <div>
           <h1 className="auth-title">Bienvenido nuevamente</h1>
           <p className="auth-subtitle">
