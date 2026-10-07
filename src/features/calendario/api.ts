@@ -1,5 +1,5 @@
 import { api } from "../../api/client";
-import type { Clase, Evento, TipoEvento } from "../../api/types";
+import type { Clase, Comision, Evento, TipoEvento } from "../../api/types";
 
 export interface DatosEvento {
   titulo: string;
@@ -67,4 +67,9 @@ export const editarClase = async (id: number, datos: DatosClase) => {
 
 export const borrarClase = async (id: number) => {
   await api.delete(`/clases/${id}`);
+};
+
+export const getComisiones = async (materiaId: number) => {
+  const response = await api.get<Comision[]>(`/materias/${materiaId}/comisiones`);
+  return response.data;
 };

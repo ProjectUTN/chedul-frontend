@@ -59,6 +59,24 @@
   display: inline;
 }
 
+.mapa-leyenda__electivas {
+  margin-left: auto;
+}
+
+.mapa-leyenda__electivas label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.mapa-leyenda__electivas input {
+  accent-color: var(--accent);
+  width: 1rem;
+  height: 1rem;
+}
+
 /* ---------- Mapa ---------- */
 
 .mapa-layout {
@@ -308,5 +326,10 @@
 
   .mapa-leyenda__flechas {
     display: none !important;
+  }
+
+  .mapa-leyenda__electivas {
+    margin-left: 0;
+    flex-basis: 100%;
   }
 }

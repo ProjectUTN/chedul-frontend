@@ -631,3 +631,20 @@
     display: none;
   }
 }
+
+.calendario-form__horarios {
+  list-style: none;
+  margin: 0;
+  padding: 0.625rem 0.75rem;
+  display: grid;
+  gap: 0.25rem;
+  border-radius: var(--radius-chico);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+}
+
+.calendario-form__horarios b {
+  color: var(--text);
+  font-weight: 600;
+}
