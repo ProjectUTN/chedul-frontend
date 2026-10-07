@@ -4,6 +4,7 @@ import "./condicionEnMaterias.css";
 import { mensajeDeError } from "../../api/client";
 import type { Condicion, CondicionPorAlumno, Materia } from "../../api/types";
 import { borrarCondicion, setCondicion } from "./api";
+import { alCambiarEstado } from "../calendario/horarioAutomatico";
 
 const PENDIENTE = "Pendiente";
 
@@ -39,6 +40,7 @@ function CondicionEnMaterias({
     condicionDe(materiaId)?.condicion ?? PENDIENTE;
 
   const guardar = async (materiaId: number, estado: string, nota: number | null) => {
+    const anterior = estadoDe(materiaId);
     setGuardando(materiaId);
     try {
       if (estado === PENDIENTE) {
@@ -49,6 +51,8 @@ function CondicionEnMaterias({
         await setCondicion(materiaId, condicion.id, estado === "Aprobada" ? nota : null);
       }
       onCambio();
+      const materia = materias.find((m) => m.id === materiaId);
+      if (materia) await alCambiarEstado(materia, anterior, estado);
     } catch (err) {
       toast.error(mensajeDeError(err, "No se pudo guardar el estado"));
     } finally {

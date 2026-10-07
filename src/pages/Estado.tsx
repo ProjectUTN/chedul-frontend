@@ -12,6 +12,7 @@ import {
 import { useAuth } from "../context/authProvider";
 import { mensajeDeError } from "../api/client";
 import { confirmar } from "../components/confirmar";
+import { agregarVariasAlHorario, sacarVariasDelHorario } from "../features/calendario/horarioAutomatico";
 import type { Condicion, CondicionPorAlumno, Materia } from "../api/types";
 import "../styles.css";
 
@@ -78,6 +79,9 @@ function Estado() {
     if (!ok) return;
 
     const condicion = condiciones.find((c) => c.condicion === estado);
+    const estabanCursando = aCambiar.filter(
+      (m) => misCondiciones.find((c) => c.materia_id === m.id)?.condicion === "Cursando"
+    );
     setMarcando(true);
     try {
       await Promise.all(
@@ -88,6 +92,8 @@ function Estado() {
         )
       );
       toast.success(`Listo, ${aCambiar.length} materias de ${nombreNivel} en ${estado.toLowerCase()}`);
+      if (estado === "Cursando") await agregarVariasAlHorario(aCambiar);
+      else if (estabanCursando.length > 0) await sacarVariasDelHorario(estabanCursando);
     } catch (err) {
       toast.error(mensajeDeError(err, "No se pudieron guardar todas, revisá la lista"));
     } finally {

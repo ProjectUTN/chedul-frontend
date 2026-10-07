@@ -1,7 +1,8 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "react-toastify";
 import { borrarClase, crearClase, editarClase, getComisiones, type DatosClase } from "./api";
-import { DIAS, DIAS_CORTOS } from "./fechas";
+import { DIAS } from "./fechas";
+import { NOMBRE_CUATRIMESTRE, comisionesVigentes, resumenHorarios } from "./comisiones";
 import { erroresDeCampo, mensajeDeError, type ErroresCampo } from "../../api/client";
 import SelectorMateria from "../../components/SelectorMateria";
 import { confirmar } from "../../components/confirmar";
@@ -13,22 +14,6 @@ interface Props {
   materias: Materia[];
   onGuardado: () => void;
 }
-
-// De agosto en adelante se cursa el 2do cuatrimestre
-const cuatrimestreActual = () => (new Date().getMonth() >= 7 ? "2C" : "1C");
-
-const NOMBRE_CUATRIMESTRE: Record<string, string> = { "1C": "1° cuatr.", "2C": "2° cuatr.", Anual: "anual" };
-
-// Si hay comisiones cargadas para el cuatrimestre que se esta cursando se
-// muestran solo esas, asi no se mezclan con horarios de otro cuatrimestre.
-const comisionesVigentes = (lista: Comision[]) => {
-  const conHorario = lista.filter((c) => c.horarios.length > 0);
-  const actuales = conHorario.filter((c) => c.cuatrimestre === cuatrimestreActual());
-  return actuales.length > 0 ? actuales : conHorario;
-};
-
-const resumenHorarios = (comision: Comision) =>
-  comision.horarios.map((h) => `${DIAS_CORTOS[h.dia - 1]} ${h.hora_inicio}–${h.hora_fin}`).join(", ");
 
 function ClaseForm({ clase, diaInicial, materias, onGuardado }: Props) {
   const [datos, setDatos] = useState<DatosClase>(() => ({
@@ -95,6 +80,7 @@ function ClaseForm({ clase, diaInicial, materias, onGuardado }: Props) {
         hora_inicio: horario.hora_inicio,
         hora_fin: horario.hora_fin,
         aula: datos.aula.trim() || horario.aula || elegida.codigo,
+        comision_id: elegida.id,
       });
     }
     const cantidad = elegida.horarios.length;

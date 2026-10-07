@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { alCambiarEstado } from "../features/calendario/horarioAutomatico";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
@@ -119,11 +120,14 @@ function MapaCorrelativas() {
 
   const cambiarCondicion = async (condicionId: number, nota: number | null) => {
     if (!materia) return;
+    const anterior = miCondicion?.condicion ?? "Pendiente";
+    const nuevo = condiciones.find((c) => c.id === condicionId)?.condicion ?? "Pendiente";
     setGuardando(true);
     try {
       if (condicionId === 0) await borrarCondicion(materia.id);
       else await setCondicion(materia.id, condicionId, nota);
       await cargarEstado();
+      await alCambiarEstado(materia, anterior, nuevo);
     } catch (err) {
       toast.error(mensajeDeError(err));
     } finally {

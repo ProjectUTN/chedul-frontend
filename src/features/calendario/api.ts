@@ -17,6 +17,7 @@ export interface DatosClase {
   hora_fin: string;
   aula: string;
   materia_id: number;
+  comision_id?: number | null;
 }
 
 // Los campos opcionales vacios se mandan como null
@@ -29,6 +30,7 @@ const eventoParaApi = (datos: DatosEvento) => ({
 const claseParaApi = (datos: DatosClase) => ({
   ...datos,
   materia_id: datos.materia_id || null,
+  comision_id: datos.comision_id || null,
 });
 
 export const getEventos = async (desde: string, hasta: string) => {

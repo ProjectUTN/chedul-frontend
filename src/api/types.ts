@@ -119,6 +119,8 @@ export interface Clase {
   hora_fin: string;
   aula: string;
   materia: MateriaResumen | null;
+  // Comision de la que se cargo; null si se cargo a mano
+  comision_id: number | null;
 }
 
 export interface HorarioComision {
