@@ -1,0 +1,3 @@
+# Netlify: la API pasa por el mismo dominio que el front (ver README)
+/api/*  https://REEMPLAZAR-CON-LA-URL-DE-CLOUD-RUN.run.app/api/:splat  200
+/*      /index.html  200

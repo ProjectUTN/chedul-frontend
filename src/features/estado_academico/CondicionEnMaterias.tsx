@@ -1,191 +1,151 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 import "./condicionEnMaterias.css";
-import useIsMobile from "../../hooks/useIsMobile";
+import { mensajeDeError } from "../../api/client";
+import type { Condicion, CondicionPorAlumno, Materia } from "../../api/types";
+import { borrarCondicion, setCondicion } from "./api";
 
-const materias = [
-  {
-    id: 1,
-    nombre: "Analisis matematico",
-    cuatrimestre: "1C",
-    tipo: "Obligatoria",
-    programa: "https://www.frre.utn.edu.ar/iq/clean/files/get/item/7373",
-    estado: "Pendiente",
-  },
-  {
-    id: 2,
-    nombre: "Analisis matematico",
-    cuatrimestre: "1C",
-    tipo: "Obligatoria",
-    programa: "https://www.frre.utn.edu.ar/iq/clean/files/get/item/7373",
-    estado: "Regular",
-  },
-  {
-    id: 3,
-    nombre: "Analisis matematico",
-    cuatrimestre: "2C",
-    tipo: "Obligatoria",
-    programa: "https://www.frre.utn.edu.ar/iq/clean/files/get/item/7373",
-    estado: "Aprobada",
-  },
-];
+const PENDIENTE = "Pendiente";
 
-const estados = ["Pendiente", "Cursando", "Regular", "Aprobada"];
+// Texto corto para que los cuatro estados entren en una fila en el celular
+const CORTO: Record<string, string> = {
+  Regularizada: "Regular",
+};
 
-function CondicionEnMaterias() {
-  const isMobile = useIsMobile();
+const claseEstado = (estado: string) =>
+  `estado--${estado.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")}`;
 
-  const [estadoMaterias, setEstadoMaterias] = useState(
-    materias.map((m) => ({ id: m.id, estado: m.estado }))
-  );
+interface CondicionEnMateriasProps {
+  materias: Materia[];
+  condiciones: Condicion[];
+  misCondiciones: CondicionPorAlumno[];
+  onCambio: () => void;
+}
 
-  const handleEstadoChange = async (id: number, nuevoEstado: string) => {
-    setEstadoMaterias((prev) =>
-      prev.map((m) => (m.id === id ? { ...m, estado: nuevoEstado } : m))
-    );
+function CondicionEnMaterias({
+  materias,
+  condiciones,
+  misCondiciones,
+  onCambio,
+}: CondicionEnMateriasProps) {
+  const [guardando, setGuardando] = useState<number | null>(null);
 
-    // try {
-    //   await axios.patch(`/api/materias/${id}`, {
-    //     estado: nuevoEstado,
-    //   });
-    //   console.log(`Materia ${id} actualizada a ${nuevoEstado}`);
-    // } catch (error) {
-    //   console.error("Error al actualizar el estado:", error);
-    //   // Opcional: revertir el estado si falla
-    //   setEstadoMaterias((prev) =>
-    //     prev.map((m) =>
-    //       m.id === id
-    //         ? {
-    //             ...m,
-    //             estado:
-    //               materias.find((mat) => mat.id === id)?.estado || "Pendiente",
-    //           }
-    //         : m
-    //     )
-    //   );
-    // }
+  const estados = [PENDIENTE, ...condiciones.map((c) => c.condicion)];
+
+  const condicionDe = (materiaId: number) =>
+    misCondiciones.find((c) => c.materia_id === materiaId);
+
+  const estadoDe = (materiaId: number) =>
+    condicionDe(materiaId)?.condicion ?? PENDIENTE;
+
+  const guardar = async (materiaId: number, estado: string, nota: number | null) => {
+    setGuardando(materiaId);
+    try {
+      if (estado === PENDIENTE) {
+        await borrarCondicion(materiaId);
+      } else {
+        const condicion = condiciones.find((c) => c.condicion === estado);
+        if (!condicion) return;
+        await setCondicion(materiaId, condicion.id, estado === "Aprobada" ? nota : null);
+      }
+      onCambio();
+    } catch (err) {
+      toast.error(mensajeDeError(err, "No se pudo guardar el estado"));
+    } finally {
+      setGuardando(null);
+    }
   };
 
-  // TODO: por ahora lo saco para que la ruta sea publica
-  // const { user } = useAuth();
+  const cambiarEstado = (materiaId: number, nuevoEstado: string) => {
+    if (nuevoEstado === estadoDe(materiaId)) return;
+    guardar(materiaId, nuevoEstado, condicionDe(materiaId)?.nota ?? null);
+  };
 
-  // if (!user) {
-  //   return <Navigate to="/login" replace />;
-  // }
+  const cambiarNota = (materiaId: number, valor: string) => {
+    const nota = valor === "" ? null : Number(valor);
+    guardar(materiaId, "Aprobada", nota);
+  };
 
-  // useEffect(() => {
-  //   const fetchEstadoAcademico = async () => {
-  //     try {
-  //       const data = await getEstado({
-  //         alumnoId: user.id,
-  //       });
-  //       console.log("Estado académico:", data);
-  //       setCondiciones(data);
-  //     } catch (err) {
-  //       console.error("Error al cargar el estado académico:", err);
-  //     }
-  //   };
-
-  //   fetchEstadoAcademico();
-  // }, []);
+  if (materias.length === 0) {
+    return <p className="vacio">No hay materias cargadas para este año.</p>;
+  }
 
   return (
-    <>
-      {!isMobile ? (
-        <div className="tabla-form">
-          <table className="tabla-materias">
-            <thead>
-              <tr>
-                <th>N°</th>
-                <th>Materia</th>
-                <th>Cuatrimestre</th>
-                <th>Tipo</th>
-                <th>Estado</th>
-                <th>Programa</th>
-              </tr>
-            </thead>
-            <tbody>
-              {materias.map((materia, index) => (
-                <tr key={materia.id}>
-                  <td>{index + 1}</td>
-                  <td>
-                    <strong>{materia.nombre}</strong>
-                  </td>
-                  <td>{materia.cuatrimestre}</td>
-                  <td>{materia.tipo}</td>
-                  <td>
-                    <select
-                      className="estado-select"
-                      value={
-                        estadoMaterias.find((m) => m.id === materia.id)
-                          ?.estado || "Pendiente"
-                      }
-                      onChange={(e) =>
-                        handleEstadoChange(materia.id, e.target.value)
-                      }>
-                      {estados.map((estado) => (
-                        <option key={estado} value={estado}>
-                          {estado}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td>
-                    <a
-                      className="table-icon"
-                      href={materia.programa}
-                      target="_blank"
-                      rel="noopener noreferrer">
-                      <span className="material-symbols-rounded">article</span>
-                    </a>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <div className="tabla-form-mobile">
-          {materias.map((materia) => (
-            <div className="cardMateria" key={materia.nombre}>
-              <div className="headerMateria">
-                <div>
-                  <h3>{materia.nombre}</h3>
-                  <p>
-                    {materia.cuatrimestre} | {materia.tipo}
-                  </p>
-                </div>
-                <a
-                  className="table-icon"
-                  href={materia.programa}
-                  target="_blank"
-                  rel="noopener noreferrer">
-                  <span className="material-symbols-rounded">article</span>
-                </a>
-              </div>
+    <ul className="lista-estado">
+      {materias.map((materia) => {
+        const estado = estadoDe(materia.id);
+        const ocupado = guardando === materia.id;
 
-              <div className="condiciones">
-                {estados.map((estado) => (
-                  <label className="estado-label" key={estado}>
-                    <input
-                      type="radio"
-                      value={estado}
-                      checked={
-                        estadoMaterias.find((m) => m.id === materia.id)
-                          ?.estado === estado
-                      }
-                      onChange={(e) =>
-                        handleEstadoChange(materia.id, e.target.value)
-                      }
-                    />
-                    <span>{estado}</span>
-                  </label>
+        return (
+          <li key={materia.id} className={`materia-fila ${claseEstado(estado)}`} aria-busy={ocupado}>
+            <div className="materia-fila__info">
+              <div className="materia-fila__titulo">
+                <h3>{materia.nombre}</h3>
+                {materia.programa && (
+                  <a
+                    className="materia-fila__programa"
+                    href={materia.programa}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Ver programa">
+                    <span className="material-symbols-rounded">description</span>
+                  </a>
+                )}
+              </div>
+              <p className="materia-fila__meta">
+                {[materia.cuatrimestre, materia.tipo, materia.carga_horaria && `${materia.carga_horaria} hs/sem`]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </p>
+              {materia.correlativas.length > 0 && (
+                <p className="materia-fila__correlativas">
+                  <span className="material-symbols-rounded">link</span>
+                  {materia.correlativas
+                    .map((c) => `${c.nombre} (${c.tipo === "aprobada" ? "aprobada" : "regular"})`)
+                    .join(", ")}
+                </p>
+              )}
+            </div>
+
+            <div className="materia-fila__acciones">
+              <div className="estado-opciones" role="radiogroup" aria-label={`Estado de ${materia.nombre}`}>
+                {estados.map((opcion) => (
+                  <button
+                    key={opcion}
+                    type="button"
+                    role="radio"
+                    aria-checked={estado === opcion}
+                    className={`estado-opcion ${claseEstado(opcion)}`}
+                    disabled={ocupado}
+                    onClick={() => cambiarEstado(materia.id, opcion)}>
+                    {CORTO[opcion] ?? opcion}
+                  </button>
                 ))}
               </div>
+
+              {estado === "Aprobada" && (
+                <label className="nota">
+                  <span>Nota</span>
+                  <select
+                    className="control"
+                    aria-label={`Nota de ${materia.nombre}`}
+                    value={condicionDe(materia.id)?.nota ?? ""}
+                    disabled={ocupado}
+                    onChange={(e) => cambiarNota(materia.id, e.target.value)}>
+                    <option value="">–</option>
+                    {[4, 5, 6, 7, 8, 9, 10].map((n) => (
+                      <option key={n} value={n}>
+                        {n}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
             </div>
-          ))}
-        </div>
-      )}
-    </>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 

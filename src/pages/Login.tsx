@@ -1,17 +1,22 @@
 import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authProvider";
-import { Link, useNavigate } from "react-router-dom";
+import { mensajeDeError } from "../api/client";
+import logo from "../assets/1B-Chedul_Logo_Horizontal_Azul.svg";
+import "./auth.css";
 
 function Login() {
   const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const desde = (location.state as { desde?: string } | null)?.desde ?? "/inicio";
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [error, setError] = useState("");
-
-  const navigate = useNavigate();
+  const [enviando, setEnviando] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -23,70 +28,60 @@ function Login() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError("");
+    setEnviando(true);
 
     try {
       await login(formData.email, formData.password);
-
-      console.log("Login exitoso");
-
-      navigate("/inicio");
-    } catch (err: any) {
-      setError("Credenciales inválidas");
+      navigate(desde, { replace: true });
+    } catch (err) {
+      setError(mensajeDeError(err, "Credenciales inválidas"));
+    } finally {
+      setEnviando(false);
     }
   };
 
   return (
-    <div className="login-container">
-      <div className="login-form">
+    <div className="auth-container">
+      <div className="auth-card">
+        <img className="auth-logo" src={logo} alt="Chedul" />
         <div>
-          <h1 className="title">
-            <strong>Bienvenido nuevamente</strong>
-          </h1>
-          <p>
-            ¿Sos nuevo?{" "}
-            <span>
-              <Link to="/">
-                <u>Registrate</u>
-              </Link>
-            </span>
+          <h1 className="auth-title">Bienvenido nuevamente</h1>
+          <p className="auth-subtitle">
+            ¿Sos nuevo? <Link to="/registro">Registrate</Link>
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="formulario">
-          <div>
-            <label htmlFor="email">
-              <strong>Correo Electrónico</strong>
-            </label>
+        <form onSubmit={handleSubmit} className="form">
+          <label className="campo">
+            <span>Correo electrónico</span>
             <input
               type="email"
-              id="email"
               name="email"
+              autoComplete="email"
               value={formData.email}
               onChange={handleChange}
               required
             />
-          </div>
-          <div>
-            <label htmlFor="password">
-              <strong>Contraseña</strong>
-            </label>
-            <div className="password-input">
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
-          </div>
+          </label>
+          <label className="campo">
+            <span>Contraseña</span>
+            <input
+              type="password"
+              name="password"
+              autoComplete="current-password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </label>
 
-          <button type="submit" className="login-btn">
-            <strong>Iniciar Sesión</strong>
+          {error && <p className="form-error">{error}</p>}
+
+          <button type="submit" className="btn btn-primario" disabled={enviando}>
+            {enviando ? "Ingresando..." : "Iniciar sesión"}
           </button>
         </form>
-        {error && <p className="error">{error}</p>}
       </div>
     </div>
   );
