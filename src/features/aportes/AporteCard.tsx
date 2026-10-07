@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import type { Aporte } from "../../api/types";
 import { mensajeDeError } from "../../api/client";
+import { confirmar } from "../../components/confirmar";
 import { borrarAporte, descargarArchivo, setFavorito } from "./api";
 import { formatearFecha, formatearTamano, iconoDeArchivo } from "./formato";
 import "./aportes.css";
@@ -40,9 +41,13 @@ function AporteCard({ aporte, onActualizado, onBorrado }: AporteCardProps) {
   };
 
   const borrar = async () => {
-    if (!window.confirm(`¿Borrar "${aporte.titulo}"? No se puede deshacer.`)) {
-      return;
-    }
+    const ok = await confirmar({
+      titulo: "¿Borrar este aporte?",
+      mensaje: `"${aporte.titulo}" se borra para todos y no se puede deshacer.`,
+      aceptar: "Borrar",
+      peligro: true,
+    });
+    if (!ok) return;
     setOcupado(true);
     try {
       await borrarAporte(aporte.id);
