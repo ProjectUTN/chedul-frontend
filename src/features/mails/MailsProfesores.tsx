@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import data from "./mailsProfesores.json";
 import "./mailsProfesores.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import useIsMobile from "../../hooks/useIsMobile";
 
 type Mail = {
@@ -51,7 +51,7 @@ const MailsProfesores: React.FC<MailsProfesoresProps> = ({ searchTerm }) => {
   }, []);
 
   const sortedMails = React.useMemo(() => {
-    let sortableItems = [...mails];
+    const sortableItems = [...mails];
     if (sortConfig !== null) {
       sortableItems.sort((a, b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -192,19 +192,6 @@ const MailsProfesores: React.FC<MailsProfesoresProps> = ({ searchTerm }) => {
         </div>
       )}
 
-      <ToastContainer
-        position="bottom-right"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        style={{ borderRadius: "8px" }}
-      />
     </>
   );
 };

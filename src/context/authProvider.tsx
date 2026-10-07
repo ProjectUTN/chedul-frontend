@@ -3,239 +3,135 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useLayoutEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
+import { AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { api } from "../api/client";
-import { login as loginAlumno } from "../features/login/api";
-import type { AxiosResponse } from "axios";
+import type { Alumno } from "../api/types";
+import * as authApi from "../features/auth/api";
 
 interface AuthContextType {
-  accessToken: string | null;
-  user: { id: number; nombre: string; email: string } | null;
+  user: Alumno | null;
+  // true mientras se intenta recuperar la sesion al cargar la pagina
+  cargando: boolean;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
-}
-
-interface LoginSuccessResponse {
-  accessToken: string;
-  user: {
-    id: number;
-    nombre: string;
-    email: string;
-  };
+  logout: () => Promise<void>;
+  setUser: (user: Alumno) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const authContext = useContext(AuthContext);
 
   if (!authContext) {
-    throw new Error("useAuth debe ser usado con un authProvider");
+    throw new Error("useAuth debe ser usado con un AuthProvider");
   }
 
   return authContext;
 };
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
+const ACCESS_TOKEN_EXPIRADO = "Access Token inválido o expirado";
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [accessToken, setAccessToken] = useState<string | null | undefined>(
-    undefined
-  );
-  const [user, setUser] = useState<{
-    id: number;
-    nombre: string;
-    email: string;
-  } | null>(null);
+type ConfigConReintento = InternalAxiosRequestConfig & { _retry?: boolean };
 
-  const clearAuth = useCallback(() => {
-    setAccessToken(null);
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<Alumno | null>(null);
+  const [cargando, setCargando] = useState(true);
+
+  // El access token vive solo en memoria (no en localStorage) para que un
+  // script inyectado no lo pueda robar. Al recargar se pide uno nuevo con la
+  // cookie httpOnly del refresh token.
+  const accessToken = useRef<string | null>(null);
+  const refrescando = useRef<Promise<string | null> | null>(null);
+
+  const limpiarSesion = useCallback(() => {
+    accessToken.current = null;
     setUser(null);
-    localStorage.removeItem("auth_user");
   }, []);
 
-  // Función de logout
-  const logout = useCallback(() => {
-    clearAuth();
-  }, [clearAuth]);
-
-  const login = useCallback(
-    async (email: string, password: string) => {
-      try {
-        const response: LoginSuccessResponse = await loginAlumno({
-          email,
-          password,
+  // Un solo refresh a la vez aunque fallen varias peticiones juntas
+  const refrescarToken = useCallback(() => {
+    if (!refrescando.current) {
+      refrescando.current = authApi
+        .refresh()
+        .then((data) => {
+          accessToken.current = data.accessToken;
+          setUser(data.user);
+          return data.accessToken;
+        })
+        .catch(() => {
+          limpiarSesion();
+          return null;
+        })
+        .finally(() => {
+          refrescando.current = null;
         });
-
-        if (!response) {
-          console.error(
-            "Login response or response data is undefined:",
-            response
-          );
-          throw new Error("Respuesta de login inválida del servidor.");
-        }
-
-        const receivedAccessToken = response.accessToken;
-        const receivedUser = response.user;
-
-        if (receivedAccessToken) {
-          setAccessToken(receivedAccessToken);
-        } else {
-          console.warn(
-            "Login exitoso, pero el accessToken no fue devuelto en el cuerpo de la respuesta."
-          );
-        }
-
-        if (receivedUser) {
-          setUser(receivedUser);
-          localStorage.setItem("auth_user", JSON.stringify(receivedUser));
-        }
-      } catch (error) {
-        console.error("Error durante el login:", error);
-        clearAuth();
-        throw error;
-      }
-    },
-    [clearAuth]
-  );
+    }
+    return refrescando.current;
+  }, [limpiarSesion]);
 
   useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        const storedUser = localStorage.getItem("auth_user");
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
-
-        if (!storedUser) {
-          setAccessToken(null);
-          return;
-        }
-
-        try {
-          const response: AxiosResponse<{ accessToken: string }> =
-            await api.post(`/refresh-token`, {});
-          if (!response || !response.data) {
-            console.error(
-              "Refresh token response or response data is undefined:",
-              response
-            );
-            throw new Error(
-              "Respuesta de refresh token inválida del servidor."
-            );
-          }
-          setAccessToken(response.data.accessToken);
-          console.log("Access Token obtenido vía refresh al inicio.");
-        } catch (refreshErr) {
-          console.warn(
-            "No se pudo refrescar el token al inicio (quizás no hay refresh token o expiró):",
-            refreshErr
-          );
-          clearAuth();
-        }
-      } catch (error) {
-        console.error("Error al inicializar la autenticación:", error);
-        clearAuth();
+    const requestInterceptor = api.interceptors.request.use((config) => {
+      if (accessToken.current) {
+        config.headers.Authorization = `Bearer ${accessToken.current}`;
       }
-    };
-    initializeAuth();
-  }, [clearAuth]); // Remove location.pathname dependency
-
-  useLayoutEffect(() => {
-    const authInterceptor = api.interceptors.request.use((config) => {
-      const customConfig = config as typeof config & { _retry?: boolean };
-      if (!customConfig._retry && accessToken) {
-        customConfig.headers.Authorization = `Bearer ${accessToken}`;
-      }
-      return customConfig;
+      return config;
     });
 
-    return () => {
-      api.interceptors.request.eject(authInterceptor);
-    };
-  }, [accessToken]);
-
-  useLayoutEffect(() => {
-    const refreshInterceptor = api.interceptors.response.use(
+    const responseInterceptor = api.interceptors.response.use(
       (response) => response,
-      async (error) => {
-        const originalRequest = error.config;
-        if (!originalRequest || !error.response) {
+      async (error: AxiosError<{ msg?: unknown }>) => {
+        const original = error.config as ConfigConReintento | undefined;
+        const expirado =
+          error.response?.status === 401 &&
+          error.response.data?.msg === ACCESS_TOKEN_EXPIRADO;
+
+        if (!original || !expirado || original._retry) {
           return Promise.reject(error);
         }
 
-        const isUnauthorized = error.response.status === 401;
-        const isAccessTokenExpired =
-          error.response.data?.message === "Access Token inválido o expirado";
-        const isRefreshTokenEndpoint =
-          originalRequest.url &&
-          originalRequest.url.includes(`/api/v1/refresh-token`);
-        const isRetry = originalRequest._retry;
-
-        if (
-          isUnauthorized &&
-          isAccessTokenExpired &&
-          !isRefreshTokenEndpoint &&
-          !isRetry
-        ) {
-          try {
-            console.log("Access Token expirado. Intentando refrescar...");
-            const response: AxiosResponse<{ accessToken: string }> =
-              await api.post(`/refresh-token`, {});
-
-            if (!response || !response.data) {
-              console.error(
-                "Refresh token reattempt response or response data is undefined:",
-                response
-              );
-              throw new Error(
-                "Respuesta de reintento de refresh token inválida del servidor."
-              );
-            }
-
-            const newAccessToken = response.data.accessToken;
-            setAccessToken(newAccessToken);
-
-            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-            originalRequest._retry = true;
-            console.log(
-              "Access Token refrescado. Reintentando solicitud original."
-            );
-            return api(originalRequest);
-          } catch (refreshError) {
-            console.error(
-              "Fallo al refrescar el token. Forzando logout:",
-              refreshError
-            );
-            clearAuth();
-            return Promise.reject(refreshError);
-          }
+        original._retry = true;
+        const nuevoToken = await refrescarToken();
+        if (!nuevoToken) {
+          return Promise.reject(error);
         }
 
-        return Promise.reject(error);
+        original.headers.Authorization = `Bearer ${nuevoToken}`;
+        return api(original);
       }
     );
 
     return () => {
-      api.interceptors.response.eject(refreshInterceptor);
+      api.interceptors.request.eject(requestInterceptor);
+      api.interceptors.response.eject(responseInterceptor);
     };
-  }, [clearAuth]);
+  }, [refrescarToken]);
+
+  // Al abrir la app se intenta recuperar la sesion con la cookie
+  useEffect(() => {
+    refrescarToken().finally(() => setCargando(false));
+  }, [refrescarToken]);
+
+  const login = useCallback(async (email: string, password: string) => {
+    const data = await authApi.login(email, password);
+    accessToken.current = data.accessToken;
+    setUser(data.user);
+  }, []);
+
+  const logout = useCallback(async () => {
+    try {
+      await authApi.logout();
+    } finally {
+      limpiarSesion();
+    }
+  }, [limpiarSesion]);
 
   return (
-    <AuthContext.Provider
-      value={{
-        accessToken: accessToken ?? null,
-        user: user
-          ? { id: user.id, nombre: user.nombre, email: user.email }
-          : null,
-        login,
-        logout,
-      }}>
+    <AuthContext.Provider value={{ user, cargando, login, logout, setUser }}>
       {children}
     </AuthContext.Provider>
   );

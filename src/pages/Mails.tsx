@@ -11,7 +11,12 @@ function Mails() {
 
   return (
     <>
-      <h1>Correos de profesores</h1>
+      <div className="page-header">
+        <div>
+          <h1>Mails de profesores</h1>
+          <p>Buscá por profesor o materia y copiá el mail con un toque.</p>
+        </div>
+      </div>
       <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
       <MailsProfesores searchTerm={searchTerm} />
     </>

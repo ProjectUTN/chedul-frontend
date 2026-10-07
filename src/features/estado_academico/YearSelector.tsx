@@ -1,31 +1,36 @@
 import "./yearSelector.css";
 
-function YearSelector() {
-  const niveles = [
-    { id: 1, label: "1er año" },
-    { id: 2, label: "2do año" },
-    { id: 3, label: "3er año" },
-    { id: 4, label: "4to año" },
-    { id: 5, label: "5to año" },
-  ];
+const niveles = [
+  { id: 1, label: "1er año" },
+  { id: 2, label: "2do año" },
+  { id: 3, label: "3er año" },
+  { id: 4, label: "4to año" },
+  { id: 5, label: "5to año" },
+];
 
+interface YearSelectorProps {
+  nivelActual: number;
+  onChange: (nivel: number) => void;
+}
+
+function YearSelector({ nivelActual, onChange }: YearSelectorProps) {
   return (
-    <div className="radio-buttons-container">
+    <div className="radio-buttons-container" role="radiogroup" aria-label="Año">
       {niveles.map(({ id, label }) => (
-        <div key={id} className="radio-button">
+        <label
+          key={id}
+          className={
+            nivelActual === id ? "radio-button radio-button--activo" : "radio-button"
+          }>
           <input
-            name="radio-group"
-            id={`radio${id}`}
+            name="nivel"
             className="radio-button__input"
             type="radio"
-            // checked={nivelActual === id}
-            // onChange={() => handleNivelChange(id)}
+            checked={nivelActual === id}
+            onChange={() => onChange(id)}
           />
-          <label htmlFor={`radio${id}`} className="radio-button__label">
-            <span className="radio-button__custom"></span>
-            {label}
-          </label>
-        </div>
+          {label}
+        </label>
       ))}
     </div>
   );

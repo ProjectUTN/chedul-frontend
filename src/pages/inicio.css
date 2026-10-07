@@ -1,0 +1,172 @@
+.estadisticas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.estadistica {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.estadistica__valor {
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.estadistica__valor small {
+  font-size: 1rem;
+  color: var(--clr-text-300);
+}
+
+.estadistica__titulo {
+  color: var(--clr-text-200);
+}
+
+.barra {
+  margin-top: 0.5rem;
+  height: 6px;
+  border-radius: 999px;
+  background-color: var(--clr-bg-300);
+  overflow: hidden;
+}
+
+.barra > div {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--green), color-mix(in srgb, var(--green) 60%, var(--accent)));
+}
+
+.inicio-columnas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.inicio-seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.inicio-seccion__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.inicio-seccion__header h2 {
+  font-size: 1.125rem;
+}
+
+.inicio-seccion__header a,
+.inicio-seccion a {
+  color: var(--clr-assent);
+  text-decoration: none;
+}
+
+.lista-materias,
+.lista-aportes {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.lista-materias li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--clr-bg-300);
+}
+
+.lista-materias li:last-child,
+.lista-aportes li:last-child a {
+  border-bottom: none;
+}
+
+.lista-materias__link {
+  margin-left: auto;
+  display: inline-flex;
+}
+
+.lista-aportes a {
+  display: grid;
+  gap: 0.125rem;
+  padding: 0.5rem 0;
+  color: var(--clr-text-100) !important;
+  border-bottom: 1px solid var(--clr-bg-300);
+}
+
+.lista-aportes a:hover strong {
+  color: var(--clr-assent-100);
+}
+
+.lista-proximos {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.lista-proximos li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.625rem;
+  border-radius: 0.5rem;
+  background-color: var(--clr-bg-400);
+  border-left: 3px solid var(--evento);
+}
+
+.lista-proximos li > div {
+  display: grid;
+}
+
+.lista-proximos__cuando {
+  min-width: 4.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--evento);
+}
+
+.estadistica__icono {
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.625rem;
+  margin-bottom: 0.5rem;
+  color: var(--tono);
+  background-color: color-mix(in srgb, var(--tono) 15%, transparent);
+}
+
+@media (max-width: 600px) {
+  .estadisticas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .estadistica__valor {
+    font-size: 1.5rem;
+  }
+
+  .estadistica__titulo {
+    font-size: 0.75rem;
+  }
+
+  .estadistica__icono {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .inicio-columnas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
