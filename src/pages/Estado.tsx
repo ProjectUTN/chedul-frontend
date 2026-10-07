@@ -1,15 +1,24 @@
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import CondicionEnMaterias from "../features/estado_academico/CondicionEnMaterias";
 import YearSelector from "../features/estado_academico/YearSelector";
 import {
+  borrarCondicion,
   getCondiciones,
   getMaterias,
   getMisCondiciones,
+  setCondicion,
 } from "../features/estado_academico/api";
 import { useAuth } from "../context/authProvider";
 import { mensajeDeError } from "../api/client";
 import type { Condicion, CondicionPorAlumno, Materia } from "../api/types";
 import "../styles.css";
+
+const PENDIENTE = "Pendiente";
+const NOMBRE_NIVEL = ["", "primer año", "segundo año", "tercer año", "cuarto año", "quinto año"];
+
+const claseEstado = (estado: string) =>
+  `estado--${estado.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")}`;
 
 function Estado() {
   const { user } = useAuth();
@@ -18,10 +27,11 @@ function Estado() {
   const [condiciones, setCondiciones] = useState<Condicion[]>([]);
   const [misCondiciones, setMisCondiciones] = useState<CondicionPorAlumno[]>([]);
   const [cargando, setCargando] = useState(true);
+  const [marcando, setMarcando] = useState(false);
   const [error, setError] = useState("");
 
   const recargarMisCondiciones = useCallback(() => {
-    getMisCondiciones()
+    return getMisCondiciones()
       .then(setMisCondiciones)
       .catch((err) => setError(mensajeDeError(err)));
   }, []);
@@ -43,6 +53,41 @@ function Estado() {
     .filter((m) => m.nivel === nivel)
     .sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
   const aprobadas = misCondiciones.filter((c) => c.condicion === "Aprobada").length;
+  const estados = [PENDIENTE, ...condiciones.map((c) => c.condicion)];
+
+  // Marca todas las materias del año que se esta viendo con el mismo estado.
+  // Las que ya estaban aprobadas conservan su nota.
+  const marcarTodas = async (estado: string) => {
+    const nombreNivel = NOMBRE_NIVEL[nivel] ?? `nivel ${nivel}`;
+    const aCambiar = materiasDelNivel.filter(
+      (m) => (misCondiciones.find((c) => c.materia_id === m.id)?.condicion ?? PENDIENTE) !== estado
+    );
+    if (aCambiar.length === 0) {
+      toast.info(`Todas las materias de ${nombreNivel} ya están en ${estado.toLowerCase()}`);
+      return;
+    }
+    if (!confirm(`¿Marcar las ${aCambiar.length} materias de ${nombreNivel} que faltan como ${estado.toLowerCase()}?`)) {
+      return;
+    }
+
+    const condicion = condiciones.find((c) => c.condicion === estado);
+    setMarcando(true);
+    try {
+      await Promise.all(
+        aCambiar.map((m) =>
+          estado === PENDIENTE || !condicion
+            ? borrarCondicion(m.id)
+            : setCondicion(m.id, condicion.id, null)
+        )
+      );
+      toast.success(`Listo, ${aCambiar.length} materias de ${nombreNivel} en ${estado.toLowerCase()}`);
+    } catch (err) {
+      toast.error(mensajeDeError(err, "No se pudieron guardar todas, revisá la lista"));
+    } finally {
+      await recargarMisCondiciones();
+      setMarcando(false);
+    }
+  };
 
   return (
     <>
@@ -62,6 +107,24 @@ function Estado() {
       </div>
 
       <YearSelector nivelActual={nivel} onChange={setNivel} />
+
+      {!cargando && materiasDelNivel.length > 0 && (
+        <div className="marcar-todas" role="group" aria-label="Marcar todas las materias del año">
+          <span className="marcar-todas__texto">Marcar todas como</span>
+          <div className="marcar-todas__opciones">
+            {estados.map((estado) => (
+              <button
+                key={estado}
+                type="button"
+                className={`estado-opcion marcar-todas__boton ${claseEstado(estado)}`}
+                disabled={marcando}
+                onClick={() => marcarTodas(estado)}>
+                {estado === "Regularizada" ? "Regular" : estado}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {error && <p className="form-error">{error}</p>}
 
