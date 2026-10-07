@@ -79,7 +79,7 @@ export const alCambiarEstado = async (materia: MateriaBasica, anterior: string, 
     if (nuevo === CURSANDO && anterior !== CURSANDO) await agregarAlHorario(materia);
     else if (anterior === CURSANDO && nuevo !== CURSANDO) await sacarDelHorario(materia);
   } catch {
-    toast.error("No se pudo actualizar tu horario, revisalo en Calendario");
+    toast.error("No se pudo actualizar tu horario, revisalo en Horarios");
   }
 };
 
@@ -125,7 +125,7 @@ export const agregarVariasAlHorario = async (materias: MateriaBasica[]) => {
       toast.success(agregadas === 1 ? "Agregamos 1 materia a tu horario" : `Agregamos ${agregadas} materias a tu horario`);
     }
   } catch {
-    toast.error("No se pudo actualizar tu horario, revisalo en Calendario");
+    toast.error("No se pudo actualizar tu horario, revisalo en Horarios");
   }
 };
 
@@ -136,6 +136,6 @@ export const sacarVariasDelHorario = async (materias: MateriaBasica[]) => {
     for (const c of clases) await borrarClase(c.id);
     if (clases.length > 0) toast.info("Actualizamos tu horario");
   } catch {
-    toast.error("No se pudo actualizar tu horario, revisalo en Calendario");
+    toast.error("No se pudo actualizar tu horario, revisalo en Horarios");
   }
 };

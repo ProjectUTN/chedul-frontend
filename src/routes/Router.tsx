@@ -9,6 +9,7 @@ import Mails from "../pages/Mails";
 import Aportes from "../pages/Aportes";
 import FormularioAporte from "../pages/FormularioAporte";
 import Calendario from "../pages/Calendario";
+import Horarios from "../pages/Horarios";
 import MapaCorrelativas from "../pages/MapaCorrelativas";
 import Landing from "../pages/Landing";
 
@@ -32,6 +33,7 @@ export const AppRouter = () => {
             <Route path="/aportes/nuevo" element={<FormularioAporte />} />
             <Route path="/aportes/:id/editar" element={<FormularioAporte />} />
             <Route path="/calendario" element={<Calendario />} />
+            <Route path="/horarios" element={<Horarios />} />
             <Route path="/correlativas" element={<MapaCorrelativas />} />
             <Route path="/correos" element={<Mails />} />
           </Route>

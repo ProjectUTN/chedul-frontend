@@ -18,6 +18,7 @@ const navigation: Item[] = [
   { title: "Inicio", href: "/inicio", icon: "home", principal: true },
   { title: "Estado académico", corto: "Estado", href: "/estado", icon: "school", principal: true },
   { title: "Aportes", href: "/aportes", icon: "library_books", principal: true },
+  { title: "Horarios", href: "/horarios", icon: "schedule", principal: true },
   { title: "Calendario", corto: "Agenda", href: "/calendario", icon: "calendar_month", principal: true },
   { title: "Mapa de correlativas", href: "/correlativas", icon: "account_tree" },
   { title: "Mails de profesores", href: "/correos", icon: "mail" },
