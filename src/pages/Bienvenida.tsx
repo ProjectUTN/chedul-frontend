@@ -13,6 +13,7 @@ import {
 } from "../features/estado_academico/api";
 import { esElectiva } from "../features/estado_academico/condiciones";
 import { agregarVariasAlHorario } from "../features/calendario/horarioAutomatico";
+import { fueraDeCuatrimestre } from "../features/calendario/comisiones";
 import { marcarBienvenidaVista } from "../features/bienvenida/bienvenida";
 import logo from "../assets/1B-Chedul_Logo_Horizontal_Azul.svg";
 import type { Condicion, CondicionPorAlumno, Materia } from "../api/types";
@@ -127,7 +128,10 @@ function Bienvenida() {
     const propuesta: Record<number, Estado> = {};
     for (const m of materias) {
       if (esElectiva(m)) continue;
-      propuesta[m.id] = m.nivel < nivel ? "Aprobada" : m.nivel === nivel ? "Cursando" : PENDIENTE;
+      // Del año que cursa, las de un cuatrimestre que ya paso (o no empezo)
+      // no pueden estar en curso: se proponen regulares
+      if (m.nivel === nivel) propuesta[m.id] = fueraDeCuatrimestre(m.cuatrimestre) ? "Regularizada" : "Cursando";
+      else propuesta[m.id] = m.nivel < nivel ? "Aprobada" : PENDIENTE;
     }
     setElegidos(propuesta);
     ir({ tipo: "nivel", nivel: 1 });

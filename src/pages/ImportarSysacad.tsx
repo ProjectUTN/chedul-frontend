@@ -12,6 +12,7 @@ import {
   setCondicion,
 } from "../features/estado_academico/api";
 import { agregarConComision, sacarVariasDelHorario } from "../features/calendario/horarioAutomatico";
+import { fueraDeCuatrimestre } from "../features/calendario/comisiones";
 import { buscarMateria, leerSysacad, type FilaInterpretada } from "../features/importar/sysacad";
 import type { Condicion, CondicionPorAlumno, Materia } from "../api/types";
 import "../features/herramientas/herramientas.css";
@@ -78,6 +79,23 @@ function ImportarSysacad({ embebido = false, alTerminar }: Props) {
     return destino === "Aprobada" && nota !== null && nota !== actual?.nota;
   };
 
+  // Que hacer con una fila ya asociada a una materia del plan. Las materias de
+  // otro cuatrimestre que SysAcad sigue mostrando como cursando se dejan como
+  // estan: SysAcad tarda en actualizarlas.
+  const proponer = (fila: FilaInterpretada, materiaId: number): { destino: Destino | null; motivo: string } => {
+    if (fila.anio === 0) return { destino: null, motivo: "Curso de ingreso, no es del plan" };
+    if (!fila.condicion) return { destino: null, motivo: "No entendimos este estado" };
+    if (fila.condicion === "Cursando" && materiaId) {
+      const cuatrimestre = materias.find((m) => m.id === materiaId)?.cuatrimestre;
+      if (fueraDeCuatrimestre(cuatrimestre))
+        return {
+          destino: null,
+          motivo: `Es de ${cuatrimestre === "1C" ? "1er" : "2do"} cuatrimestre: no puede estar en curso ahora, la dejamos como está`,
+        };
+    }
+    return { destino: fila.condicion === "Libre" ? PENDIENTE : fila.condicion, motivo: "" };
+  };
+
   const leer = (texto: string) => {
     setContenido(texto);
     if (!texto.trim()) {
@@ -87,12 +105,8 @@ function ImportarSysacad({ embebido = false, alTerminar }: Props) {
     const filas = leerSysacad(texto);
     setPropuestas(
       filas.map((fila, i) => {
-        let destino: Destino | null = null;
-        let motivo = "";
-        if (fila.anio === 0) motivo = "Curso de ingreso, no es del plan";
-        else if (!fila.condicion) motivo = "No entendimos este estado";
-        else destino = fila.condicion === "Libre" ? PENDIENTE : fila.condicion;
-        const materiaId = destino ? (buscarMateria(fila.materia, materias) ?? 0) : 0;
+        const materiaId = fila.anio > 0 && fila.condicion ? (buscarMateria(fila.materia, materias) ?? 0) : 0;
+        const { destino, motivo } = proponer(fila, materiaId);
         return {
           clave: `${i}-${fila.materia}`,
           fila,
@@ -118,7 +132,10 @@ function ImportarSysacad({ embebido = false, alTerminar }: Props) {
         if (p.clave !== clave) return p;
         const nueva = { ...p, ...cambios };
         // Al elegir a mano la materia se marca para importar si cambia algo
-        if ("materiaId" in cambios) nueva.incluir = cambia(nueva.materiaId, nueva.destino, nueva.fila.nota);
+        if ("materiaId" in cambios) {
+          Object.assign(nueva, proponer(nueva.fila, nueva.materiaId));
+          nueva.incluir = cambia(nueva.materiaId, nueva.destino, nueva.fila.nota);
+        }
         return nueva;
       })
     );

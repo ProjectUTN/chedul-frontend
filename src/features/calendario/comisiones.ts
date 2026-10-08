@@ -4,6 +4,11 @@ import { aISO, DIAS_CORTOS } from "./fechas";
 // De agosto en adelante se cursa el 2do cuatrimestre
 export const cuatrimestreActual = () => (new Date().getMonth() >= 7 ? "2C" : "1C");
 
+// Una materia de 1C en el 2do cuatrimestre (o al reves) no se puede estar
+// cursando ahora, aunque SysAcad todavia la muestre como "Cursa en ..."
+export const fueraDeCuatrimestre = (cuatrimestre: string | null | undefined) =>
+  (cuatrimestre === "1C" || cuatrimestre === "2C") && cuatrimestre !== cuatrimestreActual();
+
 export const NOMBRE_CUATRIMESTRE: Record<string, string> = { "1C": "1° cuatr.", "2C": "2° cuatr.", Anual: "anual" };
 
 // Si hay comisiones cargadas para el cuatrimestre que se esta cursando se
