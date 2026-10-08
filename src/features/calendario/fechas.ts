@@ -1,4 +1,4 @@
-import type { FechaAcademica, TipoEvento } from "../../api/types";
+import type { FechaAcademica, TipoClase, TipoEvento } from "../../api/types";
 
 export const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 export const DIAS_CORTOS = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
@@ -13,6 +13,12 @@ export const TIPOS_EVENTO: { valor: TipoEvento; nombre: string }[] = [
   { valor: "entrega", nombre: "Entrega" },
   { valor: "recordatorio", nombre: "Recordatorio" },
   { valor: "otro", nombre: "Otro" },
+];
+
+export const TIPOS_CLASE: { valor: TipoClase; nombre: string }[] = [
+  { valor: "clase", nombre: "Clase" },
+  { valor: "trabajo", nombre: "Trabajo" },
+  { valor: "otro", nombre: "Otra actividad" },
 ];
 
 export const nombreTipo = (tipo: TipoEvento) =>

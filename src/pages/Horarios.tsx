@@ -73,7 +73,7 @@ function Horarios() {
       <header className="page-header">
         <div>
           <h1>Horarios</h1>
-          <p>Tu horario de cursada. Las materias que marcás como cursando se agregan solas.</p>
+          <p>Tu semana: clases, trabajo y lo que se repita. Las materias que marcás como cursando se agregan solas.</p>
         </div>
         <div className="calendario-acciones">
           <button
@@ -86,7 +86,7 @@ function Horarios() {
               })
             }>
             <span className="material-symbols-rounded">add</span>
-            Agregar clase
+            Agregar al horario
           </button>
         </div>
       </header>
@@ -118,7 +118,7 @@ function Horarios() {
 
       {clases.length === 0 && (
         <p className="vacio">
-          Todavía no cargaste tu horario. Marcá materias como cursando en Estado académico, tocá "Agregar clase" o hacé
+          Todavía no cargaste tu horario. Marcá materias como cursando en Estado académico, tocá "Agregar al horario" o hacé
           click en un día de la grilla.
         </p>
       )}
@@ -142,7 +142,7 @@ function Horarios() {
       <Modal
         abierto={edicion !== null}
         onCerrar={() => setEdicion(null)}
-        titulo={edicion?.tipo === "evento" ? "Editar evento" : edicion?.clase ? "Editar clase" : "Nueva clase"}>
+        titulo={edicion?.tipo === "evento" ? "Editar evento" : edicion?.clase ? "Editar horario" : "Agregar al horario"}>
         {edicion?.tipo === "evento" && (
           <EventoForm
             evento={edicion.evento}

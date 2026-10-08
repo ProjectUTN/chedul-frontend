@@ -144,7 +144,13 @@ export interface Clase {
   comision_id: number | null;
   // Cuatrimestre de esa comision (1C, 2C); null si se cargo a mano
   cuatrimestre?: string | null;
+  tipo?: TipoClase;
+  // Ultimo dia en que se repite (AAAA-MM-DD); null si no termina
+  hasta?: string | null;
 }
+
+// Un bloque del horario puede ser una clase u otra actividad que se repite
+export type TipoClase = "clase" | "trabajo" | "otro";
 
 export interface HorarioComision {
   dia: number; // 1 = lunes ... 7 = domingo

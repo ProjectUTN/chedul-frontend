@@ -1,5 +1,5 @@
 import type { Clase, Comision } from "../../api/types";
-import { DIAS_CORTOS } from "./fechas";
+import { aISO, DIAS_CORTOS } from "./fechas";
 
 // De agosto en adelante se cursa el 2do cuatrimestre
 export const cuatrimestreActual = () => (new Date().getMonth() >= 7 ? "2C" : "1C");
@@ -27,8 +27,10 @@ export const comisionesParaAutomatico = (lista: Comision[]) => {
 const MESES_DE_CURSADA: Record<string, [number, number]> = { "1C": [2, 6], "2C": [7, 11] };
 
 // Una clase cargada desde una comision aparece solo en las semanas de su
-// cuatrimestre; las cargadas a mano o anuales, siempre.
+// cuatrimestre; las cargadas a mano o anuales, siempre. Lo que tiene fecha
+// de fin deja de aparecer despues de ese dia.
 export const seCursaEl = (clase: Clase, fecha: Date) => {
+  if (clase.hasta && aISO(fecha) > clase.hasta) return false;
   const meses = clase.cuatrimestre ? MESES_DE_CURSADA[clase.cuatrimestre] : undefined;
   if (!meses) return true;
   return fecha.getMonth() >= meses[0] && fecha.getMonth() <= meses[1];
