@@ -352,15 +352,45 @@
 }
 
 .landing-pie {
+  padding-block: 2rem 2.5rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-3);
+  font-size: 0.875rem;
+}
+
+.landing-pie__fila {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding-block: 2rem 2.5rem;
-  border-top: 1px solid var(--border);
-  color: var(--text-3);
-  font-size: 0.875rem;
+}
+
+.landing-pie a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.landing-pie a:hover {
+  color: var(--accent);
+}
+
+/* Quienes somos: discreto, arriba del pie */
+.landing-nosotros {
+  max-width: 640px;
+  margin-bottom: 2rem;
+}
+
+.landing .landing-nosotros h2 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-2);
+}
+
+.landing-nosotros p {
+  margin: 0 0 0.5rem;
+  line-height: 1.6;
 }
 
 .landing-pie__logo {

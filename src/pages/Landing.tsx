@@ -4,8 +4,12 @@ import inicioClaro from "../assets/landing/inicio-claro.jpg";
 import inicioOscuro from "../assets/landing/inicio-oscuro.jpg";
 import correlativasClaro from "../assets/landing/correlativas-claro.jpg";
 import correlativasOscuro from "../assets/landing/correlativas-oscuro.jpg";
-import calendarioClaro from "../assets/landing/calendario-claro.jpg";
-import calendarioOscuro from "../assets/landing/calendario-oscuro.jpg";
+import horariosClaro from "../assets/landing/horarios-claro.jpg";
+import horariosOscuro from "../assets/landing/horarios-oscuro.jpg";
+import estudiarClaro from "../assets/landing/estudiar-claro.jpg";
+import estudiarOscuro from "../assets/landing/estudiar-oscuro.jpg";
+import comunidadesClaro from "../assets/landing/comunidades-claro.jpg";
+import comunidadesOscuro from "../assets/landing/comunidades-oscuro.jpg";
 import movilClaro from "../assets/landing/movil-claro.jpg";
 import movilOscuro from "../assets/landing/movil-oscuro.jpg";
 import useTema from "../hooks/useTema";
@@ -15,7 +19,7 @@ const FUNCIONES = [
   {
     icono: "school",
     titulo: "Estado académico",
-    texto: "Marcá cada materia como cursando, regular o aprobada, con su nota. Chedul calcula tu promedio y cuánto te falta.",
+    texto: "Marcá cada materia como cursando, regular o aprobada, con su nota. Las electivas van aparte y calcula tu promedio.",
   },
   {
     icono: "account_tree",
@@ -23,24 +27,39 @@ const FUNCIONES = [
     texto: "Todo el plan de ISI en un mapa. Tocá una materia y ves qué necesitás para cursarla y qué te habilita.",
   },
   {
-    icono: "calendar_month",
-    titulo: "Calendario",
-    texto: "Elegí tu comisión y se carga tu horario de la semana. Anotá parciales, finales y entregas para no olvidarte.",
+    icono: "schedule",
+    titulo: "Horarios",
+    texto: "Marcás una materia como cursando, elegís la comisión y tu semana se arma sola, con aulas.",
+  },
+  {
+    icono: "campaign",
+    titulo: "Parciales confirmados",
+    texto: "Si varios de tu comisión cargan el mismo parcial, te avisa para que no se te pase.",
+  },
+  {
+    icono: "event",
+    titulo: "En tu Google Calendar",
+    texto: "Clases, parciales, finales y feriados en el calendario del celu, y se actualiza solo.",
+  },
+  {
+    icono: "timer",
+    titulo: "Estudiar",
+    texto: "Pomodoro, meta diaria, rachas, medallas y un ranking semanal con otros alumnos, si querés entrar.",
   },
   {
     icono: "library_books",
     titulo: "Aportes",
-    texto: "Resúmenes, parciales resueltos y videos que comparten otros alumnos, filtrados por materia.",
+    texto: "Resúmenes, parciales resueltos y videos que comparten otros alumnos, por materia o de toda la carrera.",
   },
   {
-    icono: "mail",
-    titulo: "Mails de profesores",
-    texto: "Buscá por profesor o materia y copiá el mail con un toque.",
+    icono: "groups",
+    titulo: "Comunidades",
+    texto: "Los grupos de WhatsApp, Discord y Telegram de la carrera y de cada materia, en un solo lugar.",
   },
   {
-    icono: "smartphone",
-    titulo: "En el celu también",
-    texto: "Pensada para usarla en el bondi o en el pasillo antes de entrar a clase. Con modo claro y oscuro.",
+    icono: "task_alt",
+    titulo: "Ordenanza 531 y electivas",
+    texto: "Te dice cuántas horas de electivas llevás y cuándo podés pedir cursar sin correlativas.",
   },
 ];
 
@@ -100,8 +119,8 @@ function Landing() {
               Tu carrera, <span className="landing-degradado">ordenada</span> en un solo lugar
             </h1>
             <p>
-              Llevá tu estado académico, mirá qué materias podés cursar, armá tu horario y encontrá los apuntes que
-              comparten otros alumnos. Gratis.
+              Llevá tu estado académico, mirá qué materias podés cursar, armá tu horario, medí lo que estudiás y encontrá
+              los apuntes y grupos de otros alumnos. En la compu y en el celu. Gratis.
             </p>
             <div className="landing-hero__ctas">
               <Link to="/registro" className="btn btn-primario landing-cta">
@@ -143,7 +162,7 @@ function Landing() {
         <section className="landing-seccion" aria-labelledby="funciones-titulo">
           <div className="landing-seccion__encabezado">
             <h2 id="funciones-titulo">Todo lo que necesitás para cursar</h2>
-            <p>Chedul junta lo que hoy tenés repartido entre el SIU, planillas, grupos de WhatsApp y el campus.</p>
+            <p>Chedul junta lo que hoy tenés repartido entre el SysAcad, planillas, grupos de WhatsApp y el campus.</p>
           </div>
           <div className="landing-funciones">
             {FUNCIONES.map((f) => (
@@ -171,13 +190,35 @@ function Landing() {
 
         <section className="landing-seccion landing-muestra landing-muestra--invertida">
           <div className="landing-muestra__texto">
-            <h2>Tu semana armada en dos clics</h2>
+            <h2>Tu semana armada sola</h2>
             <p>
-              Elegí la materia y la comisión, y Chedul carga todos los horarios con su aula. Sumá parciales y entregas y
-              en el inicio ves cuántos días te quedan.
+              Marcás una materia como cursando, elegís la comisión y Chedul carga sus horarios con el aula. Sumá el
+              trabajo o lo que se repita y llevate todo a Google Calendar con un link.
             </p>
           </div>
-          <Captura claro={calendarioClaro} oscuro={calendarioOscuro} alt="Calendario semanal de Chedul" />
+          <Captura claro={horariosClaro} oscuro={horariosOscuro} alt="Horario semanal de Chedul" />
+        </section>
+
+        <section className="landing-seccion landing-muestra">
+          <div className="landing-muestra__texto">
+            <h2>Estudiá con una meta</h2>
+            <p>
+              Pomodoro o cronómetro, una meta por día y tus horas de la semana y del mes. Sumá rachas, medallas y
+              trofeos, y mirá cuánto falta para el próximo parcial.
+            </p>
+          </div>
+          <Captura claro={estudiarClaro} oscuro={estudiarOscuro} alt="Sección Estudiar de Chedul con el pomodoro y la meta diaria" />
+        </section>
+
+        <section className="landing-seccion landing-muestra landing-muestra--invertida">
+          <div className="landing-muestra__texto">
+            <h2>Los grupos de la carrera, juntos</h2>
+            <p>
+              Los alumnos suman los grupos de WhatsApp, Discord y Telegram de cada materia. Si un link no anda, se
+              reporta y desaparece.
+            </p>
+          </div>
+          <Captura claro={comunidadesClaro} oscuro={comunidadesOscuro} alt="Comunidades de la carrera en Chedul" />
         </section>
 
         <section className="landing-seccion" aria-labelledby="pasos-titulo">
@@ -207,8 +248,25 @@ function Landing() {
       </main>
 
       <footer className="landing-pie">
-        <img src={logo} alt="Chedul" className="landing-pie__logo" />
-        <span>Hecho por estudiantes de la UTN FRRe, para estudiantes.</span>
+        <section className="landing-nosotros" id="quienes-somos" aria-labelledby="nosotros-titulo">
+          <h2 id="nosotros-titulo">Quiénes somos</h2>
+          <p>
+            Somos estudiantes de Ingeniería en Sistemas de la UTN Facultad Regional Resistencia. Hicimos Chedul porque
+            llevar la carrera entre planillas, el SysAcad y grupos de WhatsApp era un lío. Es gratis, sin publicidad, y
+            lo vamos mejorando con lo que nos piden los alumnos.
+          </p>
+          <p>
+            El código es abierto:{" "}
+            <a href="https://github.com/ProjectUTN/chedul-frontend" target="_blank" rel="noopener noreferrer">
+              miralo en GitHub
+            </a>
+            .
+          </p>
+        </section>
+        <div className="landing-pie__fila">
+          <img src={logo} alt="Chedul" className="landing-pie__logo" />
+          <span>Hecho por estudiantes de la UTN FRRe, para estudiantes.</span>
+        </div>
       </footer>
     </div>
   );
