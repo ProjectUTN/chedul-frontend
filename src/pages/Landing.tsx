@@ -298,13 +298,6 @@ function Landing() {
               </li>
             ))}
           </ul>
-          <p>
-            El código es abierto:{" "}
-            <a href="https://github.com/ProjectUTN/chedul-frontend" target="_blank" rel="noopener noreferrer">
-              miralo en GitHub
-            </a>
-            .
-          </p>
         </section>
         <div className="landing-pie__fila">
           <img src={logo} alt="Chedul" className="landing-pie__logo" />
