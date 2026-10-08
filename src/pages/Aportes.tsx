@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import AporteCard from "../features/aportes/AporteCard";
 import { getAportes, getTags, type FiltroAportes } from "../features/aportes/api";
+import { conEmoji, MATERIA_CARRERA, NOMBRE_CARRERA } from "../features/aportes/formato";
 import { getMaterias } from "../features/estado_academico/api";
 import SearchBar from "../features/mails/SearchBar";
 import SelectorMateria from "../components/SelectorMateria";
@@ -14,6 +15,8 @@ import "../features/aportes/aportes.css";
 type Vista = "todos" | "mios" | "favoritos";
 
 const POR_PAGINA = 12;
+
+const EXTRAS_MATERIA = [{ id: MATERIA_CARRERA, texto: NOMBRE_CARRERA }];
 
 function Aportes() {
   const { user } = useAuth();
@@ -108,8 +111,8 @@ function Aportes() {
         <div>
           <h1>Aportes</h1>
           <p>
-            Resúmenes, parciales, ejercicios y links que comparten los alumnos.
-            Subí lo tuyo y guardá en favoritos lo que te sirva.
+            Resúmenes, parciales, ejercicios y links que comparten los alumnos, de cada materia o de toda la
+            carrera. Subí lo tuyo y guardá en favoritos lo que te sirva.
           </p>
         </div>
         <Link className="btn btn-primario fab-movil" to="/aportes/nuevo">
@@ -129,6 +132,7 @@ function Aportes() {
           value={materiaId}
           onChange={(id) => cambiarFiltro(() => setMateriaId(id))}
           opcionVacia="Todas las materias"
+          extras={EXTRAS_MATERIA}
         />
         <select
           className="control"
@@ -138,7 +142,7 @@ function Aportes() {
           <option value={0}>Todos los tipos</option>
           {tags.map((t) => (
             <option key={t.id} value={t.id}>
-              {t.nombre}
+              {conEmoji(t.nombre)}
             </option>
           ))}
         </select>

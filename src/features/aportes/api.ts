@@ -1,7 +1,9 @@
 import { api } from "../../api/client";
 import type { Aporte, AporteTag, ListaAportes } from "../../api/types";
+import { MATERIA_CARRERA } from "./formato";
 
 export interface FiltroAportes {
+  // MATERIA_CARRERA trae solo los de toda la carrera
   materia_id?: number;
   tag_id?: number;
   q?: string;
@@ -15,6 +17,7 @@ export interface FiltroAportes {
 export interface DatosAporte {
   titulo: string;
   descripcion: string;
+  // 0 es de toda la carrera
   materia_id: number;
   tag_id: number;
   link: string;
@@ -22,7 +25,8 @@ export interface DatosAporte {
 
 export const getAportes = async (filtro: FiltroAportes) => {
   const params: Record<string, string | number> = {};
-  if (filtro.materia_id) params.materia_id = filtro.materia_id;
+  if (filtro.materia_id === MATERIA_CARRERA) params.carrera = 1;
+  else if (filtro.materia_id) params.materia_id = filtro.materia_id;
   if (filtro.tag_id) params.tag_id = filtro.tag_id;
   if (filtro.q?.trim()) params.q = filtro.q.trim();
   if (filtro.mios) params.mios = 1;

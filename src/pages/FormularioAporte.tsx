@@ -13,6 +13,9 @@ import { getMaterias } from "../features/estado_academico/api";
 import {
   EXTENSIONES_PERMITIDAS,
   TAMANO_MAXIMO_MB,
+  MATERIA_CARRERA,
+  NOMBRE_CARRERA,
+  conEmoji,
   formatearTamano,
   iconoDeArchivo,
 } from "../features/aportes/formato";
@@ -78,7 +81,7 @@ function FormularioAporte() {
         setDatos({
           titulo: aporte.titulo,
           descripcion: aporte.descripcion,
-          materia_id: aporte.materia.id,
+          materia_id: aporte.materia?.id ?? 0,
           tag_id: aporte.tag.id,
           link: aporte.link ?? "",
         });
@@ -126,7 +129,6 @@ function FormularioAporte() {
   const validar = (): ErroresCampo => {
     const e: ErroresCampo = {};
     if (!datos.titulo.trim()) e.titulo = "Poné un título.";
-    if (!datos.materia_id) e.materia_id = "Elegí la materia.";
     if (!datos.tag_id) e.tag_id = "Elegí el tipo de aporte.";
 
     const tieneArchivo = archivo || aporteOriginal?.archivo;
@@ -156,7 +158,7 @@ function FormularioAporte() {
         await crearAporte(datos, archivo, setProgreso);
         toast.success("¡Gracias por tu aporte!");
       }
-      navigate(`/aportes?materia_id=${datos.materia_id}`);
+      navigate(`/aportes?materia_id=${datos.materia_id || MATERIA_CARRERA}`);
     } catch (err) {
       const deCampo = erroresDeCampo(err);
       if (Object.keys(deCampo).length > 0) setErrores(deCampo);
@@ -263,7 +265,9 @@ function FormularioAporte() {
               materias={materias}
               value={datos.materia_id}
               onChange={(id) => setDatos((d) => ({ ...d, materia_id: id }))}
+              opcionVacia={NOMBRE_CARRERA}
             />
+            <small className="campo-ayuda">Dejá "{NOMBRE_CARRERA}" si no es de una materia en particular.</small>
             {errores.materia_id && (
               <small className="campo-error">{errores.materia_id}</small>
             )}
@@ -277,7 +281,7 @@ function FormularioAporte() {
               </option>
               {tags.map((t) => (
                 <option key={t.id} value={t.id}>
-                  {t.nombre}
+                  {conEmoji(t.nombre)}
                 </option>
               ))}
             </select>

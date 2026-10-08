@@ -8,6 +8,8 @@ interface Props {
   onChange: (id: number) => void;
   // Texto de la opcion "sin materia" (Todas, Ninguna...). Sin esto no se ofrece.
   opcionVacia?: string;
+  // Opciones fijas que van despues de la vacia (ej. "Toda la carrera")
+  extras?: { id: number; texto: string }[];
   placeholder?: string;
   ariaLabel?: string;
   className?: string;
@@ -26,6 +28,7 @@ function SelectorMateria({
   value,
   onChange,
   opcionVacia,
+  extras,
   placeholder = "Escribí para buscar la materia",
   ariaLabel = "Materia",
   className = "",
@@ -38,6 +41,7 @@ function SelectorMateria({
   const lista = useRef<HTMLUListElement>(null);
 
   const seleccionada = materias.find((m) => m.id === value);
+  const extraElegida = extras?.find((e) => e.id === value);
 
   const opciones = useMemo<Opcion[]>(() => {
     const palabras = normalizar(texto).split(/\s+/).filter(Boolean);
@@ -48,8 +52,9 @@ function SelectorMateria({
       })
       .sort((a, b) => a.nivel - b.nivel || a.nombre.localeCompare(b.nombre, "es"))
       .map((m) => ({ id: m.id, texto: m.nombre, nivel: m.nivel }));
-    return opcionVacia && !palabras.length ? [{ id: 0, texto: opcionVacia }, ...filtradas] : filtradas;
-  }, [materias, texto, opcionVacia]);
+    const fijas: Opcion[] = palabras.length ? [] : [...(opcionVacia ? [{ id: 0, texto: opcionVacia }] : []), ...(extras ?? [])];
+    return [...fijas, ...filtradas];
+  }, [materias, texto, opcionVacia, extras]);
 
   // Al cerrar se vuelve a mostrar el nombre de la materia elegida
   useEffect(() => {
@@ -103,7 +108,9 @@ function SelectorMateria({
     }
   };
 
-  const mostrado = abierto ? texto : (seleccionada?.nombre ?? (value === 0 && opcionVacia ? opcionVacia : ""));
+  const mostrado = abierto
+    ? texto
+    : (seleccionada?.nombre ?? extraElegida?.texto ?? (value === 0 && opcionVacia ? opcionVacia : ""));
 
   return (
     <div className={`selector-materia ${className}`} ref={contenedor}>
@@ -117,7 +124,7 @@ function SelectorMateria({
         aria-activedescendant={abierto && opciones[activa] ? `${id}-${activa}` : undefined}
         autoComplete="off"
         className="control selector-materia__input"
-        placeholder={abierto && seleccionada ? seleccionada.nombre : placeholder}
+        placeholder={abierto && (seleccionada || extraElegida) ? (seleccionada?.nombre ?? extraElegida?.texto) : placeholder}
         value={mostrado}
         onChange={(e) => {
           setTexto(e.target.value);

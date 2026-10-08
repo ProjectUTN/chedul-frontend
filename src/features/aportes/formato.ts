@@ -11,6 +11,30 @@ export const formatearTamano = (bytes: number) => {
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 };
 
+// Emoji de cada tipo de aporte, para reconocerlos de un vistazo
+const EMOJI_TIPO: Record<string, string> = {
+  resumen: "📝",
+  "apunte de clase": "📒",
+  parcial: "✍️",
+  final: "🎓",
+  ejercicios: "🧮",
+  libro: "📚",
+  video: "🎬",
+  otro: "📎",
+};
+
+export const emojiDeTipo = (nombre: string) => EMOJI_TIPO[nombre.trim().toLowerCase()] ?? "📎";
+
+export const conEmoji = (nombre: string) => `${emojiDeTipo(nombre)} ${nombre}`;
+
+// Valor del filtro de materia para ver solo los aportes de toda la carrera
+export const MATERIA_CARRERA = -1;
+
+export const NOMBRE_CARRERA = "Toda la carrera";
+
+export const nombreMateriaAporte = (aporte: { materia: { nombre: string } | null }) =>
+  aporte.materia?.nombre ?? NOMBRE_CARRERA;
+
 export const iconoDeArchivo = (tipo: string) => {
   if (tipo === "application/pdf") return "picture_as_pdf";
   if (tipo.startsWith("image/")) return "image";

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/authProvider";
 import { getProgreso } from "../features/estado_academico/api";
 import { getAportes } from "../features/aportes/api";
-import { formatearFecha } from "../features/aportes/formato";
+import { conEmoji, formatearFecha, MATERIA_CARRERA, nombreMateriaAporte } from "../features/aportes/formato";
 import { getCalendarioAcademico, getEventos } from "../features/calendario/api";
 import { aISO, cuantoFalta, nombreTipo, sumarDias } from "../features/calendario/fechas";
 import { mensajeDeError } from "../api/client";
@@ -214,10 +214,10 @@ function Inicio() {
             <ul className="lista-aportes">
               {aportes.map((a) => (
                 <li key={a.id}>
-                  <Link to={`/aportes?materia_id=${a.materia.id}`}>
+                  <Link to={`/aportes?materia_id=${a.materia?.id ?? MATERIA_CARRERA}`}>
                     <strong>{a.titulo}</strong>
                     <span className="campo-ayuda">
-                      {a.materia.nombre} · {a.tag.nombre} · {formatearFecha(a.creado_en)}
+                      {nombreMateriaAporte(a)} · {conEmoji(a.tag.nombre)} · {formatearFecha(a.creado_en)}
                     </span>
                   </Link>
                 </li>

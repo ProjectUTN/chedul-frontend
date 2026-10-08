@@ -5,7 +5,7 @@ import type { Aporte } from "../../api/types";
 import { mensajeDeError } from "../../api/client";
 import { confirmar } from "../../components/confirmar";
 import { borrarAporte, descargarArchivo, setFavorito } from "./api";
-import { formatearFecha, formatearTamano, iconoDeArchivo } from "./formato";
+import { conEmoji, formatearFecha, formatearTamano, iconoDeArchivo, nombreMateriaAporte } from "./formato";
 import "./aportes.css";
 
 interface AporteCardProps {
@@ -62,8 +62,8 @@ function AporteCard({ aporte, onActualizado, onBorrado }: AporteCardProps) {
   return (
     <article className="aporte-card card">
       <div className="aporte-card__tags">
-        <span className="chip chip-azul">{aporte.tag.nombre}</span>
-        <span className="chip">{aporte.materia.nombre}</span>
+        <span className="chip chip-azul">{conEmoji(aporte.tag.nombre)}</span>
+        <span className="chip">{nombreMateriaAporte(aporte)}</span>
       </div>
 
       <div className="aporte-card__cuerpo">

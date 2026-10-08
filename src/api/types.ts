@@ -100,7 +100,8 @@ export interface Aporte {
   descripcion: string;
   link: string | null;
   creado_en: string;
-  materia: { id: number; nombre: string; nivel: number };
+  // null en los aportes de toda la carrera
+  materia: { id: number; nombre: string; nivel: number } | null;
   tag: AporteTag;
   autor: { id: number; nombre: string };
   archivo: { nombre: string; tipo: string; tamano: number } | null;
