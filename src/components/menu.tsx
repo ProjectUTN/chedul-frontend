@@ -20,7 +20,10 @@ const navigation: Item[] = [
   { title: "Aportes", href: "/aportes", icon: "library_books", principal: true },
   { title: "Horarios", href: "/horarios", icon: "schedule", principal: true },
   { title: "Calendario", corto: "Agenda", href: "/calendario", icon: "calendar_month", principal: true },
-  // Estudiar, electivas, 531, correlativas y mails: todo en una entrada
+  { title: "Estudiar", href: "/herramientas/estudiar", icon: "timer" },
+  { title: "Mapa de correlativas", href: "/correlativas", icon: "account_tree" },
+  { title: "Comunidades", href: "/herramientas/comunidades", icon: "groups" },
+  // Electivas, 531, mails y lo de arriba: todo junto
   { title: "Herramientas", href: "/herramientas", icon: "apps" },
 ];
 
@@ -71,6 +74,14 @@ const Menu = () => {
   // Al navegar se cierra el menu "Más"
   useEffect(() => setMasAbierto(false), [location.pathname]);
 
+  // Herramientas no se marca cuando estas en una herramienta que tiene su
+  // propia entrada (Estudiar, Comunidades)
+  const activo = (item: Item) => {
+    const ruta = location.pathname;
+    const dentro = (href: string) => ruta === href || ruta.startsWith(`${href}/`);
+    return dentro(item.href) && !navigation.some((o) => o.href.startsWith(`${item.href}/`) && dentro(o.href));
+  };
+
   const secundarios = navigation.filter((i) => !i.principal);
   const enSecundario = secundarios.some((i) => location.pathname.startsWith(i.href));
 
@@ -83,9 +94,7 @@ const Menu = () => {
         <ul className="sidebar__menu">
           {navigation.map((item) => (
             <li key={item.href}>
-              <NavLink
-                to={item.href}
-                className={({ isActive }) => (isActive ? "nav-link activo" : "nav-link")}>
+              <NavLink to={item.href} className={() => (activo(item) ? "nav-link activo" : "nav-link")}>
                 <span className="material-symbols-rounded">{item.icon}</span>
                 <span>{item.title}</span>
               </NavLink>
@@ -178,9 +187,7 @@ const Menu = () => {
           <ul className="sheet__lista">
             {secundarios.map((item) => (
               <li key={item.href}>
-                <NavLink
-                  to={item.href}
-                  className={({ isActive }) => (isActive ? "nav-link activo" : "nav-link")}>
+                <NavLink to={item.href} className={() => (activo(item) ? "nav-link activo" : "nav-link")}>
                   <span className="material-symbols-rounded">{item.icon}</span>
                   <span>{item.title}</span>
                 </NavLink>
