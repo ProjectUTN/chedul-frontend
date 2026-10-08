@@ -9,7 +9,6 @@ import { borrarSesion, getRanking, getResumen, getSesiones, participarEnRanking 
 import { AJUSTES_POMODORO, formatoHoras, formatoReloj } from "../features/estudio/useTemporizador";
 import { SESION_GUARDADA, useTemporizadorGlobal } from "../features/estudio/TemporizadorProvider";
 import { avisosSoportados } from "../features/estudio/avisosEstudio";
-import { ventanaAparteSoportada } from "../features/estudio/ventanaAparte";
 import { DIAS_CORTOS, desdeISO, diaSemana } from "../features/calendario/fechas";
 import MetaDiaria from "../features/estudio/MetaDiaria";
 import CalendarioActividad from "../features/estudio/CalendarioActividad";
@@ -74,7 +73,7 @@ function Estudiar() {
     return () => window.removeEventListener(SESION_GUARDADA, recargar);
   }, [recargar]);
 
-  const { t, flotante, setFlotante, avisar, setAvisar } = useTemporizadorGlobal();
+  const { t, flotante, alternarFlotante, flotanteAparte, avisar, setAvisar } = useTemporizadorGlobal();
 
   // Pantalla completa del temporizador, para dejarlo a la vista mientras estudiás
   const reloj = useRef<HTMLElement>(null);
@@ -250,10 +249,14 @@ function Estudiar() {
                 type="button"
                 className="btn btn-secundario"
                 aria-pressed={flotante}
-                onClick={() => setFlotante(!flotante)}
-                title="Una ventanita con el reloj que podés mover y dejar a un costado mientras usás Chedul">
+                onClick={alternarFlotante}
+                title={
+                  flotanteAparte
+                    ? "Una ventana con el reloj que queda por encima de todo, aunque cambies de pestaña o minimices"
+                    : "Una ventana con el reloj que podés mover mientras usás Chedul"
+                }>
                 <span className="material-symbols-rounded">picture_in_picture_alt</span>
-                {flotante ? "Ocultar ventanita" : "Ventanita"}
+                {flotante ? "Cerrar ventana flotante" : "Ventana flotante"}
               </button>
               {avisosSoportados() && (
                 <label className="temporizador__aviso">
@@ -262,12 +265,6 @@ function Estudiar() {
                 </label>
               )}
             </div>
-            <p className="campo-ayuda temporizador__ayuda">
-              {t.modo === "pomodoro"
-                ? "Cada bloque de foco que terminás se guarda solo. Se guarda en tu cuenta: si cerrás la pantalla o lo abrís desde el celu, sigue el mismo reloj."
-                : "Cuando cortes, se guarda lo que estudiaste (desde 1 minuto). Si cerrás la pantalla o lo abrís desde otro dispositivo, sigue el mismo reloj."}
-              {ventanaAparteSoportada() && flotante && " Desde la ventanita podés sacarlo fuera de la pestaña."}
-            </p>
           </section>
 
           <Tareas materias={materias} materiaId={t.materiaId} />
@@ -279,6 +276,7 @@ function Estudiar() {
               resumen={resumen}
               enCurso={enCurso}
               corriendo={t.corriendo && t.fase === "foco"}
+              foco={t.ajustes.foco}
               onMetaCambiada={(meta) => setResumen((r) => (r ? { ...r, meta_diaria: meta } : r))}
             />
           )}

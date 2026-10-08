@@ -251,8 +251,24 @@ export default function useTemporizador({ alumnoId, onSesion, onFin }: Opciones)
 
   useEffect(() => {
     if (!corriendo) return;
-    const id = window.setInterval(() => setAhora(ahoraServidor()), 500);
-    return () => window.clearInterval(id);
+    let worker: Worker | null = null;
+    let id: number | undefined;
+    // El reloj late desde un worker: a una pestaña en segundo plano (o con la
+    // app minimizada) el navegador le frena los timers, a un worker no
+    try {
+      const url = URL.createObjectURL(
+        new Blob(["setInterval(() => postMessage(0), 500)"], { type: "text/javascript" })
+      );
+      worker = new Worker(url);
+      URL.revokeObjectURL(url);
+      worker.onmessage = () => setAhora(ahoraServidor());
+    } catch {
+      id = window.setInterval(() => setAhora(ahoraServidor()), 500);
+    }
+    return () => {
+      worker?.terminate();
+      if (id !== undefined) window.clearInterval(id);
+    };
   }, [corriendo, ahoraServidor]);
 
   // Fin de una fase del pomodoro: el foco se guarda y arranca el descanso;

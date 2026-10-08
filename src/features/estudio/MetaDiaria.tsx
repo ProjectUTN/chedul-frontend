@@ -11,6 +11,8 @@ interface Props {
   // Minutos del bloque que esta corriendo y todavia no se guardo
   enCurso: number;
   corriendo: boolean;
+  // Minutos del pomodoro elegido, para estimar cuantos faltan
+  foco: number;
   onMetaCambiada: (meta: number) => void;
 }
 
@@ -19,9 +21,9 @@ const diasDelMesActual = () => {
   return new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).getDate();
 };
 
-const pomodoros = (minutos: number) => {
-  const cantidad = Math.ceil(minutos / 25);
-  return cantidad === 1 ? "un pomodoro de 25" : `unos ${cantidad} pomodoros de 25`;
+const pomodoros = (minutos: number, foco: number) => {
+  const cantidad = Math.ceil(minutos / foco);
+  return cantidad === 1 ? `un pomodoro de ${foco}` : `unos ${cantidad} pomodoros de ${foco}`;
 };
 
 const horaEn = (minutos: number) =>
@@ -50,7 +52,7 @@ function Pildora({ titulo, minutos, objetivo }: { titulo: string; minutos: numbe
 
 // Meta diaria: cuanto llevás hoy, la medalla del dia, cuanto falta para la
 // proxima y como vas en la semana y el mes.
-function MetaDiaria({ resumen, enCurso, corriendo, onMetaCambiada }: Props) {
+function MetaDiaria({ resumen, enCurso, corriendo, foco, onMetaCambiada }: Props) {
   const [editando, setEditando] = useState(false);
   const [guardando, setGuardando] = useState(false);
   const meta = resumen.meta_diaria;
@@ -109,7 +111,9 @@ function MetaDiaria({ resumen, enCurso, corriendo, onMetaCambiada }: Props) {
             {medalla ? `Medalla de ${NOMBRE_MEDALLA[medalla].toLowerCase()} de hoy. ` : ""}
             {proxima
               ? `Te faltan ${formatoHoras(proxima.faltan)} para ${proxima.medalla === "bronce" ? "cumplir la meta" : `la de ${NOMBRE_MEDALLA[proxima.medalla].toLowerCase()}`}${
-                  corriendo ? `: si seguís, llegás a las ${horaEn(proxima.faltan)}` : ` (${pomodoros(proxima.faltan)})`
+                  corriendo
+                    ? `: si seguís, llegás a las ${horaEn(proxima.faltan)}`
+                    : ` (${pomodoros(proxima.faltan, foco)})`
                 }.`
               : "Llegaste al oro, el máximo del día."}
           </p>

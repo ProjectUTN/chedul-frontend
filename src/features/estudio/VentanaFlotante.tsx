@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
-import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { useTemporizadorGlobal } from "./TemporizadorProvider";
 import { formatoReloj } from "./useTemporizador";
-import { documentPiP, ventanaAparteSoportada } from "./ventanaAparte";
 import "./ventanaFlotante.css";
 
-// Ventanita con el temporizador para dejarla a un costado: se arrastra a
-// cualquier lado, se cierra con la X (el temporizador sigue) y, en los
-// navegadores que lo permiten, se puede sacar fuera de la pestaña.
+// Ventana flotante dentro de la app, para los navegadores que no pueden sacarla
+// fuera de la pestaña: se arrastra a cualquier lado y se cierra con la X (el
+// temporizador sigue).
 
 const CLAVE_POSICION = "chedul.flotante.pos";
 
@@ -31,7 +29,7 @@ const limitar = (pos: Posicion, ancho: number, alto: number): Posicion => ({
   y: Math.min(Math.max(0, pos.y), Math.max(0, window.innerHeight - alto)),
 });
 
-function Reloj({ enAparte = false }: { enAparte?: boolean }) {
+export function Reloj({ enAparte = false }: { enAparte?: boolean }) {
   const { t } = useTemporizadorGlobal();
   const etiqueta = t.modo === "libre" ? "Cronómetro" : t.fase === "foco" ? "Foco" : "Descanso";
 
@@ -73,42 +71,18 @@ function Reloj({ enAparte = false }: { enAparte?: boolean }) {
   );
 }
 
-// Copia los estilos de la app a la ventana que se abre aparte
-const copiarEstilos = (destino: Window) => {
-  for (const hoja of Array.from(document.styleSheets)) {
-    try {
-      const estilo = destino.document.createElement("style");
-      estilo.textContent = Array.from(hoja.cssRules)
-        .map((regla) => regla.cssText)
-        .join("\n");
-      destino.document.head.appendChild(estilo);
-    } catch {
-      if (hoja.href) {
-        const enlace = destino.document.createElement("link");
-        enlace.rel = "stylesheet";
-        enlace.href = hoja.href;
-        destino.document.head.appendChild(enlace);
-      }
-    }
-  }
-  destino.document.documentElement.className = document.documentElement.className;
-  const tema = document.documentElement.dataset.theme;
-  if (tema) destino.document.documentElement.dataset.theme = tema;
-};
-
 function VentanaFlotante() {
-  const { setFlotante } = useTemporizadorGlobal();
+  const { alternarFlotante } = useTemporizadorGlobal();
   const caja = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<Posicion | null>(leerPosicion);
   const arrastre = useRef<{ dx: number; dy: number } | null>(null);
-  const [aparte, setAparte] = useState<Window | null>(null);
 
   const medir = useCallback(() => {
     const r = caja.current?.getBoundingClientRect();
     return { ancho: r?.width ?? 200, alto: r?.height ?? 72 };
   }, []);
 
-  // Si se achica la pantalla, la ventanita no puede quedar afuera
+  // Si se achica la pantalla, la ventana no puede quedar afuera
   useEffect(() => {
     const alRedimensionar = () => {
       setPos((p) => {
@@ -148,27 +122,11 @@ function VentanaFlotante() {
     });
   };
 
-  const sacarDeLaPestana = async () => {
-    const pip = documentPiP();
-    if (!pip) return;
-    try {
-      const ventana = await pip.requestWindow({ width: 260, height: 150 });
-      copiarEstilos(ventana);
-      ventana.addEventListener("pagehide", () => setAparte(null));
-      setAparte(ventana);
-    } catch {
-      // El navegador la rechazo (hay que pedirla con un click): queda la ventanita de siempre
-    }
-  };
-
-  // Al cerrar la ventanita se cierra tambien la que esta aparte
-  useEffect(() => () => aparte?.close(), [aparte]);
-
   const estilo = pos ? { left: pos.x, top: pos.y, right: "auto", bottom: "auto" } : undefined;
 
   return (
     <>
-      {!aparte && (
+      {
         <div ref={caja} className="ventana-flotante" style={estilo} role="region" aria-label="Temporizador de estudio">
           <div
             className="ventana-flotante__asa"
@@ -183,16 +141,6 @@ function VentanaFlotante() {
           </div>
           <Reloj />
           <div className="ventana-flotante__extras">
-            {ventanaAparteSoportada() && (
-              <button
-                type="button"
-                className="mini-reloj__boton"
-                onClick={sacarDeLaPestana}
-                aria-label="Sacar de la pestaña"
-                title="Sacar de la pestaña">
-                <span className="material-symbols-rounded">picture_in_picture_alt</span>
-              </button>
-            )}
             <Link
               to="/herramientas/estudiar"
               className="mini-reloj__boton"
@@ -203,15 +151,14 @@ function VentanaFlotante() {
             <button
               type="button"
               className="mini-reloj__boton"
-              onClick={() => setFlotante(false)}
-              aria-label="Cerrar ventanita"
+              onClick={alternarFlotante}
+              aria-label="Cerrar ventana flotante"
               title="Cerrar (el temporizador sigue)">
               <span className="material-symbols-rounded">close</span>
             </button>
           </div>
         </div>
-      )}
-      {aparte && createPortal(<Reloj enAparte />, aparte.document.body)}
+      }
     </>
   );
 }

@@ -59,7 +59,6 @@
 
 .temporizador:fullscreen .temporizador__materia,
 .temporizador:fullscreen .temporizador__ajustes,
-.temporizador:fullscreen .temporizador__ayuda,
 .temporizador:fullscreen > .segmented {
   display: none;
 }
@@ -134,10 +133,6 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.5rem;
-}
-
-.temporizador__ayuda {
-  text-align: center;
 }
 
 /* ---------- Numeros y graficos ---------- */

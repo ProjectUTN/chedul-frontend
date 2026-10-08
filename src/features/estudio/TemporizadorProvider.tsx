@@ -1,4 +1,5 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
 import { mensajeDeError } from "../../api/client";
 import { useAuth } from "../../context/authProvider";
@@ -11,10 +12,13 @@ import {
   permisoDeAvisos,
 } from "./avisosEstudio";
 import useTemporizador, { formatoHoras, formatoReloj } from "./useTemporizador";
-import VentanaFlotante from "./VentanaFlotante";
+import VentanaFlotante, { Reloj } from "./VentanaFlotante";
+import { abrirVentanaAparte, ventanaAparteSoportada } from "./ventanaAparte";
 
 // El temporizador vive aca arriba (en el Layout) para que siga andando y se
-// pueda ver en una ventanita flotante desde cualquier seccion.
+// pueda ver en una ventana flotante: en Chrome y Edge de escritorio queda por
+// encima de todo (aunque cambies de pestaña o minimices); en el resto, flotando
+// dentro de la app.
 
 export const SESION_GUARDADA = "chedul:sesion-guardada";
 
@@ -22,8 +26,11 @@ type Temporizador = ReturnType<typeof useTemporizador>;
 
 interface Contexto {
   t: Temporizador;
+  // Hay una ventana flotante abierta (dentro de la app o fuera de la pestaña)
   flotante: boolean;
-  setFlotante: (abierta: boolean) => void;
+  alternarFlotante: () => Promise<void>;
+  // El navegador puede sacarla fuera de la pestaña
+  flotanteAparte: boolean;
   avisar: boolean;
   setAvisar: (activo: boolean) => Promise<void>;
 }
@@ -50,7 +57,11 @@ const leerFlotante = () => {
 export function TemporizadorProvider({ alumnoId, children }: { alumnoId: number; children: ReactNode }) {
   const { user } = useAuth();
   const [avisar, setAvisarEstado] = useState(leerPreferenciaAvisos);
-  const [flotante, setFlotanteEstado] = useState(leerFlotante);
+  const [flotanteEnApp, setFlotanteEstado] = useState(leerFlotante);
+  // Ventana siempre visible, fuera de la pestaña
+  const [aparte, setAparte] = useState<Window | null>(null);
+  const aparteRef = useRef<Window | null>(null);
+  aparteRef.current = aparte;
 
   const setFlotante = useCallback((abierta: boolean) => {
     setFlotanteEstado(abierta);
@@ -60,6 +71,27 @@ export function TemporizadorProvider({ alumnoId, children }: { alumnoId: number;
       // Sin storage solo se pierde el recuerdo
     }
   }, []);
+
+  const alternarFlotante = useCallback(async () => {
+    if (aparteRef.current) {
+      aparteRef.current.close();
+      return;
+    }
+    if (ventanaAparteSoportada()) {
+      try {
+        const ventana = await abrirVentanaAparte();
+        ventana.addEventListener("pagehide", () => setAparte(null));
+        setAparte(ventana);
+        return;
+      } catch {
+        toast.info("Tu navegador no dejó abrir la ventana flotante fuera de la pestaña. La dejamos dentro de Chedul.");
+      }
+    }
+    setFlotante(!flotanteEnApp);
+  }, [flotanteEnApp, setFlotante]);
+
+  // Al salir de la sesion se cierra la ventana que quedo afuera
+  useEffect(() => () => aparteRef.current?.close(), []);
 
   const setAvisar = useCallback(async (activo: boolean) => {
     if (!activo) {
@@ -116,15 +148,17 @@ export function TemporizadorProvider({ alumnoId, children }: { alumnoId: number;
     };
   }, [t.empezado, t.mostrarMs, t.fase, t.modo]);
 
+  const flotante = aparte !== null || flotanteEnApp;
   const valor = useMemo(
-    () => ({ t, flotante, setFlotante, avisar, setAvisar }),
-    [t, flotante, setFlotante, avisar, setAvisar]
+    () => ({ t, flotante, alternarFlotante, flotanteAparte: ventanaAparteSoportada(), avisar, setAvisar }),
+    [t, flotante, alternarFlotante, avisar, setAvisar]
   );
 
   return (
     <TemporizadorContext.Provider value={valor}>
       {children}
-      {flotante && user && <VentanaFlotante />}
+      {flotanteEnApp && !aparte && user && <VentanaFlotante />}
+      {aparte && createPortal(<Reloj enAparte />, aparte.document.body)}
     </TemporizadorContext.Provider>
   );
 }
