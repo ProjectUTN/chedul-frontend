@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import CondicionEnMaterias from "../features/estado_academico/CondicionEnMaterias";
 import YearSelector from "../features/estado_academico/YearSelector";
+import CalculadoraElectivas from "../features/estado_academico/CalculadoraElectivas";
 import {
   borrarCondicion,
   getCondiciones,
@@ -118,6 +119,8 @@ function Estado() {
           </span>
         )}
       </div>
+
+      {!cargando && <CalculadoraElectivas materias={materias} misCondiciones={misCondiciones} />}
 
       <YearSelector nivelActual={nivel} onChange={setNivel} />
 
