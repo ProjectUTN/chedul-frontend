@@ -39,7 +39,13 @@ const claseEstado = (estado: string) => `estado--${estado.toLowerCase()}`;
 const textoDestino = (destino: string, nota: number | null) =>
   destino === "Aprobada" && nota ? `Aprobada con ${nota}` : destino === "Regularizada" ? "Regular" : destino;
 
-function ImportarSysacad() {
+interface Props {
+  // En la bienvenida va sin encabezado y al terminar sigue con el siguiente paso
+  embebido?: boolean;
+  alTerminar?: () => void;
+}
+
+function ImportarSysacad({ embebido = false, alTerminar }: Props) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [materias, setMaterias] = useState<Materia[]>([]);
@@ -157,7 +163,8 @@ function ImportarSysacad() {
       if (empiezan.length > 0) {
         await agregarConComision(empiezan.map((p) => ({ materia: materia(p.materiaId), codigo: p.fila.comision })));
       }
-      navigate("/estado");
+      if (alTerminar) alTerminar();
+      else navigate("/estado");
     } catch (err) {
       toast.error(mensajeDeError(err, "No se pudo importar todo, revisá tu estado académico"));
       setMis(await getMisCondiciones().catch(() => mis));
@@ -224,16 +231,18 @@ function ImportarSysacad() {
 
   return (
     <>
-      <div className="page-header">
-        <div>
-          <Link to="/estado" className="volver">
-            <span className="material-symbols-rounded">arrow_back</span>
-            Estado académico
-          </Link>
-          <h1>Importar de SysAcad</h1>
-          <p>Traé tu estado académico de SysAcad en un paso, sin cargar materia por materia.</p>
+      {!embebido && (
+        <div className="page-header">
+          <div>
+            <Link to="/estado" className="volver">
+              <span className="material-symbols-rounded">arrow_back</span>
+              Estado académico
+            </Link>
+            <h1>Importar de SysAcad</h1>
+            <p>Traé tu estado académico de SysAcad en un paso, sin cargar materia por materia.</p>
+          </div>
         </div>
-      </div>
+      )}
 
       {error && <p className="form-error">{error}</p>}
 

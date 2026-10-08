@@ -1,8 +1,9 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authProvider";
-import { getProgreso } from "../features/estado_academico/api";
+import { getMisCondiciones, getProgreso } from "../features/estado_academico/api";
+import { bienvenidaVista } from "../features/bienvenida/bienvenida";
 import { getAportes } from "../features/aportes/api";
 import { conEmoji, formatearFecha, MATERIA_CARRERA, nombreMateriaAporte } from "../features/aportes/formato";
 import { getCalendarioAcademico, getEventos } from "../features/calendario/api";
@@ -26,6 +27,7 @@ const diaMes = (iso: string) => iso.split("-").reverse().slice(0, 2).join("/");
 
 function Inicio() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [progreso, setProgreso] = useState<Progreso | null>(null);
   const [aportes, setAportes] = useState<Aporte[]>([]);
   const [proximos, setProximos] = useState<Evento[]>([]);
@@ -38,6 +40,16 @@ function Inicio() {
       .then((data) => setProximos(data.slice(0, MAX_PROXIMAS)))
       .catch(() => {});
   };
+
+  // La primera vez, sin materias cargadas, se pasa por la bienvenida
+  useEffect(() => {
+    if (!user || bienvenidaVista(user.id)) return;
+    getMisCondiciones()
+      .then((mis) => {
+        if (mis.length === 0) navigate("/bienvenida", { replace: true });
+      })
+      .catch(() => {});
+  }, [user, navigate]);
 
   useEffect(() => {
     getProgreso()

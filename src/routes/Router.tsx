@@ -19,6 +19,7 @@ import Comunidades from "../pages/Comunidades";
 import Ordenanza531 from "../pages/Ordenanza531";
 import Perfil from "../pages/Perfil";
 import ImportarSysacad from "../pages/ImportarSysacad";
+import Bienvenida from "../pages/Bienvenida";
 
 export const AppRouter = () => {
   return (
@@ -33,6 +34,7 @@ export const AppRouter = () => {
 
         {/* Rutas privadas */}
         <Route element={<ProtectedRoute redirectPath="/login" />}>
+          <Route path="/bienvenida" element={<Bienvenida />} />
           <Route element={<Layout />}>
             <Route path="/inicio" element={<Inicio />} />
             <Route path="/estado" element={<Estado />} />
