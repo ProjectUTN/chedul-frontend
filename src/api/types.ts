@@ -165,3 +165,40 @@ export interface Comision {
   cuatrimestre: string;
   horarios: HorarioComision[];
 }
+
+export type ModoEstudio = "pomodoro" | "libre";
+
+// Un rato de estudio terminado. fin es la fecha y hora en que termino (ISO).
+export interface SesionEstudio {
+  id: number;
+  modo: ModoEstudio;
+  minutos: number;
+  fin: string;
+  materia: MateriaResumen | null;
+}
+
+export interface ResumenEstudio {
+  hoy_minutos: number;
+  semana_minutos: number;
+  racha_dias: number;
+  // Los ultimos 28 dias, del mas viejo a hoy
+  por_dia: { fecha: string; minutos: number }[];
+  // Esta semana; sin materia viene con materia_id null
+  por_materia: { materia_id: number | null; nombre: string; minutos: number }[];
+}
+
+export interface PuestoRanking {
+  posicion: number;
+  nombre: string;
+  minutos: number;
+  soy_yo: boolean;
+}
+
+// Ranking de la semana (lunes a domingo); solo aparecen los que se suman
+export interface RankingEstudio {
+  participo: boolean;
+  desde: string;
+  hasta: string;
+  participantes: number;
+  puestos: PuestoRanking[];
+}

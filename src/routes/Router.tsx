@@ -12,6 +12,7 @@ import Calendario from "../pages/Calendario";
 import Horarios from "../pages/Horarios";
 import MapaCorrelativas from "../pages/MapaCorrelativas";
 import Landing from "../pages/Landing";
+import Estudiar from "../pages/Estudiar";
 
 export const AppRouter = () => {
   return (
@@ -34,6 +35,7 @@ export const AppRouter = () => {
             <Route path="/aportes/:id/editar" element={<FormularioAporte />} />
             <Route path="/calendario" element={<Calendario />} />
             <Route path="/horarios" element={<Horarios />} />
+            <Route path="/estudiar" element={<Estudiar />} />
             <Route path="/correlativas" element={<MapaCorrelativas />} />
             <Route path="/correos" element={<Mails />} />
           </Route>
