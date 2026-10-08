@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import CondicionEnMaterias from "../features/estado_academico/CondicionEnMaterias";
 import YearSelector from "../features/estado_academico/YearSelector";
@@ -114,11 +115,17 @@ function Estado() {
           <h1>Estado académico</h1>
           <p>Llevá registro de tu progreso, así podés ver tus estadísticas y qué materias podés cursar en Inicio.</p>
         </div>
-        {!cargando && (
-          <span className="chip chip-azul">
-            {aprobadas} de {materias.length} aprobadas
-          </span>
-        )}
+        <div className="estado-cabecera">
+          {!cargando && (
+            <span className="chip chip-azul">
+              {aprobadas} de {materias.length} aprobadas
+            </span>
+          )}
+          <Link to="/estado/importar" className="btn btn-secundario btn-chico">
+            <span className="material-symbols-rounded">download</span>
+            Importar de SysAcad
+          </Link>
+        </div>
       </div>
 
       <YearSelector nivelActual={nivel} onChange={setNivel} />

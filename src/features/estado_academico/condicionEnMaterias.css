@@ -271,3 +271,10 @@
   font-weight: 400;
   font-size: 0.8125rem;
 }
+
+.estado-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}

@@ -154,3 +154,28 @@ export const sacarVariasDelHorario = async (materias: MateriaBasica[]) => {
     toast.error("No se pudo actualizar tu horario, revisalo en Horarios");
   }
 };
+
+// Para lo importado de SysAcad: SysAcad dice en que comision cursa cada materia
+// (K5.1...), asi que esas se cargan directo; si no la encuentra pregunta.
+export const agregarConComision = async (lista: { materia: MateriaBasica; codigo: string | null }[]) => {
+  try {
+    const clases = await getClases();
+    let agregadas = 0;
+    for (const { materia, codigo } of lista) {
+      if (yaEstaEnHorario(clases, materia.id)) continue;
+      const comisiones = comisionesParaAutomatico(await getComisiones(materia.id));
+      const comision = comisiones.find((c) => c.codigo === codigo);
+      if (comision) {
+        await cargarComision(materia, comision);
+        agregadas++;
+      } else if (await agregarAlHorario(materia, clases)) {
+        agregadas++;
+      }
+    }
+    if (agregadas > 0) {
+      toast.success(agregadas === 1 ? "Agregamos 1 materia a tu horario" : `Agregamos ${agregadas} materias a tu horario`);
+    }
+  } catch {
+    toast.error("No se pudo armar tu horario, revisalo en Horarios");
+  }
+};

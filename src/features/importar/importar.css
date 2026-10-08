@@ -1,0 +1,154 @@
+.importar-paso {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  max-width: 52rem;
+}
+
+.importar-paso h2 {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+.importar-paso p {
+  margin: 0;
+}
+
+.importar-pasos {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.25rem;
+  line-height: 1.5;
+}
+
+kbd {
+  padding: 0 0.3rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--border-strong);
+  background-color: var(--surface-2);
+  font-family: inherit;
+  font-size: 0.8125rem;
+}
+
+.importar-texto {
+  min-height: 7rem;
+  resize: vertical;
+  font: inherit;
+}
+
+.importar-archivo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: flex-start;
+  color: var(--accent-text);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.importar-archivo input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.importar-archivo:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+.importar-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.importar-fila {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--radius-chico);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--estado, var(--border));
+  background-color: var(--surface);
+}
+
+.importar-fila__check {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+}
+
+.importar-fila__info {
+  display: grid;
+  gap: 0.125rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.importar-fila__info small {
+  overflow-wrap: anywhere;
+}
+
+.importar-fila__cambio {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.importar-fila__cambio .material-symbols-rounded {
+  font-size: 1rem;
+  color: var(--text-3);
+}
+
+.importar-estado {
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--estado, var(--text-2));
+  background-color: var(--estado-fondo, var(--surface-3));
+}
+
+.importar-mas summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0.25rem 0;
+}
+
+.importar-mas .importar-lista {
+  margin-top: 0.5rem;
+}
+
+.importar-acciones {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.5rem;
+}
+
+@media (max-width: 600px) {
+  .importar-fila {
+    flex-wrap: wrap;
+  }
+
+  .importar-fila__cambio {
+    width: 100%;
+    padding-left: 1.875rem;
+  }
+
+  .importar-acciones .btn {
+    width: 100%;
+  }
+}

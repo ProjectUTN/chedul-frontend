@@ -28,6 +28,12 @@ const HERRAMIENTAS = [
     detalle: "Si ya podés cursar lo que te falta sin correlativas.",
   },
   {
+    href: "/estado/importar",
+    icono: "download",
+    titulo: "Importar de SysAcad",
+    detalle: "Traé tu estado académico copiándolo de SysAcad.",
+  },
+  {
     href: "/correlativas",
     icono: "account_tree",
     titulo: "Mapa de correlativas",

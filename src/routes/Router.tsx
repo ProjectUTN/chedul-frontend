@@ -18,6 +18,7 @@ import Electivas from "../pages/Electivas";
 import Comunidades from "../pages/Comunidades";
 import Ordenanza531 from "../pages/Ordenanza531";
 import Perfil from "../pages/Perfil";
+import ImportarSysacad from "../pages/ImportarSysacad";
 
 export const AppRouter = () => {
   return (
@@ -35,6 +36,7 @@ export const AppRouter = () => {
           <Route element={<Layout />}>
             <Route path="/inicio" element={<Inicio />} />
             <Route path="/estado" element={<Estado />} />
+            <Route path="/estado/importar" element={<ImportarSysacad />} />
             <Route path="/aportes" element={<Aportes />} />
             <Route path="/aportes/nuevo" element={<FormularioAporte />} />
             <Route path="/aportes/:id/editar" element={<FormularioAporte />} />
