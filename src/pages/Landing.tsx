@@ -85,10 +85,18 @@ function Captura({ claro, oscuro, alt, className = "" }: { claro: string; oscuro
 
 // Landing es la pagina publica que se ve antes de iniciar sesion
 // El equipo que hace Chedul, para Quiénes somos
-const EQUIPO = [
-  { nombre: "Eduardo Ramírez", rol: "Idea, coordinación y fullstack" },
-  { nombre: "Lautaro Acosta", rol: "Backend e infraestructura" },
-  { nombre: "Tobías Stegmayer", rol: "Frontend y UI" },
+const EQUIPO: { nombre: string; rol: string; link: string; foto?: string }[] = [
+  { nombre: "Eduardo Ramírez", rol: "Idea, coordinación y fullstack", link: "https://eduramirez.dev" },
+  {
+    nombre: "Lautaro Acosta Quintana",
+    rol: "Backend e infraestructura",
+    link: "https://www.linkedin.com/in/lautaro-acosta-quintana/",
+  },
+  {
+    nombre: "Tobías Stegmayer",
+    rol: "Frontend y UI",
+    link: "https://www.linkedin.com/in/tobias-stegmayer-612551218/",
+  },
 ];
 
 function Landing() {
@@ -265,14 +273,21 @@ function Landing() {
           <ul className="landing-equipo">
             {EQUIPO.map((persona) => (
               <li key={persona.nombre}>
-                <span className="landing-equipo__avatar" aria-hidden="true">
-                  {persona.nombre
-                    .split(" ")
-                    .map((p) => p[0])
-                    .join("")}
-                </span>
+                {persona.foto ? (
+                  <img className="landing-equipo__avatar" src={persona.foto} alt="" loading="lazy" />
+                ) : (
+                  <span className="landing-equipo__avatar" aria-hidden="true">
+                    {persona.nombre
+                      .split(" ")
+                      .slice(0, 2)
+                      .map((p) => p[0])
+                      .join("")}
+                  </span>
+                )}
                 <div>
-                  <strong>{persona.nombre}</strong>
+                  <a href={persona.link} target="_blank" rel="noopener noreferrer">
+                    {persona.nombre}
+                  </a>
                   <span>{persona.rol}</span>
                 </div>
               </li>

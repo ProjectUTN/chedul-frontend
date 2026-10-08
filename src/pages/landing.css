@@ -426,6 +426,20 @@
   line-height: 1.3;
 }
 
+.landing-equipo__avatar {
+  object-fit: cover;
+}
+
+.landing-equipo div a {
+  font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+}
+
+.landing-equipo div a:hover {
+  text-decoration: underline;
+}
+
 .landing-equipo div span {
   color: var(--text-3);
   font-size: 0.8125rem;
