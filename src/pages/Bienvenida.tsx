@@ -198,21 +198,33 @@ function Bienvenida() {
               Contanos cómo vas y Chedul calcula qué podés cursar, tu progreso y tus horarios.
             </p>
             <div className="bienvenida-opciones">
-              <button type="button" className="bienvenida-opcion" onClick={() => ir({ tipo: "importar" })}>
-                <span className="material-symbols-rounded">bolt</span>
-                <strong>Importar de SysAcad</strong>
-                <span>Copiás tu estado académico y listo. Lo más rápido.</span>
-                <span className="chip chip-azul">Recomendado</span>
+              <button
+                type="button"
+                className="bienvenida-opcion bienvenida-opcion--destacada opcion--azul"
+                onClick={() => ir({ tipo: "importar" })}>
+                <span className="bienvenida-opcion__icono material-symbols-rounded">bolt</span>
+                <span className="bienvenida-opcion__texto">
+                  <strong>Importar de SysAcad</strong>
+                  <span>Copiás tu estado académico y listo. Lo más rápido.</span>
+                </span>
+                <span className="bienvenida-opcion__flecha material-symbols-rounded">arrow_forward</span>
+                <span className="bienvenida-opcion__sello">Recomendado</span>
               </button>
-              <button type="button" className="bienvenida-opcion" onClick={() => ir({ tipo: "anio" })}>
-                <span className="material-symbols-rounded">checklist</span>
-                <strong>Completarlo a mano</strong>
-                <span>Te preguntamos año por año, con todo ya sugerido.</span>
+              <button type="button" className="bienvenida-opcion opcion--lila" onClick={() => ir({ tipo: "anio" })}>
+                <span className="bienvenida-opcion__icono material-symbols-rounded">checklist</span>
+                <span className="bienvenida-opcion__texto">
+                  <strong>Completarlo a mano</strong>
+                  <span>Te preguntamos año por año, con todo ya sugerido.</span>
+                </span>
+                <span className="bienvenida-opcion__flecha material-symbols-rounded">arrow_forward</span>
               </button>
-              <button type="button" className="bienvenida-opcion" onClick={() => elegirAnio(1)}>
-                <span className="material-symbols-rounded">school</span>
-                <strong>Recién empiezo</strong>
-                <span>Arrancás 1er año: te armamos el horario.</span>
+              <button type="button" className="bienvenida-opcion opcion--verde" onClick={() => elegirAnio(1)}>
+                <span className="bienvenida-opcion__icono material-symbols-rounded">rocket_launch</span>
+                <span className="bienvenida-opcion__texto">
+                  <strong>Recién empiezo</strong>
+                  <span>Arrancás 1er año: te armamos el horario.</span>
+                </span>
+                <span className="bienvenida-opcion__flecha material-symbols-rounded">arrow_forward</span>
               </button>
             </div>
             <button type="button" className="bienvenida__despues" onClick={() => terminar()}>
