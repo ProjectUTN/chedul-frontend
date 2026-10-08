@@ -1,4 +1,4 @@
-import { api } from "../../api/client";
+import { api, API_URL } from "../../api/client";
 import type { Clase, Comision, Evento, FechaAcademica, TipoClase, TipoEvento } from "../../api/types";
 
 export interface DatosEvento {
@@ -84,4 +84,23 @@ export const borrarClase = async (id: number) => {
 export const getComisiones = async (materiaId: number) => {
   const response = await api.get<Comision[]>(`/materias/${materiaId}/comisiones`);
   return response.data;
+};
+
+// Token del link de calendario (.ics). La primera vez la API lo crea.
+export const getSuscripcionCalendario = async () => {
+  const response = await api.get<{ token: string }>("/calendario/suscripcion");
+  return response.data.token;
+};
+
+// Cambia el token: el link anterior deja de andar
+export const renovarSuscripcionCalendario = async () => {
+  const response = await api.post<{ token: string }>("/calendario/suscripcion/renovar");
+  return response.data.token;
+};
+
+// Link publico del calendario. En produccion la API va por el mismo dominio,
+// asi que la URL relativa se completa con el origen.
+export const linkCalendario = (token: string) => {
+  const base = API_URL.startsWith("http") ? API_URL : `${window.location.origin}${API_URL}`;
+  return `${base}/calendario/ics/${token}.ics`;
 };

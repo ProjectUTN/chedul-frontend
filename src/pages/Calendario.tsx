@@ -4,6 +4,7 @@ import { academicasDelDia, aISO, desdeISO, diasDelMes, fechaLarga, MESES, nombre
 import VistaMes from "../features/calendario/VistaMes";
 import Modal from "../features/calendario/Modal";
 import EventoForm from "../features/calendario/EventoForm";
+import SincronizarCalendario from "../features/calendario/SincronizarCalendario";
 import { getMaterias } from "../features/estado_academico/api";
 import { useAuth } from "../context/authProvider";
 import { mensajeDeError } from "../api/client";
@@ -27,6 +28,7 @@ function Calendario() {
   const [error, setError] = useState("");
   const [recarga, setRecarga] = useState(0);
   const [edicion, setEdicion] = useState<Edicion | null>(null);
+  const [sincronizando, setSincronizando] = useState(false);
 
   const anio = referencia.getFullYear();
   const mes = referencia.getMonth();
@@ -95,6 +97,10 @@ function Calendario() {
           <p>Anotá parciales, finales y entregas para que no se te pase ninguno.</p>
         </div>
         <div className="calendario-acciones">
+          <button className="btn btn-secundario" onClick={() => setSincronizando(true)}>
+            <span className="material-symbols-rounded">sync</span>
+            Google Calendar
+          </button>
           <button
             className="btn btn-primario fab-movil"
             onClick={() => setEdicion({ evento: null, fecha: seleccionado })}>
@@ -193,6 +199,10 @@ function Calendario() {
         {edicion && (
           <EventoForm evento={edicion.evento} fechaInicial={edicion.fecha} materias={materias} onGuardado={guardado} />
         )}
+      </Modal>
+
+      <Modal abierto={sincronizando} onCerrar={() => setSincronizando(false)} titulo="Ver en Google Calendar">
+        {sincronizando && <SincronizarCalendario />}
       </Modal>
     </>
   );

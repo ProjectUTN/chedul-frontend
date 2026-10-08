@@ -6,6 +6,7 @@ import { seCursaEl } from "../features/calendario/comisiones";
 import Modal from "../features/calendario/Modal";
 import EventoForm from "../features/calendario/EventoForm";
 import ClaseForm from "../features/calendario/ClaseForm";
+import SincronizarCalendario from "../features/calendario/SincronizarCalendario";
 import { getMaterias } from "../features/estado_academico/api";
 import { useAuth } from "../context/authProvider";
 import { mensajeDeError } from "../api/client";
@@ -26,6 +27,7 @@ function Horarios() {
   const [error, setError] = useState("");
   const [recarga, setRecarga] = useState(0);
   const [edicion, setEdicion] = useState<Edicion | null>(null);
+  const [sincronizando, setSincronizando] = useState(false);
 
   const lunes = useMemo(() => inicioSemana(referencia), [referencia]);
   const domingo = sumarDias(lunes, 6);
@@ -76,6 +78,10 @@ function Horarios() {
           <p>Tu semana: clases, trabajo y lo que se repita. Las materias que marcás como cursando se agregan solas.</p>
         </div>
         <div className="calendario-acciones">
+          <button className="btn btn-secundario" onClick={() => setSincronizando(true)}>
+            <span className="material-symbols-rounded">sync</span>
+            Google Calendar
+          </button>
           <button
             className="btn btn-primario fab-movil"
             onClick={() =>
@@ -154,6 +160,10 @@ function Horarios() {
         {edicion?.tipo === "clase" && (
           <ClaseForm clase={edicion.clase} diaInicial={edicion.dia} materias={materias} onGuardado={guardado} />
         )}
+      </Modal>
+
+      <Modal abierto={sincronizando} onCerrar={() => setSincronizando(false)} titulo="Ver en Google Calendar">
+        {sincronizando && <SincronizarCalendario />}
       </Modal>
     </>
   );
