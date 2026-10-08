@@ -1,5 +1,9 @@
 .bienvenida {
-  min-height: 100dvh;
+  /* El body no scrollea (la app scrollea adentro del layout), asi que la
+     bienvenida, que va sin layout, tiene su propio scroll */
+  height: 100dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   background: radial-gradient(60rem 30rem at 50% -10rem, var(--accent-soft), transparent 70%), var(--bg);
