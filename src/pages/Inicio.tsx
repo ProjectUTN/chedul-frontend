@@ -7,6 +7,7 @@ import { getAportes } from "../features/aportes/api";
 import { conEmoji, formatearFecha, MATERIA_CARRERA, nombreMateriaAporte } from "../features/aportes/formato";
 import { getCalendarioAcademico, getEventos } from "../features/calendario/api";
 import { aISO, cuantoFalta, nombreTipo, sumarDias } from "../features/calendario/fechas";
+import EventosConfirmados from "../features/calendario/EventosConfirmados";
 import { mensajeDeError } from "../api/client";
 import type { Aporte, Evento, FechaAcademica, Progreso } from "../api/types";
 import "../features/calendario/calendario.css";
@@ -31,6 +32,13 @@ function Inicio() {
   const [academicas, setAcademicas] = useState<FechaAcademica[]>([]);
   const [error, setError] = useState("");
 
+  const recargarProximos = () => {
+    const hoy = new Date();
+    getEventos(aISO(hoy), aISO(sumarDias(hoy, 60)))
+      .then((data) => setProximos(data.slice(0, MAX_PROXIMAS)))
+      .catch(() => {});
+  };
+
   useEffect(() => {
     getProgreso()
       .then(setProgreso)
@@ -38,10 +46,8 @@ function Inicio() {
     getAportes({ limite: 4 })
       .then((data) => setAportes(data.items))
       .catch(() => {});
+    recargarProximos();
     const hoy = new Date();
-    getEventos(aISO(hoy), aISO(sumarDias(hoy, 60)))
-      .then((data) => setProximos(data.slice(0, MAX_PROXIMAS)))
-      .catch(() => {});
     getCalendarioAcademico(aISO(hoy), aISO(sumarDias(hoy, 60)))
       .then((data) => setAcademicas(data.filter((f) => ACADEMICAS_EN_INICIO.has(f.tipo))))
       .catch(() => {});
@@ -75,6 +81,8 @@ function Inicio() {
       </div>
 
       {error && <p className="form-error">{error}</p>}
+
+      <EventosConfirmados onAgregado={recargarProximos} />
 
       {progreso && (
         <section className="estadisticas" aria-label="Estadísticas">

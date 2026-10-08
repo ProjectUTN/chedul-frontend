@@ -794,3 +794,64 @@
     justify-content: center;
   }
 }
+
+/* Fechas confirmadas por la comision */
+.confirmados {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.confirmado {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 1rem;
+  border-left: 4px solid var(--evento, var(--accent));
+}
+
+.confirmado__icono {
+  color: var(--evento, var(--accent));
+  font-size: 1.75rem;
+}
+
+.confirmado__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.confirmado__texto .campo-ayuda {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.confirmado__check {
+  font-size: 1rem;
+  color: var(--green);
+}
+
+.confirmado__acciones {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .confirmado {
+    flex-wrap: wrap;
+  }
+
+  .confirmado__acciones {
+    width: 100%;
+  }
+
+  .confirmado__acciones .btn {
+    flex: 1;
+    justify-content: center;
+  }
+}

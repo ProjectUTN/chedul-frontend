@@ -1,5 +1,5 @@
 import { api, API_URL } from "../../api/client";
-import type { Clase, Comision, Evento, FechaAcademica, TipoClase, TipoEvento } from "../../api/types";
+import type { Clase, Comision, Evento, EventoConfirmado, FechaAcademica, TipoClase, TipoEvento } from "../../api/types";
 
 export interface DatosEvento {
   titulo: string;
@@ -103,4 +103,19 @@ export const renovarSuscripcionCalendario = async () => {
 export const linkCalendario = (token: string) => {
   const base = API_URL.startsWith("http") ? API_URL : `${window.location.origin}${API_URL}`;
   return `${base}/calendario/ics/${token}.ics`;
+};
+
+export const getEventosConfirmados = async () => {
+  const response = await api.get<EventoConfirmado[]>("/eventos/confirmados");
+  return response.data;
+};
+
+// "No es así": deja de mostrarse y cuenta en contra
+export const desmentirEvento = async (e: EventoConfirmado) => {
+  await api.post("/eventos/confirmados/desmentir", {
+    materia_id: e.materia.id,
+    comision_id: e.comision_id,
+    tipo: e.tipo,
+    fecha: e.fecha,
+  });
 };

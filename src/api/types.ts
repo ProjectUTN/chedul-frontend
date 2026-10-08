@@ -121,6 +121,18 @@ export interface ListaAportes {
 
 export type TipoEvento = "parcial" | "final" | "entrega" | "recordatorio" | "otro";
 
+// Parcial, entrega o final que cargaron varios compañeros de la comision (o
+// con la materia regular, si es un final) y vos todavia no tenes
+export interface EventoConfirmado {
+  materia: { id: number; nombre: string };
+  // 0 en los finales
+  comision_id: number;
+  tipo: "parcial" | "entrega" | "final";
+  fecha: string;
+  hora: string | null;
+  confirmaciones: number;
+}
+
 export interface MateriaResumen {
   id: number;
   nombre: string;

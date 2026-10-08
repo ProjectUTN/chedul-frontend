@@ -5,6 +5,7 @@ import VistaMes from "../features/calendario/VistaMes";
 import Modal from "../features/calendario/Modal";
 import EventoForm from "../features/calendario/EventoForm";
 import SincronizarCalendario from "../features/calendario/SincronizarCalendario";
+import EventosConfirmados from "../features/calendario/EventosConfirmados";
 import { getMaterias } from "../features/estado_academico/api";
 import { useAuth } from "../context/authProvider";
 import { mensajeDeError } from "../api/client";
@@ -111,6 +112,8 @@ function Calendario() {
       </header>
 
       {error && <p className="form-error">{error}</p>}
+
+      <EventosConfirmados onAgregado={() => setRecarga((n) => n + 1)} />
 
       <div className="calendario-barra">
         <div className="calendario-nav">
