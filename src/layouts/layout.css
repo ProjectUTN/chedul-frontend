@@ -18,7 +18,9 @@
     radial-gradient(40rem 22rem at 0% -15%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%);
 }
 
-.main-content > * {
+/* Los <dialog> quedan afuera: si no, toman el ancho de la pagina y en el
+   celular ocupan toda la pantalla */
+.main-content > :not(dialog) {
   /* Sin esto, los bloques con scroll propio se achican a cero */
   flex-shrink: 0;
   width: 100%;

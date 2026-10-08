@@ -401,6 +401,7 @@
 .modal {
   width: min(32rem, calc(100vw - 2rem));
   max-height: calc(100dvh - 2rem);
+  overscroll-behavior: contain;
   padding: 0;
   border: 1px solid var(--clr-bg-300);
   border-radius: var(--radius);
@@ -444,6 +445,17 @@
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
+}
+
+/* Si el formulario no entra en la pantalla, Guardar queda siempre a mano */
+.modal .calendario-form__acciones {
+  position: sticky;
+  bottom: 0;
+  margin-inline: -1.25rem;
+  padding: 0.75rem 1.25rem 1.25rem;
+  margin-bottom: -1.25rem;
+  background-color: var(--clr-bg-600);
+  border-top: 1px solid var(--clr-bg-300);
 }
 
 .calendario-form__acciones .btn-peligro {
@@ -500,9 +512,33 @@
     font-size: 0.8125rem;
   }
 
-  .calendario-form__fila,
-  .calendario-form__fila--3 {
+  .calendario-form__fila {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Fecha y hora, desde y hasta: entran de a dos y el form queda mas corto */
+  .calendario-form__fila--fija,
+  .calendario-form__fila--3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .calendario-form__fila--3 > :first-child {
+    grid-column: 1 / -1;
+  }
+
+  .modal__contenido {
+    padding: 1rem;
+    gap: 0.875rem;
+  }
+
+  .modal .calendario-form__acciones {
+    bottom: 0;
+    margin: 0 -1rem -1rem;
+    padding: 0.75rem 1rem 1rem;
+  }
+
+  .modal .form {
+    gap: 0.875rem;
   }
 }
 

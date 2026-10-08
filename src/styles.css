@@ -505,16 +505,16 @@ h3 {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .main-content > * {
+  .main-content > :not(dialog) {
     /* backwards: al terminar no deja transform, asi los desplegables quedan arriba */
     animation: entrar 320ms cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
   }
 
-  .main-content > :nth-child(2) {
+  .main-content > :nth-child(2):not(dialog) {
     animation-delay: 40ms;
   }
 
-  .main-content > :nth-child(n + 3) {
+  .main-content > :nth-child(n + 3):not(dialog) {
     animation-delay: 80ms;
   }
 }

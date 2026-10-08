@@ -114,7 +114,7 @@ function EventoForm({ evento, fechaInicial, materias, onGuardado }: Props) {
         {errores.titulo && <small className="campo-error">{errores.titulo}</small>}
       </label>
 
-      <div className="calendario-form__fila">
+      <div className="calendario-form__fila calendario-form__fila--fija">
         <label className="campo">
           <span>Fecha</span>
           <input type="date" value={datos.fecha} onChange={(e) => cambiar("fecha", e.target.value)} />

@@ -38,6 +38,17 @@ const cargarComision = async (materia: MateriaBasica, comision: Comision) => {
 
 const yaEstaEnHorario = (clases: Clase[], materiaId: number) => clases.some((c) => c.materia?.id === materiaId);
 
+// Pregunta en que comision cursa la materia. Devuelve undefined si no elige.
+const preguntarComision = async (materia: MateriaBasica, comisiones: Comision[], cancelar: string) => {
+  const valor = await elegir({
+    titulo: `¿En qué comisión cursás ${materia.nombre}?`,
+    mensaje: "La agregamos a tu horario semanal con sus aulas.",
+    opciones: comisiones.map(opcionDe),
+    cancelar,
+  });
+  return comisiones.find((c) => String(c.id) === valor);
+};
+
 // Agrega una materia al horario. Con una sola comision la carga directo; con
 // varias pregunta en cual esta el alumno. Devuelve true si cargo algo.
 export const agregarAlHorario = async (materia: MateriaBasica, clases?: Clase[]) => {
@@ -47,16 +58,8 @@ export const agregarAlHorario = async (materia: MateriaBasica, clases?: Clase[])
   const comisiones = comisionesParaAutomatico(await getComisiones(materia.id));
   if (comisiones.length === 0) return false;
 
-  let comision: Comision | undefined = comisiones[0];
-  if (comisiones.length > 1) {
-    const valor = await elegir({
-      titulo: `¿En qué comisión cursás ${materia.nombre}?`,
-      mensaje: "La agregamos a tu horario semanal con sus aulas.",
-      opciones: comisiones.map(opcionDe),
-      cancelar: "No agregar al horario",
-    });
-    comision = comisiones.find((c) => String(c.id) === valor);
-  }
+  const comision =
+    comisiones.length === 1 ? comisiones[0] : await preguntarComision(materia, comisiones, "No agregar al horario");
   if (!comision) return false;
 
   await cargarComision(materia, comision);
@@ -83,9 +86,12 @@ export const alCambiarEstado = async (materia: MateriaBasica, anterior: string, 
   }
 };
 
+const POR_MATERIA = "por-materia";
+
 // Para "Marcar todas como cursando": las del mismo año suelen ser del mismo
-// curso (K1.1, K1.2...), asi que se pregunta una sola vez y se usa ese codigo
-// en todas. Las materias con una sola comision se cargan directo.
+// curso (K1.1, K1.2...), asi que se ofrece elegir uno solo para todas o ir
+// materia por materia. Las que tienen una sola comision se cargan directo y
+// las que no tienen el curso elegido se preguntan aparte.
 export const agregarVariasAlHorario = async (materias: MateriaBasica[]) => {
   try {
     const clases = await getClases();
@@ -93,22 +99,28 @@ export const agregarVariasAlHorario = async (materias: MateriaBasica[]) => {
     const conComisiones = await Promise.all(
       pendientes.map(async (m) => ({ materia: m, comisiones: comisionesParaAutomatico(await getComisiones(m.id)) }))
     );
+    const conVarias = conComisiones.filter((x) => x.comisiones.length > 1);
 
     const nivel = materias[0]?.nivel;
-    const todos = [
-      ...new Set(conComisiones.filter((x) => x.comisiones.length > 1).flatMap((x) => x.comisiones.map((c) => c.codigo))),
-    ].sort();
+    const todos = [...new Set(conVarias.flatMap((x) => x.comisiones.map((c) => c.codigo)))].sort();
     // Los cursos de un año empiezan con K<año>. (K1.1, K1.2...); otras materias
     // del año pueden tener comisiones de otro año, que no se ofrecen
     const delNivel = todos.filter((c) => c.startsWith(`K${nivel}.`));
     const codigos = delNivel.length > 0 ? delNivel : todos;
 
     let codigo: string | null = null;
-    if (codigos.length > 0) {
+    if (conVarias.length > 1 && codigos.length > 0) {
       codigo = await elegir({
         titulo: `¿En qué curso de ${NOMBRE_NIVEL[nivel ?? 0] || "este año"} estás?`,
-        mensaje: "Cargamos en tu horario las materias de ese curso, con sus aulas.",
-        opciones: codigos.map((c) => ({ valor: c, etiqueta: c })),
+        mensaje: "Elegí tu curso y cargamos todas las materias con esa comisión, o elegí una por materia.",
+        opciones: [
+          ...codigos.map((c) => ({ valor: c, etiqueta: c })),
+          {
+            valor: POR_MATERIA,
+            etiqueta: "Elegir una por materia",
+            detalle: "Te preguntamos la comisión de cada materia",
+          },
+        ],
         cancelar: "No agregar al horario",
       });
       if (!codigo) return;
@@ -116,7 +128,10 @@ export const agregarVariasAlHorario = async (materias: MateriaBasica[]) => {
 
     let agregadas = 0;
     for (const { materia, comisiones } of conComisiones) {
-      const comision = comisiones.length === 1 ? comisiones[0] : comisiones.find((c) => c.codigo === codigo);
+      let comision = comisiones.length === 1 ? comisiones[0] : comisiones.find((c) => c.codigo === codigo);
+      if (!comision && comisiones.length > 1) {
+        comision = await preguntarComision(materia, comisiones, "Saltear esta materia");
+      }
       if (!comision) continue;
       await cargarComision(materia, comision);
       agregadas++;
