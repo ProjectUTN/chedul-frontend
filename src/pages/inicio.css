@@ -171,3 +171,24 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* ---------- Ordenanza 531 ---------- */
+
+.ordenanza--puede {
+  border-color: color-mix(in srgb, var(--green) 45%, var(--border));
+}
+
+.ordenanza p {
+  color: var(--clr-text-200);
+  line-height: 1.5;
+}
+
+.chip.chip-verde {
+  color: var(--green);
+  background-color: color-mix(in srgb, var(--green) 15%, transparent);
+}
+
+.ordenanza__estado {
+  margin-left: auto;
+  font-size: 0.8125rem;
+}

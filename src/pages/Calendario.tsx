@@ -1,17 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
-import { getEventos } from "../features/calendario/api";
-import { aISO, desdeISO, diasDelMes, fechaLarga, MESES, nombreTipo } from "../features/calendario/fechas";
+import { getCalendarioAcademico, getEventos } from "../features/calendario/api";
+import { academicasDelDia, aISO, desdeISO, diasDelMes, fechaLarga, MESES, nombreTipo } from "../features/calendario/fechas";
 import VistaMes from "../features/calendario/VistaMes";
 import Modal from "../features/calendario/Modal";
 import EventoForm from "../features/calendario/EventoForm";
 import { getMaterias } from "../features/estado_academico/api";
 import { useAuth } from "../context/authProvider";
 import { mensajeDeError } from "../api/client";
-import type { Evento, Materia } from "../api/types";
+import type { Evento, FechaAcademica, Materia } from "../api/types";
 import "../features/calendario/calendario.css";
 
-// Calendario de parciales, finales y entregas. El horario de cursada esta en
-// su propia seccion (Horarios).
+// Calendario de parciales, finales y entregas, con las fechas de la facultad
+// (mesas, feriados, cuatrimestres). El horario de cursada esta en su propia
+// seccion (Horarios).
 
 type Edicion = { evento: Evento | null; fecha: string };
 
@@ -21,6 +22,7 @@ function Calendario() {
   const [seleccionado, setSeleccionado] = useState(() => aISO(new Date()));
 
   const [eventos, setEventos] = useState<Evento[]>([]);
+  const [academicas, setAcademicas] = useState<FechaAcademica[]>([]);
   const [materias, setMaterias] = useState<Materia[]>([]);
   const [error, setError] = useState("");
   const [recarga, setRecarga] = useState(0);
@@ -44,6 +46,17 @@ function Calendario() {
       cancelado = true;
     };
   }, [desde, hasta, recarga]);
+
+  // Si falla, el calendario sigue andando con los eventos del alumno
+  useEffect(() => {
+    let cancelado = false;
+    getCalendarioAcademico(desde, hasta)
+      .then((data) => !cancelado && setAcademicas(data))
+      .catch(() => !cancelado && setAcademicas([]));
+    return () => {
+      cancelado = true;
+    };
+  }, [desde, hasta]);
 
   useEffect(() => {
     if (!user) return;
@@ -72,6 +85,7 @@ function Calendario() {
   };
 
   const delDia = eventos.filter((e) => e.fecha === seleccionado);
+  const deLaFacultad = academicasDelDia(academicas, seleccionado);
 
   return (
     <>
@@ -114,6 +128,7 @@ function Calendario() {
           anio={anio}
           mes={mes}
           eventos={eventos}
+          academicas={academicas}
           seleccionado={seleccionado}
           onSeleccionar={seleccionar}
           onEditar={(evento) => setEdicion({ evento, fecha: evento.fecha })}
@@ -129,6 +144,23 @@ function Calendario() {
               <span className="material-symbols-rounded">add</span>
             </button>
           </div>
+
+          {deLaFacultad.length > 0 && (
+            <ul className="dia-panel__lista">
+              {deLaFacultad.map((f) => (
+                <li key={f.id} className={`dia-panel__evento dia-panel__evento--facultad academica--${f.tipo}`}>
+                  <span className="dia-panel__tipo">Calendario de la facultad</span>
+                  <strong>{f.titulo}</strong>
+                  {f.desde !== f.hasta && (
+                    <span className="dia-panel__materia">
+                      Del {f.desde.split("-").reverse().slice(0, 2).join("/")} al{" "}
+                      {f.hasta.split("-").reverse().slice(0, 2).join("/")}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
 
           {delDia.length === 0 ? (
             <p className="dia-panel__vacio">No tenés nada anotado.</p>

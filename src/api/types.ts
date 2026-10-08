@@ -65,6 +65,27 @@ export interface Progreso {
   obligatorias_aprobadas: number;
   porcentaje_aprobadas: number;
   promedio: number | null;
+  ordenanza_531: Ordenanza531;
+}
+
+// Excepcion de correlativas del punto 5.3.1 del Reglamento de Estudios
+export interface Ordenanza531 {
+  puede: boolean;
+  horas_faltantes: number;
+  horas_limite: number;
+  faltantes: MateriaProgreso[];
+}
+
+export type TipoFechaAcademica = "examen" | "cuatrimestre" | "feriado" | "receso" | "otro";
+
+// Fecha del calendario de la facultad, igual para todos. desde y hasta son
+// AAAA-MM-DD; en las de un solo dia son iguales.
+export interface FechaAcademica {
+  id: number;
+  titulo: string;
+  tipo: TipoFechaAcademica;
+  desde: string;
+  hasta: string;
 }
 
 export interface AporteTag {

@@ -1,4 +1,4 @@
-import type { TipoEvento } from "../../api/types";
+import type { FechaAcademica, TipoEvento } from "../../api/types";
 
 export const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 export const DIAS_CORTOS = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
@@ -63,6 +63,14 @@ export const cuantoFalta = (iso: string) => {
   if (dias < 0) return `Hace ${-dias} días`;
   return `En ${dias} días`;
 };
+
+// Las fechas de la facultad que caen en el dia (los rangos incluyen sus puntas)
+export const academicasDelDia = (fechas: FechaAcademica[], iso: string) =>
+  fechas.filter((f) => f.desde <= iso && iso <= f.hasta);
+
+// Los feriados y recesos pintan el dia: no hay clases
+export const esDiaSinClases = (fechas: FechaAcademica[]) =>
+  fechas.some((f) => f.tipo === "feriado" || f.tipo === "receso");
 
 // Color estable para cada materia en el horario
 const PALETA = ["#4f87f8", "#32a458", "#d489ef", "#fd7c2d", "#edd444", "#3cc6c6", "#f06292", "#9ccc65"];

@@ -1,5 +1,5 @@
 import { api } from "../../api/client";
-import type { Clase, Comision, Evento, TipoEvento } from "../../api/types";
+import type { Clase, Comision, Evento, FechaAcademica, TipoEvento } from "../../api/types";
 
 export interface DatosEvento {
   titulo: string;
@@ -35,6 +35,11 @@ const claseParaApi = (datos: DatosClase) => ({
 
 export const getEventos = async (desde: string, hasta: string) => {
   const response = await api.get<Evento[]>("/eventos", { params: { desde, hasta } });
+  return response.data;
+};
+
+export const getCalendarioAcademico = async (desde: string, hasta: string) => {
+  const response = await api.get<FechaAcademica[]>("/calendario-academico", { params: { desde, hasta } });
   return response.data;
 };
 

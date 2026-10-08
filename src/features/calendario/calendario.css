@@ -20,6 +20,23 @@
   --evento-fondo: var(--lila-soft);
 }
 
+.academica--examen {
+  --evento: var(--accent);
+  --evento-fondo: var(--accent-soft);
+}
+
+.academica--cuatrimestre {
+  --evento: var(--green);
+  --evento-fondo: color-mix(in srgb, var(--green) 16%, transparent);
+}
+
+.academica--feriado,
+.academica--receso,
+.academica--otro {
+  --evento: var(--text-3);
+  --evento-fondo: color-mix(in srgb, var(--text-3) 14%, transparent);
+}
+
 .evento--otro {
   --evento: var(--clr-assent-100);
   --evento-fondo: var(--clr-primary-600);
@@ -177,6 +194,22 @@
   color: var(--evento);
   background-color: var(--evento-fondo);
   border-left: 3px solid var(--evento);
+}
+
+.evento-chip--facultad {
+  cursor: default;
+  font-weight: 600;
+}
+
+/* Feriados y recesos: no hay clases */
+.mes__dia--sin-clases {
+  background-color: color-mix(in srgb, var(--text-3) 8%, transparent);
+}
+
+.dia-panel__evento--facultad,
+.dia-panel__evento--facultad:hover {
+  cursor: default;
+  background-color: var(--evento-fondo);
 }
 
 .evento-chip:focus-visible {
