@@ -24,7 +24,7 @@ import {
 import { useAuth } from "../context/authProvider";
 import { mensajeDeError } from "../api/client";
 import type { Condicion, CondicionPorAlumno, Materia } from "../api/types";
-import { NO_ME_INTERESA, condicionesPara, esElectiva } from "../features/estado_academico/condiciones";
+import { NOTAS_APROBADA, NO_ME_INTERESA, condicionesPara, esElectiva } from "../features/estado_academico/condiciones";
 import "../features/correlativas/correlativas.css";
 
 const NIVELES = ["", "Primer año", "Segundo año", "Tercer año", "Cuarto año", "Quinto año", "Sexto año"];
@@ -283,7 +283,7 @@ function MapaCorrelativas() {
                           cambiarCondicion(condicionAprobada.id, Number(e.target.value) || null)
                         }>
                         <option value={0}>Sin nota</option>
-                        {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
+                        {NOTAS_APROBADA.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>

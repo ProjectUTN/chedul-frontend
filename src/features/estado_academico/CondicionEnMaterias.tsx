@@ -5,7 +5,7 @@ import { mensajeDeError } from "../../api/client";
 import type { Condicion, CondicionPorAlumno, Materia } from "../../api/types";
 import { borrarCondicion, setCondicion } from "./api";
 import { alCambiarEstado } from "../calendario/horarioAutomatico";
-import { NO_ME_INTERESA, condicionesPara } from "./condiciones";
+import { NOTAS_APROBADA, NO_ME_INTERESA, condicionesPara } from "./condiciones";
 
 const PENDIENTE = "Pendiente";
 
@@ -150,7 +150,7 @@ function CondicionEnMaterias({ materias, condiciones, misCondiciones, onCambio }
                     disabled={ocupado}
                     onChange={(e) => cambiarNota(materia.id, e.target.value)}>
                     <option value="">–</option>
-                    {[4, 5, 6, 7, 8, 9, 10].map((n) => (
+                    {NOTAS_APROBADA.map((n) => (
                       <option key={n} value={n}>
                         {n}
                       </option>
