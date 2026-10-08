@@ -14,17 +14,19 @@ const contieneCaracteresProhibidos = (texto: string) => {
   return forbiddenChars.some((char) => texto.includes(char));
 };
 
-// Mismas reglas que valida la API (domain/password.go)
+// La API solo pide un largo minimo (domain/password.go)
+const MINIMO_PASSWORD = 6;
+
 const tiposDeCaracter = (password: string) =>
   [/[A-Z]/, /[a-z]/, /[0-9]/, /[^A-Za-z0-9]/].filter((r) => r.test(password)).length;
 
-// De 0 a 4 para la barrita: largo minimo y variedad de caracteres
+// De 0 a 4 para la barrita. Es solo una guia: no bloquea claves simples.
 const fuerzaPassword = (password: string) => {
   if (!password) return 0;
-  if (password.length < 8) return 1;
+  if (password.length < MINIMO_PASSWORD) return 1;
   const tipos = tiposDeCaracter(password);
-  if (tipos < 3) return 2;
-  return password.length >= 12 && tipos === 4 ? 4 : 3;
+  if (password.length < 10 && tipos < 3) return 2;
+  return password.length >= 12 && tipos >= 3 ? 4 : 3;
 };
 
 const validarFormulario = (nombre: string, password: string, carreraId: number): ErroresCampo => {
@@ -36,12 +38,8 @@ const validarFormulario = (nombre: string, password: string, carreraId: number):
     errores.nombre = "El nombre contiene caracteres no permitidos.";
   }
 
-  if (password.length < 8) {
-    errores.password = "La contraseña debe tener al menos 8 caracteres.";
-  } else if (/\s/.test(password)) {
-    errores.password = "La contraseña no puede tener espacios.";
-  } else if (tiposDeCaracter(password) < 3) {
-    errores.password = "Usá al menos 3 de estos: mayúsculas, minúsculas, números y símbolos.";
+  if (password.length < MINIMO_PASSWORD) {
+    errores.password = `La contraseña debe tener al menos ${MINIMO_PASSWORD} caracteres.`;
   }
 
   if (!carreraId) {
@@ -192,9 +190,7 @@ function SignUp() {
           {errores.password ? (
             <small className="campo-error">{errores.password}</small>
           ) : (
-            <small className="campo-ayuda">
-              8 o más caracteres, mezclando mayúsculas, minúsculas, números o símbolos.
-            </small>
+            <small className="campo-ayuda">6 caracteres o más.</small>
           )}
         </CampoPassword>
 
