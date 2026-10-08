@@ -17,6 +17,7 @@ import Herramientas from "../pages/Herramientas";
 import Electivas from "../pages/Electivas";
 import Comunidades from "../pages/Comunidades";
 import Ordenanza531 from "../pages/Ordenanza531";
+import Perfil from "../pages/Perfil";
 
 export const AppRouter = () => {
   return (
@@ -46,6 +47,7 @@ export const AppRouter = () => {
             <Route path="/herramientas/comunidades" element={<Comunidades />} />
             <Route path="/correlativas" element={<MapaCorrelativas />} />
             <Route path="/correos" element={<Mails />} />
+            <Route path="/perfil" element={<Perfil />} />
           </Route>
         </Route>
 

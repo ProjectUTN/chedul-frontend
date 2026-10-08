@@ -94,6 +94,24 @@
   min-width: 0;
 }
 
+.usuario__perfil {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex: 1;
+  min-width: 0;
+  margin: -0.25rem;
+  padding: 0.25rem;
+  border-radius: var(--radius-chico);
+  color: inherit;
+  text-decoration: none;
+}
+
+.usuario__perfil:hover,
+.usuario__perfil.active {
+  background-color: var(--surface);
+}
+
 .usuario__datos {
   display: grid;
   min-width: 0;

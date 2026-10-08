@@ -83,7 +83,8 @@ const Menu = () => {
   };
 
   const secundarios = navigation.filter((i) => !i.principal);
-  const enSecundario = secundarios.some((i) => location.pathname.startsWith(i.href));
+  const enSecundario =
+    secundarios.some((i) => location.pathname.startsWith(i.href)) || location.pathname === "/perfil";
 
   return (
     <>
@@ -106,13 +107,15 @@ const Menu = () => {
           <BotonTema conTexto />
           {user && (
             <div className="usuario">
-              <span className="avatar" aria-hidden="true">
-                {iniciales(user.nombre)}
-              </span>
-              <div className="usuario__datos">
-                <strong>{user.nombre}</strong>
-                <span>{user.email}</span>
-              </div>
+              <NavLink to="/perfil" className="usuario__perfil" title="Mi perfil">
+                <span className="avatar" aria-hidden="true">
+                  {iniciales(user.nombre)}
+                </span>
+                <div className="usuario__datos">
+                  <strong>{user.nombre}</strong>
+                  <span>{user.email}</span>
+                </div>
+              </NavLink>
               <button
                 type="button"
                 className="boton-redondo"
@@ -193,6 +196,12 @@ const Menu = () => {
                 </NavLink>
               </li>
             ))}
+            <li>
+              <NavLink to="/perfil" className={({ isActive }) => (isActive ? "nav-link activo" : "nav-link")}>
+                <span className="material-symbols-rounded">person</span>
+                <span>Mi perfil</span>
+              </NavLink>
+            </li>
             <li>
               <BotonTema conTexto />
             </li>
