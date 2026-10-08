@@ -71,6 +71,7 @@ export interface Progreso {
 // Excepcion de correlativas del punto 5.3.1 del Reglamento de Estudios
 export interface Ordenanza531 {
   puede: boolean;
+  // En horas semanales (carga horaria), no horas totales
   horas_faltantes: number;
   horas_limite: number;
   faltantes: MateriaProgreso[];
