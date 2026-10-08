@@ -29,7 +29,7 @@ function Ordenanza531() {
           </Link>
           <h1>Ordenanza 531</h1>
           <p>
-            Si la carga horaria semanal de lo que te falta para recibirte no supera la de 5° año, podés cursar esas
+            Si la carga horaria semanal de lo que te falta cursar no supera la de 5° año, podés cursar esas
             materias sin correlativas. Para rendir el final sí se piden.
           </p>
         </div>
@@ -60,9 +60,9 @@ function Ordenanza531() {
               <span className="campo-ayuda">
                 Te faltan {Math.round(ordenanza.horas_faltantes)} hs semanales de {Math.round(ordenanza.horas_limite)}{" "}
                 permitidas.
-                No cuenta electivas ni la Práctica Supervisada.
+                No cuenta electivas, la Práctica Supervisada ni lo que ya regularizaste o estás cursando.
               </span>
-              <h3 className="ordenanza__subtitulo">Lo que te falta aprobar</h3>
+              <h3 className="ordenanza__subtitulo">Lo que te falta cursar</h3>
               <ul className="lista-materias">
                 {ordenanza.faltantes.map((m) => (
                   <li key={m.id}>
