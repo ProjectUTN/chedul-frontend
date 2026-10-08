@@ -71,3 +71,33 @@ export const editarTarea = async (id: number, datos: DatosTarea) => {
 export const borrarTarea = async (id: number) => {
   await api.delete(`/estudio/tareas/${id}`);
 };
+
+// El cronometro en curso vive en el servidor para retomarlo desde cualquier
+// dispositivo. Los tiempos son hora del servidor (en milisegundos).
+export interface EstadoTemporizadorApi {
+  modo: ModoEstudio;
+  fase: "foco" | "descanso";
+  foco: number;
+  descanso: number;
+  materia_id: number;
+  acumulado: number;
+  desde: number | null;
+}
+
+export interface RespuestaTemporizador {
+  estado: EstadoTemporizadorApi | null;
+  // Version guardada: se manda de vuelta al guardar para no pisar a otro dispositivo
+  rev: number;
+  ahora: number;
+}
+
+export const getTemporizador = async () => {
+  const response = await api.get<RespuestaTemporizador>("/estudio/temporizador");
+  return response.data;
+};
+
+// Si otro dispositivo lo cambio antes, la API responde 409 con lo que hay guardado
+export const guardarTemporizador = async (estado: EstadoTemporizadorApi, rev: number) => {
+  const response = await api.put<RespuestaTemporizador>("/estudio/temporizador", { estado, rev });
+  return response.data;
+};

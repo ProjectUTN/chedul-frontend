@@ -1,6 +1,8 @@
 export interface Alumno {
   id: number;
   nombre: string;
+  // Vacio en las cuentas de antes de que existiera el campo
+  apellido?: string;
   email: string;
   carrera: number;
   // Solo viene (en true) para los administradores

@@ -3,6 +3,7 @@ import type { Alumno, Carrera } from "../../api/types";
 
 export interface SignUpRequest {
   nombre: string;
+  apellido: string;
   email: string;
   carrera_id: number;
   password: string;

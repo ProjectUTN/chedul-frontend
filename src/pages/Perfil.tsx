@@ -26,6 +26,7 @@ function Perfil() {
   const [carreras, setCarreras] = useState<Carrera[]>([]);
 
   const [nombre, setNombre] = useState(user?.nombre ?? "");
+  const [apellido, setApellido] = useState(user?.apellido ?? "");
   const [carrera, setCarrera] = useState(user?.carrera ?? 0);
   const [erroresDatos, setErroresDatos] = useState<ErroresCampo>({});
   const [guardandoDatos, setGuardandoDatos] = useState(false);
@@ -44,7 +45,8 @@ function Perfil() {
 
   if (!user) return null;
 
-  const datosCambiaron = nombre.trim() !== user.nombre || carrera !== user.carrera;
+  const datosCambiaron =
+    nombre.trim() !== user.nombre || apellido.trim() !== (user.apellido ?? "") || carrera !== user.carrera;
 
   const guardarDatos = async (e: FormEvent) => {
     e.preventDefault();
@@ -64,9 +66,10 @@ function Perfil() {
     setErroresDatos({});
     setGuardandoDatos(true);
     try {
-      const alumno = await actualizarPerfil(nombre.trim(), carrera);
+      const alumno = await actualizarPerfil(nombre.trim(), apellido.trim(), carrera);
       setUser(alumno);
       setNombre(alumno.nombre);
+      setApellido(alumno.apellido ?? "");
       toast.success("Listo, guardamos tus datos");
     } catch (err) {
       const errores = erroresDeCampo(err);
@@ -133,10 +136,10 @@ function Perfil() {
         <form className="form card" onSubmit={guardarDatos} noValidate>
           <div className="mi-perfil__cabecera">
             <span className="avatar" aria-hidden="true">
-              {iniciales(nombre || user.nombre)}
+              {iniciales(`${(nombre || user.nombre).split(" ")[0]} ${apellido}`)}
             </span>
             <div>
-              <strong>{user.nombre}</strong>
+              <strong>{`${user.nombre} ${user.apellido ?? ""}`.trim()}</strong>
               <span>{user.email}</span>
             </div>
           </div>
@@ -151,6 +154,25 @@ function Perfil() {
               onChange={(e) => setNombre(e.target.value)}
             />
             {erroresDatos.nombre && <small className="campo-error">{erroresDatos.nombre}</small>}
+          </label>
+
+          <label className="campo">
+            <span>Apellido</span>
+            <input
+              name="apellido"
+              autoComplete="family-name"
+              maxLength={100}
+              value={apellido}
+              onChange={(e) => setApellido(e.target.value)}
+            />
+            {erroresDatos.apellido ? (
+              <small className="campo-error">{erroresDatos.apellido}</small>
+            ) : (
+              <small className="campo-ayuda">
+                En los aportes y el ranking los demás ven solo tu nombre y la inicial del apellido.
+                {!apellido.trim() && " Todavía no lo cargaste."}
+              </small>
+            )}
           </label>
 
           {carreras.length > 1 && (

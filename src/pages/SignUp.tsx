@@ -29,13 +29,19 @@ const fuerzaPassword = (password: string) => {
   return password.length >= 12 && tipos >= 3 ? 4 : 3;
 };
 
-const validarFormulario = (nombre: string, password: string, carreraId: number): ErroresCampo => {
+const validarFormulario = (nombre: string, apellido: string, password: string, carreraId: number): ErroresCampo => {
   const errores: ErroresCampo = {};
 
   if (nombre.trim().length === 0) {
     errores.nombre = "Poné tu nombre.";
   } else if (contieneCaracteresProhibidos(nombre)) {
     errores.nombre = "El nombre contiene caracteres no permitidos.";
+  }
+
+  if (apellido.trim().length === 0) {
+    errores.apellido = "Poné tu apellido.";
+  } else if (contieneCaracteresProhibidos(apellido)) {
+    errores.apellido = "El apellido contiene caracteres no permitidos.";
   }
 
   if (password.length < MINIMO_PASSWORD) {
@@ -52,6 +58,7 @@ const validarFormulario = (nombre: string, password: string, carreraId: number):
 function SignUp() {
   const [formData, setFormData] = useState({
     nombre: "",
+    apellido: "",
     email: "",
     carrera_id: 0,
     password: "",
@@ -87,7 +94,12 @@ function SignUp() {
     e.preventDefault();
     setError("");
 
-    const erroresLocales = validarFormulario(formData.nombre, formData.password, formData.carrera_id);
+    const erroresLocales = validarFormulario(
+      formData.nombre,
+      formData.apellido,
+      formData.password,
+      formData.carrera_id
+    );
     setErrores(erroresLocales);
     if (Object.keys(erroresLocales).length > 0) {
       return;
@@ -97,6 +109,7 @@ function SignUp() {
     try {
       await signup({
         nombre: formData.nombre.trim(),
+        apellido: formData.apellido.trim(),
         email: formData.email,
         carrera_id: formData.carrera_id,
         password: formData.password,
@@ -137,6 +150,24 @@ function SignUp() {
             required
           />
           {errores.nombre && <small className="campo-error">{errores.nombre}</small>}
+        </label>
+
+        <label className="campo">
+          <span>Apellido</span>
+          <input
+            type="text"
+            name="apellido"
+            autoComplete="family-name"
+            placeholder="Tu apellido"
+            value={formData.apellido}
+            onChange={handleChange}
+            required
+          />
+          {errores.apellido ? (
+            <small className="campo-error">{errores.apellido}</small>
+          ) : (
+            <small className="campo-ayuda">En los aportes se ve solo tu nombre y la inicial del apellido.</small>
+          )}
         </label>
 
         <label className="campo">

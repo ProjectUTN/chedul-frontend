@@ -81,9 +81,11 @@ function Tareas({ materias, materiaId }: Props) {
     <section className="card inicio-seccion tareas-card">
       <div className="inicio-seccion__header">
         <h2>Para estudiar</h2>
-        {pendientes.length > 0 && <span className="chip">
+        {pendientes.length > 0 && (
+          <span className="chip">
             {pendientes.length} {pendientes.length === 1 ? "pendiente" : "pendientes"}
-          </span>}
+          </span>
+        )}
       </div>
 
       <form className="tareas__nueva" onSubmit={agregar}>

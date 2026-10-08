@@ -1,0 +1,158 @@
+/* ---------- Ventanita flotante del temporizador ---------- */
+
+.ventana-flotante {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.35rem 0.5rem 0.35rem 0.15rem;
+  border: 1px solid var(--border, var(--clr-bg-300));
+  border-radius: 1rem;
+  background-color: var(--surface, var(--clr-bg-400));
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.25);
+  animation: ventana-entra 220ms ease-out backwards;
+}
+
+@keyframes ventana-entra {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem) scale(0.96);
+  }
+}
+
+.ventana-flotante__asa {
+  display: grid;
+  place-items: center;
+  align-self: stretch;
+  padding: 0 0.1rem;
+  color: var(--text-2);
+  cursor: grab;
+  /* Sin esto el celu hace scroll en vez de arrastrar */
+  touch-action: none;
+}
+
+.ventana-flotante__asa:active {
+  cursor: grabbing;
+}
+
+.ventana-flotante__asa .material-symbols-rounded {
+  font-size: 1.25rem;
+}
+
+.ventana-flotante__extras {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.mini-reloj {
+  --fase: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.mini-reloj--descanso {
+  --fase: var(--green);
+}
+
+.mini-reloj__texto {
+  display: grid;
+  min-width: 4.5rem;
+}
+
+.mini-reloj__fase {
+  color: var(--fase);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mini-reloj__tiempo {
+  font-family: var(--ff-titulos);
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.mini-reloj__acciones {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.mini-reloj__boton {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 0.6rem;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  transition:
+    background-color 150ms,
+    color 150ms;
+}
+
+.mini-reloj__boton:hover {
+  background-color: var(--clr-bg-300);
+  color: var(--text);
+}
+
+.mini-reloj__boton--principal {
+  background-color: var(--fase);
+  color: #fff;
+}
+
+.mini-reloj__boton--principal:hover {
+  background-color: var(--fase);
+  color: #fff;
+  filter: brightness(1.1);
+}
+
+.mini-reloj__boton .material-symbols-rounded {
+  font-size: 1.25rem;
+}
+
+.ventana-flotante__extras .mini-reloj__boton {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.ventana-flotante__extras .material-symbols-rounded {
+  font-size: 1.05rem;
+}
+
+/* En la ventana que se saca de la pestaña ocupa todo el lugar */
+.mini-reloj[data-aparte] {
+  justify-content: center;
+  min-height: 100vh;
+  padding: 0.5rem;
+  background-color: var(--surface, var(--clr-bg-400));
+  color: var(--text);
+}
+
+.mini-reloj[data-aparte] .mini-reloj__tiempo {
+  font-size: 2.6rem;
+}
+
+/* En el celu va arriba de la barra de abajo, sin tapar los botones */
+@media (max-width: 900px) {
+  .ventana-flotante {
+    right: 0.75rem;
+    bottom: calc(5rem + env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ventana-flotante {
+    animation: none;
+  }
+}

@@ -109,9 +109,7 @@ function MetaDiaria({ resumen, enCurso, corriendo, onMetaCambiada }: Props) {
             {medalla ? `Medalla de ${NOMBRE_MEDALLA[medalla].toLowerCase()} de hoy. ` : ""}
             {proxima
               ? `Te faltan ${formatoHoras(proxima.faltan)} para ${proxima.medalla === "bronce" ? "cumplir la meta" : `la de ${NOMBRE_MEDALLA[proxima.medalla].toLowerCase()}`}${
-                  corriendo
-                    ? `: si seguís, llegás a las ${horaEn(proxima.faltan)}`
-                    : ` (${pomodoros(proxima.faltan)})`
+                  corriendo ? `: si seguís, llegás a las ${horaEn(proxima.faltan)}` : ` (${pomodoros(proxima.faltan)})`
                 }.`
               : "Llegaste al oro, el máximo del día."}
           </p>

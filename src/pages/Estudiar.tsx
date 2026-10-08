@@ -5,15 +5,11 @@ import SelectorMateria from "../components/SelectorMateria";
 import { useAuth } from "../context/authProvider";
 import { mensajeDeError } from "../api/client";
 import { getMaterias } from "../features/estado_academico/api";
-import {
-  borrarSesion,
-  getRanking,
-  getResumen,
-  getSesiones,
-  guardarSesion,
-  participarEnRanking,
-} from "../features/estudio/api";
-import useTemporizador, { AJUSTES_POMODORO, formatoHoras, formatoReloj } from "../features/estudio/useTemporizador";
+import { borrarSesion, getRanking, getResumen, getSesiones, participarEnRanking } from "../features/estudio/api";
+import { AJUSTES_POMODORO, formatoHoras, formatoReloj } from "../features/estudio/useTemporizador";
+import { SESION_GUARDADA, useTemporizadorGlobal } from "../features/estudio/TemporizadorProvider";
+import { avisosSoportados } from "../features/estudio/avisosEstudio";
+import { ventanaAparteSoportada } from "../features/estudio/ventanaAparte";
 import { DIAS_CORTOS, desdeISO, diaSemana } from "../features/calendario/fechas";
 import MetaDiaria from "../features/estudio/MetaDiaria";
 import CalendarioActividad from "../features/estudio/CalendarioActividad";
@@ -22,7 +18,7 @@ import Trofeos from "../features/estudio/Trofeos";
 import Tareas from "../features/estudio/Tareas";
 import ProximoExamen from "../features/estudio/ProximoExamen";
 import { mejorRacha } from "../features/estudio/logros";
-import type { Materia, ModoEstudio, RankingEstudio, ResumenEstudio, SesionEstudio } from "../api/types";
+import type { Materia, RankingEstudio, ResumenEstudio, SesionEstudio } from "../api/types";
 import "./inicio.css";
 import "../features/estudio/estudio.css";
 import "../features/herramientas/herramientas.css";
@@ -72,24 +68,13 @@ function Estudiar() {
       .catch(() => {});
   }, [user]);
 
-  const alTerminarSesion = useCallback(
-    async (sesion: { modo: ModoEstudio; minutos: number; materiaId: number }) => {
-      try {
-        await guardarSesion({
-          modo: sesion.modo,
-          minutos: sesion.minutos,
-          materia_id: sesion.materiaId,
-        });
-        toast.success(`Sumaste ${formatoHoras(sesion.minutos)} de estudio`);
-        recargar();
-      } catch (err) {
-        toast.error(mensajeDeError(err, "No se pudo guardar la sesión"));
-      }
-    },
-    [recargar]
-  );
+  // El temporizador vive en el Layout; cuando guarda una sesion hay que refrescar los numeros
+  useEffect(() => {
+    window.addEventListener(SESION_GUARDADA, recargar);
+    return () => window.removeEventListener(SESION_GUARDADA, recargar);
+  }, [recargar]);
 
-  const t = useTemporizador({ onSesion: alTerminarSesion });
+  const { t, flotante, setFlotante, avisar, setAvisar } = useTemporizadorGlobal();
 
   // Pantalla completa del temporizador, para dejarlo a la vista mientras estudiás
   const reloj = useRef<HTMLElement>(null);
@@ -107,15 +92,6 @@ function Estudiar() {
   // Lo del bloque que esta corriendo cuenta para la meta aunque no se guardo
   const enCurso = t.empezado && t.fase === "foco" ? Math.floor(t.transcurridoMs / 60_000) : 0;
   const materiaActual = materias.find((m) => m.id === t.materiaId);
-
-  // El tiempo en la pestaña, para verlo desde otra
-  useEffect(() => {
-    const anterior = document.title;
-    if (t.empezado) document.title = `${formatoReloj(t.mostrarMs)} · ${t.fase === "foco" ? "Estudiando" : "Descanso"}`;
-    return () => {
-      document.title = anterior;
-    };
-  }, [t.empezado, t.mostrarMs, t.fase]);
 
   const alternarRanking = async () => {
     if (!ranking) return;
@@ -269,10 +245,28 @@ function Estudiar() {
                 </button>
               )}
             </div>
+            <div className="temporizador__extras">
+              <button
+                type="button"
+                className="btn btn-secundario"
+                aria-pressed={flotante}
+                onClick={() => setFlotante(!flotante)}
+                title="Una ventanita con el reloj que podés mover y dejar a un costado mientras usás Chedul">
+                <span className="material-symbols-rounded">picture_in_picture_alt</span>
+                {flotante ? "Ocultar ventanita" : "Ventanita"}
+              </button>
+              {avisosSoportados() && (
+                <label className="temporizador__aviso">
+                  <input type="checkbox" checked={avisar} onChange={(e) => setAvisar(e.target.checked)} />
+                  <span>Avisarme al terminar</span>
+                </label>
+              )}
+            </div>
             <p className="campo-ayuda temporizador__ayuda">
               {t.modo === "pomodoro"
-                ? "Cada bloque de foco que terminás se guarda solo. Podés cambiar de sección: sigue contando."
-                : "Cuando cortes, se guarda lo que estudiaste (desde 1 minuto)."}
+                ? "Cada bloque de foco que terminás se guarda solo. Se guarda en tu cuenta: si cerrás la pantalla o lo abrís desde el celu, sigue el mismo reloj."
+                : "Cuando cortes, se guarda lo que estudiaste (desde 1 minuto). Si cerrás la pantalla o lo abrís desde otro dispositivo, sigue el mismo reloj."}
+              {ventanaAparteSoportada() && flotante && " Desde la ventanita podés sacarlo fuera de la pestaña."}
             </p>
           </section>
 
