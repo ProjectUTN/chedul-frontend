@@ -5,16 +5,22 @@ import { mensajeDeError } from "../../api/client";
 import type { Condicion, CondicionPorAlumno, Materia } from "../../api/types";
 import { borrarCondicion, setCondicion } from "./api";
 import { alCambiarEstado } from "../calendario/horarioAutomatico";
+import { NO_ME_INTERESA, condicionesPara } from "./condiciones";
 
 const PENDIENTE = "Pendiente";
 
-// Texto corto para que los cuatro estados entren en una fila en el celular
+// Texto corto para que los estados entren en una fila en el celular
 const CORTO: Record<string, string> = {
   Regularizada: "Regular",
 };
 
+// En el celular "No me interesa" no entra con los otros cuatro
+const MUY_CORTO: Record<string, string> = {
+  [NO_ME_INTERESA]: "Paso",
+};
+
 const claseEstado = (estado: string) =>
-  `estado--${estado.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")}`;
+  `estado--${estado.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, "-")}`;
 
 interface CondicionEnMateriasProps {
   materias: Materia[];
@@ -23,21 +29,17 @@ interface CondicionEnMateriasProps {
   onCambio: () => void;
 }
 
-function CondicionEnMaterias({
-  materias,
-  condiciones,
-  misCondiciones,
-  onCambio,
-}: CondicionEnMateriasProps) {
+function CondicionEnMaterias({ materias, condiciones, misCondiciones, onCambio }: CondicionEnMateriasProps) {
   const [guardando, setGuardando] = useState<number | null>(null);
 
-  const estados = [PENDIENTE, ...condiciones.map((c) => c.condicion)];
+  const estadosPara = (materia: Materia) => [
+    PENDIENTE,
+    ...condicionesPara(materia, condiciones).map((c) => c.condicion),
+  ];
 
-  const condicionDe = (materiaId: number) =>
-    misCondiciones.find((c) => c.materia_id === materiaId);
+  const condicionDe = (materiaId: number) => misCondiciones.find((c) => c.materia_id === materiaId);
 
-  const estadoDe = (materiaId: number) =>
-    condicionDe(materiaId)?.condicion ?? PENDIENTE;
+  const estadoDe = (materiaId: number) => condicionDe(materiaId)?.condicion ?? PENDIENTE;
 
   const guardar = async (materiaId: number, estado: string, nota: number | null) => {
     const anterior = estadoDe(materiaId);
@@ -78,6 +80,7 @@ function CondicionEnMaterias({
     <ul className="lista-estado">
       {materias.map((materia) => {
         const estado = estadoDe(materia.id);
+        const estados = estadosPara(materia);
         const ocupado = guardando === materia.id;
 
         return (
@@ -121,8 +124,18 @@ function CondicionEnMaterias({
                     aria-checked={estado === opcion}
                     className={`estado-opcion ${claseEstado(opcion)}`}
                     disabled={ocupado}
+                    title={MUY_CORTO[opcion] ? opcion : undefined}
                     onClick={() => cambiarEstado(materia.id, opcion)}>
-                    {CORTO[opcion] ?? opcion}
+                    {MUY_CORTO[opcion] ? (
+                      <>
+                        <span className="estado-opcion__largo">{opcion}</span>
+                        <span className="estado-opcion__corto" aria-hidden="true">
+                          {MUY_CORTO[opcion]}
+                        </span>
+                      </>
+                    ) : (
+                      (CORTO[opcion] ?? opcion)
+                    )}
                   </button>
                 ))}
               </div>

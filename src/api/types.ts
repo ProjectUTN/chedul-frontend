@@ -180,11 +180,21 @@ export interface SesionEstudio {
 export interface ResumenEstudio {
   hoy_minutos: number;
   semana_minutos: number;
+  mes_minutos: number;
+  meta_diaria: number;
   racha_dias: number;
-  // Los ultimos 28 dias, del mas viejo a hoy
+  // Las ultimas 26 semanas (182 dias), del mas viejo a hoy
   por_dia: { fecha: string; minutos: number }[];
   // Esta semana; sin materia viene con materia_id null
   por_materia: { materia_id: number | null; nombre: string; minutos: number }[];
+}
+
+export interface TareaEstudio {
+  id: number;
+  titulo: string;
+  hecha: boolean;
+  creada: string;
+  materia: MateriaResumen | null;
 }
 
 export interface PuestoRanking {

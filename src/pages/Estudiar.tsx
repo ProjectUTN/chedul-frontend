@@ -1,23 +1,46 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import SelectorMateria from "../components/SelectorMateria";
 import { useAuth } from "../context/authProvider";
 import { mensajeDeError } from "../api/client";
 import { getMaterias } from "../features/estado_academico/api";
-import { borrarSesion, getRanking, getResumen, getSesiones, guardarSesion, participarEnRanking } from "../features/estudio/api";
+import {
+  borrarSesion,
+  getRanking,
+  getResumen,
+  getSesiones,
+  guardarSesion,
+  participarEnRanking,
+} from "../features/estudio/api";
 import useTemporizador, { AJUSTES_POMODORO, formatoHoras, formatoReloj } from "../features/estudio/useTemporizador";
 import { DIAS_CORTOS, desdeISO, diaSemana } from "../features/calendario/fechas";
+import MetaDiaria from "../features/estudio/MetaDiaria";
+import CalendarioActividad from "../features/estudio/CalendarioActividad";
+import Cotizacion from "../features/estudio/Cotizacion";
+import Trofeos from "../features/estudio/Trofeos";
+import Tareas from "../features/estudio/Tareas";
+import ProximoExamen from "../features/estudio/ProximoExamen";
+import { mejorRacha } from "../features/estudio/logros";
 import type { Materia, ModoEstudio, RankingEstudio, ResumenEstudio, SesionEstudio } from "../api/types";
 import "./inicio.css";
 import "../features/estudio/estudio.css";
 import "../features/herramientas/herramientas.css";
 
-// Estudiar: temporizador pomodoro o libre por materia, lo estudiado por dia y
-// por materia, y un ranking semanal en el que solo aparece quien se suma.
+// Estudiar: temporizador pomodoro o libre por materia, meta diaria con
+// medallas, cotizacion, calendario de actividad, trofeos, tareas, cuenta
+// regresiva al proximo examen y un ranking semanal en el que solo aparece
+// quien se suma.
+
+const DIAS_DE_BARRAS = 28;
 
 const horaDe = (iso: string) =>
-  new Date(iso).toLocaleString("es-AR", { weekday: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+  new Date(iso).toLocaleString("es-AR", {
+    weekday: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
 function Estudiar() {
   const { user } = useAuth();
@@ -52,7 +75,11 @@ function Estudiar() {
   const alTerminarSesion = useCallback(
     async (sesion: { modo: ModoEstudio; minutos: number; materiaId: number }) => {
       try {
-        await guardarSesion({ modo: sesion.modo, minutos: sesion.minutos, materia_id: sesion.materiaId });
+        await guardarSesion({
+          modo: sesion.modo,
+          minutos: sesion.minutos,
+          materia_id: sesion.materiaId,
+        });
         toast.success(`Sumaste ${formatoHoras(sesion.minutos)} de estudio`);
         recargar();
       } catch (err) {
@@ -63,6 +90,23 @@ function Estudiar() {
   );
 
   const t = useTemporizador({ onSesion: alTerminarSesion });
+
+  // Pantalla completa del temporizador, para dejarlo a la vista mientras estudiás
+  const reloj = useRef<HTMLElement>(null);
+  const [pantallaCompleta, setPantallaCompleta] = useState(false);
+  useEffect(() => {
+    const alCambiar = () => setPantallaCompleta(document.fullscreenElement === reloj.current);
+    document.addEventListener("fullscreenchange", alCambiar);
+    return () => document.removeEventListener("fullscreenchange", alCambiar);
+  }, []);
+  const alternarPantallaCompleta = () => {
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    else reloj.current?.requestFullscreen().catch(() => toast.info("Tu navegador no deja usar pantalla completa"));
+  };
+
+  // Lo del bloque que esta corriendo cuenta para la meta aunque no se guardo
+  const enCurso = t.empezado && t.fase === "foco" ? Math.floor(t.transcurridoMs / 60_000) : 0;
+  const materiaActual = materias.find((m) => m.id === t.materiaId);
 
   // El tiempo en la pestaña, para verlo desde otra
   useEffect(() => {
@@ -95,7 +139,8 @@ function Estudiar() {
     }
   };
 
-  const maxDia = Math.max(60, ...(resumen?.por_dia.map((d) => d.minutos) ?? []));
+  const ultimosDias = resumen?.por_dia.slice(-DIAS_DE_BARRAS) ?? [];
+  const maxDia = Math.max(60, ...ultimosDias.map((d) => d.minutos));
   const maxMateria = Math.max(1, ...(resumen?.por_materia.map((m) => m.minutos) ?? []));
   const radio = 88;
   const circunferencia = 2 * Math.PI * radio;
@@ -109,160 +154,221 @@ function Estudiar() {
             Herramientas
           </Link>
           <h1>Estudiar</h1>
-          <p>Medí lo que estudiás con pomodoros o con el cronómetro, y compará tu semana con la de otros.</p>
+          <p>
+            Medí lo que estudiás, ponete una meta por día, ganá medallas y trofeos, y compará tu semana con la de otros.
+          </p>
         </div>
       </div>
 
       {error && <p className="form-error">{error}</p>}
 
       <div className="estudio-layout">
-        <section className={`card temporizador temporizador--${t.fase}`} aria-label="Temporizador">
-          <div className="segmented" role="group" aria-label="Modo">
-            <button type="button" aria-pressed={t.modo === "pomodoro"} disabled={t.empezado} onClick={() => t.elegirModo("pomodoro")}>
-              Pomodoro
+        <div className="estudio-columna">
+          <section ref={reloj} className={`card temporizador temporizador--${t.fase}`} aria-label="Temporizador">
+            <button
+              type="button"
+              className="btn btn-icono temporizador__pantalla"
+              onClick={alternarPantallaCompleta}
+              aria-label={pantallaCompleta ? "Salir de pantalla completa" : "Pantalla completa"}
+              title={pantallaCompleta ? "Salir de pantalla completa" : "Pantalla completa"}>
+              <span className="material-symbols-rounded">{pantallaCompleta ? "fullscreen_exit" : "fullscreen"}</span>
             </button>
-            <button type="button" aria-pressed={t.modo === "libre"} disabled={t.empezado} onClick={() => t.elegirModo("libre")}>
-              Cronómetro
-            </button>
-          </div>
+            <div className="segmented" role="group" aria-label="Modo">
+              <button
+                type="button"
+                aria-pressed={t.modo === "pomodoro"}
+                disabled={t.empezado}
+                onClick={() => t.elegirModo("pomodoro")}>
+                Pomodoro
+              </button>
+              <button
+                type="button"
+                aria-pressed={t.modo === "libre"}
+                disabled={t.empezado}
+                onClick={() => t.elegirModo("libre")}>
+                Cronómetro
+              </button>
+            </div>
 
-          <div className="temporizador__reloj">
-            <svg viewBox="0 0 200 200" aria-hidden="true">
-              <circle className="temporizador__pista" cx="100" cy="100" r={radio} />
-              <circle
-                className="temporizador__avance"
-                cx="100"
-                cy="100"
-                r={radio}
-                strokeDasharray={circunferencia}
-                strokeDashoffset={circunferencia * (1 - t.progreso)}
+            <div className="temporizador__reloj">
+              <svg viewBox="0 0 200 200" aria-hidden="true">
+                <circle className="temporizador__pista" cx="100" cy="100" r={radio} />
+                <circle
+                  className="temporizador__avance"
+                  cx="100"
+                  cy="100"
+                  r={radio}
+                  strokeDasharray={circunferencia}
+                  strokeDashoffset={circunferencia * (1 - t.progreso)}
+                />
+              </svg>
+              <div className="temporizador__texto">
+                <span className="temporizador__fase">
+                  {t.modo === "libre" ? "Cronómetro" : t.fase === "foco" ? "Foco" : "Descanso"}
+                </span>
+                <span className="temporizador__tiempo" role="timer">
+                  {formatoReloj(t.mostrarMs)}
+                </span>
+                {pantallaCompleta && materiaActual && (
+                  <span className="temporizador__materia-actual">{materiaActual.nombre}</span>
+                )}
+              </div>
+            </div>
+
+            {t.modo === "pomodoro" && (
+              <div className="segmented temporizador__ajustes" role="group" aria-label="Duración">
+                {AJUSTES_POMODORO.map((a) => (
+                  <button
+                    key={a.foco}
+                    type="button"
+                    disabled={t.empezado}
+                    aria-pressed={t.ajustes.foco === a.foco}
+                    onClick={() => t.elegirAjustes(a)}>
+                    {a.foco}/{a.descanso}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <label className="campo temporizador__materia">
+              <span>Materia</span>
+              <SelectorMateria
+                materias={materias}
+                value={t.materiaId}
+                onChange={t.elegirMateria}
+                opcionVacia="Sin materia"
               />
-            </svg>
-            <div className="temporizador__texto">
-              <span className="temporizador__fase">
-                {t.modo === "libre" ? "Cronómetro" : t.fase === "foco" ? "Foco" : "Descanso"}
-              </span>
-              <span className="temporizador__tiempo" role="timer">
-                {formatoReloj(t.mostrarMs)}
-              </span>
-            </div>
-          </div>
+            </label>
 
-          {t.modo === "pomodoro" && (
-            <div className="segmented temporizador__ajustes" role="group" aria-label="Duración">
-              {AJUSTES_POMODORO.map((a) => (
-                <button
-                  key={a.foco}
-                  type="button"
-                  disabled={t.empezado}
-                  aria-pressed={t.ajustes.foco === a.foco}
-                  onClick={() => t.elegirAjustes(a)}>
-                  {a.foco}/{a.descanso}
+            <div className="temporizador__acciones">
+              {t.corriendo ? (
+                <button type="button" className="btn btn-secundario" onClick={t.pausar}>
+                  <span className="material-symbols-rounded">pause</span>
+                  Pausar
                 </button>
-              ))}
+              ) : (
+                <button type="button" className="btn btn-primario" onClick={t.empezar}>
+                  <span className="material-symbols-rounded">play_arrow</span>
+                  {t.empezado ? "Seguir" : t.fase === "descanso" ? "Empezar descanso" : "Empezar"}
+                </button>
+              )}
+              {t.empezado && t.fase === "foco" && (
+                <button type="button" className="btn btn-secundario" onClick={t.terminar}>
+                  <span className="material-symbols-rounded">stop</span>
+                  Terminar y guardar
+                </button>
+              )}
+              {t.empezado && (
+                <button
+                  type="button"
+                  className="btn btn-icono"
+                  onClick={t.descartar}
+                  aria-label="Descartar"
+                  title="Descartar sin guardar">
+                  <span className="material-symbols-rounded">restart_alt</span>
+                </button>
+              )}
             </div>
-          )}
+            <p className="campo-ayuda temporizador__ayuda">
+              {t.modo === "pomodoro"
+                ? "Cada bloque de foco que terminás se guarda solo. Podés cambiar de sección: sigue contando."
+                : "Cuando cortes, se guarda lo que estudiaste (desde 1 minuto)."}
+            </p>
+          </section>
 
-          <label className="campo temporizador__materia">
-            <span>Materia</span>
-            <SelectorMateria materias={materias} value={t.materiaId} onChange={t.elegirMateria} opcionVacia="Sin materia" />
-          </label>
-
-          <div className="temporizador__acciones">
-            {t.corriendo ? (
-              <button type="button" className="btn btn-secundario" onClick={t.pausar}>
-                <span className="material-symbols-rounded">pause</span>
-                Pausar
-              </button>
-            ) : (
-              <button type="button" className="btn btn-primario" onClick={t.empezar}>
-                <span className="material-symbols-rounded">play_arrow</span>
-                {t.empezado ? "Seguir" : t.fase === "descanso" ? "Empezar descanso" : "Empezar"}
-              </button>
-            )}
-            {t.empezado && t.fase === "foco" && (
-              <button type="button" className="btn btn-secundario" onClick={t.terminar}>
-                <span className="material-symbols-rounded">stop</span>
-                Terminar y guardar
-              </button>
-            )}
-            {t.empezado && (
-              <button type="button" className="btn btn-icono" onClick={t.descartar} aria-label="Descartar" title="Descartar sin guardar">
-                <span className="material-symbols-rounded">restart_alt</span>
-              </button>
-            )}
-          </div>
-          <p className="campo-ayuda temporizador__ayuda">
-            {t.modo === "pomodoro"
-              ? "Cada bloque de foco que terminás se guarda solo. Podés cambiar de sección: sigue contando."
-              : "Cuando cortes, se guarda lo que estudiaste (desde 1 minuto)."}
-          </p>
-        </section>
+          <Tareas materias={materias} materiaId={t.materiaId} />
+        </div>
 
         <div className="estudio-columna">
           {resumen && (
+            <MetaDiaria
+              resumen={resumen}
+              enCurso={enCurso}
+              corriendo={t.corriendo && t.fase === "foco"}
+              onMetaCambiada={(meta) => setResumen((r) => (r ? { ...r, meta_diaria: meta } : r))}
+            />
+          )}
+
+          {resumen && (
             <section className="estadisticas estudio-numeros" aria-label="Lo que estudiaste">
-              <div className="card estadistica">
-                <span className="estadistica__valor">{formatoHoras(resumen.hoy_minutos)}</span>
-                <span className="estadistica__titulo">hoy</span>
-              </div>
               <div className="card estadistica">
                 <span className="estadistica__valor">{formatoHoras(resumen.semana_minutos)}</span>
                 <span className="estadistica__titulo">esta semana</span>
+              </div>
+              <div className="card estadistica">
+                <span className="estadistica__valor">{formatoHoras(resumen.mes_minutos)}</span>
+                <span className="estadistica__titulo">este mes</span>
               </div>
               <div className="card estadistica">
                 <span className="estadistica__valor">
                   {resumen.racha_dias}
                   <small> {resumen.racha_dias === 1 ? "día" : "días"}</small>
                 </span>
-                <span className="estadistica__titulo">de racha</span>
+                <span className="estadistica__titulo">
+                  de racha (mejor: {Math.max(mejorRacha(resumen.por_dia), resumen.racha_dias)})
+                </span>
               </div>
             </section>
           )}
 
-          {resumen && (
-            <section className="card inicio-seccion">
-              <div className="inicio-seccion__header">
-                <h2>Últimas 4 semanas</h2>
-              </div>
-              <div className="barras-dias" role="img" aria-label="Minutos estudiados por día en las últimas 4 semanas">
-                {resumen.por_dia.map((d) => {
-                  const fecha = desdeISO(d.fecha);
-                  return (
-                    <div
-                      key={d.fecha}
-                      className="barras-dias__dia"
-                      title={`${DIAS_CORTOS[diaSemana(fecha) - 1]} ${fecha.getDate()}/${fecha.getMonth() + 1}: ${formatoHoras(d.minutos)}`}>
-                      <div style={{ height: `${(d.minutos / maxDia) * 100}%` }} />
-                    </div>
-                  );
-                })}
-              </div>
-              {resumen.por_materia.length > 0 && (
-                <>
-                  <h3 className="estudio-subtitulo">Esta semana por materia</h3>
-                  <ul className="barras-materias">
-                    {resumen.por_materia.map((m) => (
-                      <li key={m.materia_id ?? 0}>
-                        <span>{m.nombre || "Sin materia"}</span>
-                        <span className="campo-ayuda">{formatoHoras(m.minutos)}</span>
-                        <div className="barras-materias__barra">
-                          <div style={{ width: `${(m.minutos / maxMateria) * 100}%` }} />
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </section>
-          )}
+          <ProximoExamen />
         </div>
+
+        {resumen && <CalendarioActividad resumen={resumen} />}
+        {resumen && <Cotizacion resumen={resumen} />}
+
+        {resumen && (
+          <section className="card inicio-seccion">
+            <div className="inicio-seccion__header">
+              <h2>Últimas 4 semanas</h2>
+            </div>
+            <div className="barras-dias" role="img" aria-label="Minutos estudiados por día en las últimas 4 semanas">
+              {ultimosDias.map((d) => {
+                const fecha = desdeISO(d.fecha);
+                return (
+                  <div
+                    key={d.fecha}
+                    className="barras-dias__dia"
+                    title={`${DIAS_CORTOS[diaSemana(fecha) - 1]} ${fecha.getDate()}/${fecha.getMonth() + 1}: ${formatoHoras(d.minutos)}`}>
+                    <div style={{ height: `${(d.minutos / maxDia) * 100}%` }} />
+                  </div>
+                );
+              })}
+            </div>
+            {resumen.por_materia.length > 0 && (
+              <>
+                <h3 className="estudio-subtitulo">Esta semana por materia</h3>
+                <ul className="barras-materias">
+                  {resumen.por_materia.map((m) => (
+                    <li key={m.materia_id ?? 0}>
+                      <span>{m.nombre || "Sin materia"}</span>
+                      <span className="campo-ayuda">{formatoHoras(m.minutos)}</span>
+                      <div className="barras-materias__barra">
+                        <div
+                          style={{
+                            width: `${(m.minutos / maxMateria) * 100}%`,
+                          }}
+                        />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </section>
+        )}
+
+        {resumen && <Trofeos resumen={resumen} />}
 
         {ranking && (
           <section className="card inicio-seccion ranking">
             <div className="inicio-seccion__header">
               <h2>Ranking de la semana</h2>
-              <button type="button" className="btn btn-secundario btn-chico" onClick={alternarRanking} disabled={cambiandoRanking}>
+              <button
+                type="button"
+                className="btn btn-secundario btn-chico"
+                onClick={alternarRanking}
+                disabled={cambiandoRanking}>
                 {ranking.participo ? "Salir del ranking" : "Sumarme"}
               </button>
             </div>

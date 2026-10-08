@@ -24,6 +24,7 @@ import {
 import { useAuth } from "../context/authProvider";
 import { mensajeDeError } from "../api/client";
 import type { Condicion, CondicionPorAlumno, Materia } from "../api/types";
+import { NO_ME_INTERESA, condicionesPara, esElectiva } from "../features/estado_academico/condiciones";
 import "../features/correlativas/correlativas.css";
 
 const NIVELES = ["", "Primer año", "Segundo año", "Tercer año", "Cuarto año", "Quinto año", "Sexto año"];
@@ -60,11 +61,12 @@ function MapaCorrelativas() {
       .finally(() => setCargando(false));
   }, [user, cargarEstado]);
 
-  // Las electivas se muestran a pedido para que el mapa no quede tan cargado
-  const visibles = useMemo(
-    () => (conElectivas ? materias : materias.filter((m) => m.tipo !== "Electiva")),
-    [materias, conElectivas]
-  );
+  // Las electivas se muestran a pedido para que el mapa no quede tan cargado,
+  // y nunca las que el alumno marco como "No me interesa"
+  const visibles = useMemo(() => {
+    const descartadas = new Set(misCondiciones.filter((c) => c.condicion === NO_ME_INTERESA).map((c) => c.materia_id));
+    return materias.filter((m) => (conElectivas || !esElectiva(m)) && !descartadas.has(m.id));
+  }, [materias, misCondiciones, conElectivas]);
   const grafo = useMemo(() => armarGrafo(visibles), [visibles]);
 
   // La materia activa es la que tiene el mouse encima o, si no, la elegida
@@ -264,7 +266,7 @@ function MapaCorrelativas() {
                       disabled={guardando}
                       onChange={(e) => cambiarCondicion(Number(e.target.value), null)}>
                       <option value={0}>Pendiente</option>
-                      {condiciones.map((c) => (
+                      {condicionesPara(materia, condiciones).map((c) => (
                         <option key={c.id} value={c.id}>
                           {c.condicion}
                         </option>

@@ -5,6 +5,10 @@
   align-items: start;
 }
 
+.estudio-ancho {
+  grid-column: 1 / -1;
+}
+
 .estudio-columna {
   display: grid;
   gap: 1rem;
@@ -14,11 +18,50 @@
 
 .temporizador {
   --fase: var(--accent);
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  grid-row: span 2;
+}
+
+.temporizador__pantalla {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+}
+
+.temporizador__materia-actual {
+  margin-top: 0.25rem;
+  color: var(--text-2);
+  font-weight: 600;
+}
+
+/* En pantalla completa queda solo el reloj grande en el medio */
+.temporizador:fullscreen {
+  justify-content: center;
+  border: none;
+  border-radius: 0;
+  background-color: var(--bg, var(--clr-bg-500));
+}
+
+.temporizador:fullscreen .temporizador__reloj {
+  width: min(70vh, 90vw);
+}
+
+.temporizador:fullscreen .temporizador__tiempo {
+  font-size: clamp(3rem, 12vh, 8rem);
+}
+
+.temporizador:fullscreen .temporizador__fase {
+  font-size: 1.25rem;
+}
+
+.temporizador:fullscreen .temporizador__materia,
+.temporizador:fullscreen .temporizador__ajustes,
+.temporizador:fullscreen .temporizador__ayuda,
+.temporizador:fullscreen > .segmented {
+  display: none;
 }
 
 .temporizador--descanso {
@@ -166,6 +209,417 @@
   background-color: var(--accent);
 }
 
+/* ---------- Meta diaria y medallas ---------- */
+
+.meta__select {
+  width: auto;
+  padding: 0.375rem 0.5rem;
+}
+
+.meta__hoy {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.meta__cuanto {
+  font-family: var(--ff-titulos);
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.meta__cuanto .campo-ayuda {
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.medalla {
+  --medalla: var(--clr-bg-300);
+  --medalla-texto: var(--text-3);
+  flex-shrink: 0;
+  width: 3.25rem;
+  height: 3.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--medalla-texto);
+  background-color: var(--medalla);
+}
+
+.medalla .material-symbols-rounded {
+  font-size: 1.75rem;
+}
+
+.medalla--chica {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.medalla--chica .material-symbols-rounded {
+  font-size: 1rem;
+}
+
+.medalla--bronce {
+  --medalla: #d9a36b;
+  --medalla-texto: #2e1a05;
+}
+
+.medalla--plata {
+  --medalla: #c9d0db;
+  --medalla-texto: #1f2633;
+}
+
+.medalla--oro {
+  --medalla: #f5c84c;
+  --medalla-texto: #3a2b00;
+}
+
+.pildoras {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.pildora {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.75rem;
+  background-color: var(--clr-bg-400);
+}
+
+.pildora__texto {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.pildora__valor {
+  font-variant-numeric: tabular-nums;
+}
+
+.pildora__barra {
+  height: 6px;
+  border-radius: 999px;
+  background-color: var(--clr-bg-300);
+  overflow: hidden;
+}
+
+.pildora__barra > div {
+  height: 100%;
+  border-radius: inherit;
+  background-color: var(--accent);
+}
+
+/* ---------- Calendario de actividad ---------- */
+
+.actividad {
+  --celda: 0.875rem;
+  display: flex;
+  gap: 0.375rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.actividad__dias {
+  display: grid;
+  grid-template-rows: 1rem repeat(7, var(--celda));
+  gap: 3px;
+  font-size: 0.6875rem;
+  color: var(--text-3);
+}
+
+.actividad__dias::before {
+  content: "";
+}
+
+.actividad__grilla {
+  display: flex;
+  gap: 3px;
+}
+
+.actividad__semana {
+  display: grid;
+  grid-template-rows: 1rem repeat(7, var(--celda));
+  gap: 3px;
+}
+
+.actividad__mes {
+  font-size: 0.6875rem;
+  color: var(--text-3);
+  white-space: nowrap;
+  width: var(--celda);
+  overflow: visible;
+}
+
+.actividad__dia {
+  width: var(--celda);
+  height: var(--celda);
+  border-radius: 3px;
+  background-color: var(--clr-bg-300);
+}
+
+.actividad__dia--vacio {
+  background-color: transparent;
+}
+
+.actividad__dia--1 {
+  background-color: color-mix(in srgb, var(--green) 30%, var(--clr-bg-300));
+}
+
+.actividad__dia--2 {
+  background-color: color-mix(in srgb, var(--green) 55%, var(--clr-bg-300));
+}
+
+.actividad__dia--3 {
+  background-color: color-mix(in srgb, var(--green) 80%, var(--clr-bg-300));
+}
+
+.actividad__dia--4 {
+  background-color: var(--green);
+}
+
+.actividad__pie {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.actividad__leyenda .actividad__dia {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+@media (min-width: 1200px) {
+  .actividad {
+    --celda: 1.25rem;
+  }
+}
+
+.actividad__leyenda {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.75rem;
+  color: var(--text-3);
+}
+
+.actividad__leyenda > span:first-child {
+  margin-right: 0.25rem;
+}
+
+.actividad__leyenda > span:last-child {
+  margin-left: 0.25rem;
+}
+
+.medallas-conteo {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 1rem;
+}
+
+.medallas-conteo li {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-weight: 600;
+}
+
+/* ---------- Cotizacion ---------- */
+
+.cotizacion {
+  --cotizacion: var(--green);
+}
+
+.cotizacion--baja {
+  --cotizacion: var(--red);
+}
+
+.cotizacion__valor {
+  font-family: var(--ff-titulos);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--cotizacion);
+  font-variant-numeric: tabular-nums;
+}
+
+.cotizacion__grafico {
+  width: 100%;
+  height: 7rem;
+  overflow: visible;
+}
+
+.cotizacion__linea {
+  fill: none;
+  stroke: var(--cotizacion);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.cotizacion__area {
+  fill: color-mix(in srgb, var(--cotizacion) 15%, transparent);
+}
+
+.cotizacion__cero {
+  stroke: var(--clr-bg-300);
+  stroke-dasharray: 4 4;
+  vector-effect: non-scaling-stroke;
+}
+
+/* ---------- Proximo examen ---------- */
+
+.examen__cuenta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.examen__dias {
+  font-family: var(--ff-titulos);
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--orange);
+}
+
+.examen__unidad {
+  color: var(--text-2);
+  font-weight: 600;
+}
+
+.examen__siguientes {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.375rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.625rem;
+}
+
+.examen__siguientes li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+}
+
+/* ---------- Trofeos ---------- */
+
+.trofeos {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 0.5rem;
+}
+
+.trofeo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.75rem;
+  background-color: var(--clr-bg-400);
+}
+
+.trofeo__icono {
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--text-3);
+  background-color: var(--clr-bg-300);
+}
+
+.trofeo--logrado .trofeo__icono {
+  color: #3a2b00;
+  background-color: #f5c84c;
+}
+
+.trofeo__texto {
+  display: grid;
+  gap: 0.125rem;
+  min-width: 0;
+  flex: 1;
+  font-size: 0.875rem;
+}
+
+.trofeo__avance {
+  height: 4px;
+  margin-top: 0.25rem;
+  border-radius: 999px;
+  background-color: var(--clr-bg-300);
+  overflow: hidden;
+}
+
+.trofeo__avance > div {
+  height: 100%;
+  background-color: var(--accent);
+}
+
+.trofeo__check {
+  color: var(--green);
+}
+
+.trofeos__mas {
+  justify-self: start;
+}
+
+/* ---------- Tareas ---------- */
+
+.tareas__nueva {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem;
+}
+
+.tareas__nueva > :first-child {
+  grid-column: 1 / -1;
+}
+
+.tareas {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.tarea {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tarea__check {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 0.375rem 0;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.tarea__check input {
+  margin-top: 0.2rem;
+  accent-color: var(--accent);
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.tarea--hecha .tarea__check > span {
+  text-decoration: line-through;
+  color: var(--text-3);
+}
+
 /* ---------- Ranking ---------- */
 
 .ranking__lista {
@@ -225,13 +679,43 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .temporizador {
-    grid-row: auto;
+  /* En una sola columna la meta va justo abajo del temporizador */
+  .estudio-columna {
+    display: contents;
+  }
+
+  .estudio-layout > *,
+  .estudio-columna > * {
+    order: 10;
+  }
+
+  .estudio-columna > .temporizador {
+    order: 1;
+  }
+
+  .estudio-columna > .meta {
+    order: 2;
+  }
+
+  .estudio-columna > .estudio-numeros {
+    order: 3;
+  }
+
+  .estudio-columna > .tareas-card {
+    order: 4;
+  }
+
+  .estudio-columna > .examen {
+    order: 5;
   }
 }
 
 @media (max-width: 600px) {
   .estudio-numeros .estadistica__valor {
     font-size: 1.25rem;
+  }
+
+  .pildoras {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

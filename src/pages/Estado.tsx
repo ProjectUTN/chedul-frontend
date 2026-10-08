@@ -12,6 +12,7 @@ import {
 import { useAuth } from "../context/authProvider";
 import { mensajeDeError } from "../api/client";
 import { confirmar } from "../components/confirmar";
+import { NO_ME_INTERESA } from "../features/estado_academico/condiciones";
 import { agregarVariasAlHorario, sacarVariasDelHorario } from "../features/calendario/horarioAutomatico";
 import type { Condicion, CondicionPorAlumno, Materia } from "../api/types";
 import "../styles.css";
@@ -20,7 +21,7 @@ const PENDIENTE = "Pendiente";
 const NOMBRE_NIVEL = ["", "primer año", "segundo año", "tercer año", "cuarto año", "quinto año"];
 
 const claseEstado = (estado: string) =>
-  `estado--${estado.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")}`;
+  `estado--${estado.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, "-")}`;
 
 function Estado() {
   const { user } = useAuth();
@@ -55,15 +56,18 @@ function Estado() {
     .filter((m) => m.nivel === nivel)
     .sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
   const aprobadas = misCondiciones.filter((c) => c.condicion === "Aprobada").length;
-  const estados = [PENDIENTE, ...condiciones.map((c) => c.condicion)];
+  // "No me interesa" se elige de a una y solo en electivas
+  const estados = [PENDIENTE, ...condiciones.map((c) => c.condicion).filter((c) => c !== NO_ME_INTERESA)];
 
   // Marca todas las materias del año que se esta viendo con el mismo estado.
   // Las que ya estaban aprobadas conservan su nota.
   const marcarTodas = async (estado: string) => {
     const nombreNivel = NOMBRE_NIVEL[nivel] ?? `nivel ${nivel}`;
-    const aCambiar = materiasDelNivel.filter(
-      (m) => (misCondiciones.find((c) => c.materia_id === m.id)?.condicion ?? PENDIENTE) !== estado
-    );
+    // Las electivas descartadas no se tocan
+    const aCambiar = materiasDelNivel.filter((m) => {
+      const actual = misCondiciones.find((c) => c.materia_id === m.id)?.condicion ?? PENDIENTE;
+      return actual !== estado && actual !== NO_ME_INTERESA;
+    });
     if (aCambiar.length === 0) {
       toast.info(`Todas las materias de ${nombreNivel} ya están en ${estado.toLowerCase()}`);
       return;
@@ -86,9 +90,7 @@ function Estado() {
     try {
       await Promise.all(
         aCambiar.map((m) =>
-          estado === PENDIENTE || !condicion
-            ? borrarCondicion(m.id)
-            : setCondicion(m.id, condicion.id, null)
+          estado === PENDIENTE || !condicion ? borrarCondicion(m.id) : setCondicion(m.id, condicion.id, null)
         )
       );
       toast.success(`Listo, ${aCambiar.length} materias de ${nombreNivel} en ${estado.toLowerCase()}`);
@@ -107,10 +109,7 @@ function Estado() {
       <div className="page-header">
         <div>
           <h1>Estado académico</h1>
-          <p>
-            Llevá registro de tu progreso, así podés ver tus estadísticas y qué
-            materias podés cursar en Inicio.
-          </p>
+          <p>Llevá registro de tu progreso, así podés ver tus estadísticas y qué materias podés cursar en Inicio.</p>
         </div>
         {!cargando && (
           <span className="chip chip-azul">

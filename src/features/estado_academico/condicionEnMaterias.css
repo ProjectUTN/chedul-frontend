@@ -19,6 +19,23 @@
   --estado-fondo: var(--green-soft);
 }
 
+.estado--no-me-interesa {
+  --estado: var(--text-3);
+  --estado-fondo: var(--surface-3);
+}
+
+.materia-fila.estado--no-me-interesa {
+  border-left-style: dashed;
+}
+
+.materia-fila.estado--no-me-interesa .materia-fila__info {
+  opacity: 0.6;
+}
+
+.estado-opcion__corto {
+  display: none;
+}
+
 .lista-estado {
   list-style: none;
   padding: 0;
@@ -179,6 +196,18 @@
   .estado-opcion {
     padding: 0.5rem 0.25rem;
     font-size: 0.75rem;
+  }
+
+  .estado-opcion__largo {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .estado-opcion__corto {
+    display: inline;
   }
 
   .nota {
