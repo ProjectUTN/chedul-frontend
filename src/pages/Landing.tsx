@@ -119,9 +119,6 @@ function Landing() {
               <li>
                 <b>109</b> correlativas
               </li>
-              <li>
-                <b>2° cuatri</b> con horarios y aulas
-              </li>
             </ul>
           </div>
 
