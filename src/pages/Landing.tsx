@@ -13,6 +13,9 @@ import comunidadesOscuro from "../assets/landing/comunidades-oscuro.jpg";
 import movilClaro from "../assets/landing/movil-claro.jpg";
 import movilOscuro from "../assets/landing/movil-oscuro.jpg";
 import useTema from "../hooks/useTema";
+import fotoEduardo from "../assets/equipo/eduardo.jpg";
+import fotoLautaro from "../assets/equipo/lautaro.jpg";
+import fotoTobias from "../assets/equipo/tobias.jpg";
 import "./landing.css";
 
 const FUNCIONES = [
@@ -86,16 +89,18 @@ function Captura({ claro, oscuro, alt, className = "" }: { claro: string; oscuro
 // Landing es la pagina publica que se ve antes de iniciar sesion
 // El equipo que hace Chedul, para Quiénes somos
 const EQUIPO: { nombre: string; rol: string; link: string; foto?: string }[] = [
-  { nombre: "Eduardo Ramírez", rol: "Idea, coordinación y fullstack", link: "https://eduramirez.dev" },
+  { nombre: "Eduardo Ramírez", rol: "Idea, coordinación y fullstack", link: "https://eduramirez.dev", foto: fotoEduardo },
   {
     nombre: "Lautaro Acosta Quintana",
     rol: "Backend e infraestructura",
     link: "https://www.linkedin.com/in/lautaro-acosta-quintana/",
+    foto: fotoLautaro,
   },
   {
     nombre: "Tobías Stegmayer",
     rol: "Frontend y UI",
     link: "https://www.linkedin.com/in/tobias-stegmayer-612551218/",
+    foto: fotoTobias,
   },
 ];
 
