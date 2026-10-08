@@ -1,19 +1,18 @@
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { AppRouter } from "./routes/Router";
 import Confirmacion from "./components/Confirmacion";
 import Eleccion from "./components/Eleccion";
-import useTema from "./hooks/useTema";
+import Avisos from "./components/Avisos";
+// Aplica el tema guardado apenas carga la app
+import "./hooks/useTema";
 import "./styles.css";
 
 function App() {
-  const { tema } = useTema();
   return (
     <>
       <AppRouter />
       <Confirmacion />
       <Eleccion />
-      <ToastContainer limit={3} position="bottom-right" theme={tema === "claro" ? "light" : "dark"} autoClose={3000} />
+      <Avisos />
     </>
   );
 }

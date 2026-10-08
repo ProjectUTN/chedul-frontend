@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { useNavigate } from "react-router-dom";
 import ImportarSysacad from "./ImportarSysacad";
+import SelectorEstado, { type OpcionEstado } from "../components/SelectorEstado";
 import { useAuth } from "../context/authProvider";
 import { mensajeDeError } from "../api/client";
 import {
@@ -23,14 +24,13 @@ import "../features/bienvenida/bienvenida.css";
 // importandolo de SysAcad o año por año. Con eso se calcula todo lo demas.
 
 const PENDIENTE = "Pendiente";
-const ESTADOS = [PENDIENTE, "Cursando", "Regularizada", "Aprobada"] as const;
-type Estado = (typeof ESTADOS)[number];
-const CORTO: Record<Estado, string> = {
-  Pendiente: "Pendiente",
-  Cursando: "Cursando",
-  Regularizada: "Regular",
-  Aprobada: "Aprobada",
-};
+type Estado = typeof PENDIENTE | "Cursando" | "Regularizada" | "Aprobada";
+const OPCIONES: OpcionEstado[] = [
+  { valor: PENDIENTE, texto: "Pendiente", icono: "hourglass_empty", color: "pendiente" },
+  { valor: "Cursando", texto: "Cursando", icono: "menu_book", color: "cursando" },
+  { valor: "Regularizada", texto: "Regular", icono: "fact_check", color: "regularizada" },
+  { valor: "Aprobada", texto: "Aprobada", icono: "workspace_premium", color: "aprobada" },
+];
 const NOMBRE_NIVEL = ["", "1er año", "2do año", "3er año", "4to año", "5to año"];
 const NIVELES = [1, 2, 3, 4, 5];
 
@@ -84,6 +84,27 @@ function Bienvenida() {
       })
       .catch((err) => setError(mensajeDeError(err, "No se pudieron cargar las materias")));
   }, [user]);
+
+  // Las materias aparecen a medida que se scrollea hasta ellas
+  useEffect(() => {
+    const raiz = pantalla.current;
+    if (!raiz) return;
+    const observador = new IntersectionObserver(
+      (entradas) => {
+        entradas
+          .filter((e) => e.isIntersecting)
+          .forEach((e, i) => {
+            const el = e.target as HTMLElement;
+            el.style.transitionDelay = `${i * 70}ms`;
+            el.classList.add("visible");
+            observador.unobserve(el);
+          });
+      },
+      { root: raiz, threshold: 0.15 }
+    );
+    raiz.querySelectorAll(".revelar:not(.visible)").forEach((el) => observador.observe(el));
+    return () => observador.disconnect();
+  });
 
   const ir = (siguiente: Paso) => {
     setDireccion(orden(siguiente) >= orden(paso) ? "adelante" : "atras");
@@ -151,27 +172,17 @@ function Bienvenida() {
     }
   };
 
-  const filaMateria = (m: Materia, i: number) => {
+  const filaMateria = (m: Materia) => {
     const actual = estadoDe(m.id);
     return (
-      <li
-        key={m.id}
-        className={`bienvenida-materia ${claseEstado(actual)}`}
-        style={{ animationDelay: `${120 + i * 45}ms` }}>
+      <li key={m.id} className={`bienvenida-materia revelar ${claseEstado(actual)}`}>
         <span className="bienvenida-materia__nombre">{m.nombre}</span>
-        <div className="estado-opciones" role="radiogroup" aria-label={`Estado de ${m.nombre}`}>
-          {ESTADOS.map((estado) => (
-            <button
-              key={estado}
-              type="button"
-              role="radio"
-              aria-checked={actual === estado}
-              className={`estado-opcion ${claseEstado(estado)}`}
-              onClick={() => elegir(m.id, estado)}>
-              {CORTO[estado]}
-            </button>
-          ))}
-        </div>
+        <SelectorEstado
+          opciones={OPCIONES}
+          valor={actual}
+          onChange={(v) => elegir(m.id, v as Estado)}
+          etiqueta={`Estado de ${m.nombre}`}
+        />
       </li>
     );
   };
@@ -265,10 +276,17 @@ function Bienvenida() {
             <h1>{NOMBRE_NIVEL[nivel]}</h1>
             <p className="bienvenida__bajada">Revisá cada materia. Las notas las podés cargar después.</p>
             <div className="bienvenida-rapido">
-              <span>Marcar todas:</span>
-              {ESTADOS.map((estado) => (
-                <button key={estado} type="button" className="chip-filtro" onClick={() => marcarNivel(nivel, estado)}>
-                  {CORTO[estado]}
+              <span>Marcar todas</span>
+              {OPCIONES.map((o) => (
+                <button
+                  key={o.valor}
+                  type="button"
+                  className={`bienvenida-rapido__boton estado--${o.color}`}
+                  onClick={() => marcarNivel(nivel, o.valor as Estado)}>
+                  <span className="material-symbols-rounded" aria-hidden="true">
+                    {o.icono}
+                  </span>
+                  {o.texto}
                 </button>
               ))}
             </div>

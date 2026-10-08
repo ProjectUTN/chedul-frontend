@@ -202,15 +202,15 @@
 }
 
 .bienvenida-materia {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.625rem 0.75rem;
-  border-radius: var(--radius-chico);
+  gap: 0.75rem 1rem;
+  padding: 0.875rem 1rem;
+  border-radius: var(--radius);
   border: 1px solid var(--border);
-  border-left: 4px solid var(--estado);
   background-color: var(--surface);
+  box-shadow: var(--shadow);
 }
 
 .bienvenida-materia__nombre {
@@ -244,12 +244,7 @@
   }
 
   .bienvenida-materia {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .bienvenida-materia .estado-opciones {
-    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .bienvenida-navegacion {
@@ -345,14 +340,51 @@
   transform: scale(0.97);
 }
 
-.bienvenida-materia {
-  animation: bienvenida-entra 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  transition: border-left-color 250ms ease;
+/* Aparecen al scrollear hasta ellas */
+.revelar {
+  opacity: 0;
+  transform: translateY(28px) scale(0.97);
+  transition:
+    opacity 500ms ease,
+    transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* El estado elegido hace un pequeño rebote */
-.bienvenida-materia .estado-opcion[aria-checked="true"] {
-  animation: bienvenida-marca 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+.revelar.visible {
+  opacity: 1;
+  transform: none;
+}
+
+.bienvenida-rapido__boton {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3125rem;
+  padding: 0.4375rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--estado);
+  background-color: var(--estado-fondo);
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.bienvenida-rapido__boton .material-symbols-rounded {
+  font-size: 1rem;
+}
+
+.bienvenida-rapido__boton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--estado) 25%, transparent);
+}
+
+.bienvenida-rapido__boton:active {
+  transform: scale(0.95);
+}
+
+.bienvenida-rapido__boton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .bienvenida-progreso span {
@@ -466,15 +498,22 @@
   }
 }
 
+/* Con "reducir movimiento" quedan solo los fundidos, sin desplazamientos */
 @media (prefers-reduced-motion: reduce) {
-  .bienvenida *,
-  .bienvenida *::before,
-  .bienvenida *::after {
-    animation: none !important;
-    transition: none !important;
+  .bienvenida__contenido {
+    --desde: 0px;
+  }
+
+  .bienvenida__mascota,
+  .papelitos {
+    animation: none;
   }
 
   .papelitos {
     display: none;
+  }
+
+  .revelar {
+    transform: none;
   }
 }

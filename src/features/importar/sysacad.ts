@@ -89,13 +89,15 @@ export const buscarMateria = (nombre: string, materias: MateriaParaMatch[]) => {
 // interpretarEstado pasa el texto de la columna Estado a un estado de Chedul.
 //   "Aprobada con 7 (5 hs.) Tomo: 139 Folio: 384" -> Aprobada, nota 7
 //   "Aprobada con Aprob. ... por resolución 743/2024" / "Aprobada en 2019" -> Aprobada sin nota
+//   "Ap. Directa", "Aprobación directa", "Promocionada" -> Aprobada sin nota
 //   "Regular en 2024 (2C)" -> Regularizada
 //   "Cursa en K5.1 EDIFICIO CENTRAL" -> Cursando en K5.1
 //   "Libre en K5.1 ..." -> Libre (en Chedul queda pendiente)
 export const interpretarEstado = (estado: string) => {
   const texto = estado.trim();
   const comision = texto.match(/\b([A-Z]\d+\.\d+)\b/)?.[1] ?? null;
-  if (/^aprobad/i.test(texto)) {
+  const aprobada = /^(aprob|promo|equival)/i.test(texto) || /\bap(\.|robaci[oó]n)?\s*directa\b/i.test(texto);
+  if (aprobada) {
     const nota = texto.match(/^aprobada con (\d{1,2})\b/i)?.[1];
     const valor = nota ? Number(nota) : null;
     return {
