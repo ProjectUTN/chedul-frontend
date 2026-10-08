@@ -378,7 +378,7 @@
 
 /* Quienes somos: discreto, arriba del pie */
 .landing-nosotros {
-  max-width: 640px;
+  max-width: 800px;
   margin-bottom: 2rem;
 }
 
@@ -391,6 +391,44 @@
 .landing-nosotros p {
   margin: 0 0 0.5rem;
   line-height: 1.6;
+}
+
+.landing-equipo {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+}
+
+.landing-equipo li {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.landing-equipo__avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.landing-equipo div {
+  display: grid;
+  line-height: 1.3;
+}
+
+.landing-equipo div span {
+  color: var(--text-3);
+  font-size: 0.8125rem;
 }
 
 .landing-pie__logo {

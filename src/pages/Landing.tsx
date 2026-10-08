@@ -84,6 +84,13 @@ function Captura({ claro, oscuro, alt, className = "" }: { claro: string; oscuro
 }
 
 // Landing es la pagina publica que se ve antes de iniciar sesion
+// El equipo que hace Chedul, para Quiénes somos
+const EQUIPO = [
+  { nombre: "Eduardo Ramírez", rol: "Idea, coordinación y fullstack" },
+  { nombre: "Lautaro Acosta", rol: "Backend e infraestructura" },
+  { nombre: "Tobías Stegmayer", rol: "Frontend y UI" },
+];
+
 function Landing() {
   const { tema, alternar } = useTema();
 
@@ -255,6 +262,22 @@ function Landing() {
             llevar la carrera entre planillas, el SysAcad y grupos de WhatsApp era un lío. Es gratis, sin publicidad, y
             lo vamos mejorando con lo que nos piden los alumnos.
           </p>
+          <ul className="landing-equipo">
+            {EQUIPO.map((persona) => (
+              <li key={persona.nombre}>
+                <span className="landing-equipo__avatar" aria-hidden="true">
+                  {persona.nombre
+                    .split(" ")
+                    .map((p) => p[0])
+                    .join("")}
+                </span>
+                <div>
+                  <strong>{persona.nombre}</strong>
+                  <span>{persona.rol}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
           <p>
             El código es abierto:{" "}
             <a href="https://github.com/ProjectUTN/chedul-frontend" target="_blank" rel="noopener noreferrer">
