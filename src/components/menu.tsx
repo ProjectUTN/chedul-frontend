@@ -27,6 +27,8 @@ const navigation: Item[] = [
   { title: "Herramientas", href: "/herramientas", icon: "apps" },
 ];
 
+const ADMIN: Item = { title: "Administración", href: "/admin", icon: "admin_panel_settings" };
+
 const iniciales = (nombre?: string) =>
   (nombre ?? "")
     .split(" ")
@@ -57,6 +59,7 @@ const Menu = () => {
   const location = useLocation();
   const [masAbierto, setMasAbierto] = useState(false);
   const sheet = useRef<HTMLDialogElement>(null);
+  const navegacion = user?.es_admin ? [...navigation, ADMIN] : navigation;
 
   const handleLogout = async () => {
     setMasAbierto(false);
@@ -79,12 +82,11 @@ const Menu = () => {
   const activo = (item: Item) => {
     const ruta = location.pathname;
     const dentro = (href: string) => ruta === href || ruta.startsWith(`${href}/`);
-    return dentro(item.href) && !navigation.some((o) => o.href.startsWith(`${item.href}/`) && dentro(o.href));
+    return dentro(item.href) && !navegacion.some((o) => o.href.startsWith(`${item.href}/`) && dentro(o.href));
   };
 
-  const secundarios = navigation.filter((i) => !i.principal);
-  const enSecundario =
-    secundarios.some((i) => location.pathname.startsWith(i.href)) || location.pathname === "/perfil";
+  const secundarios = navegacion.filter((i) => !i.principal);
+  const enSecundario = secundarios.some((i) => location.pathname.startsWith(i.href)) || location.pathname === "/perfil";
 
   return (
     <>
@@ -93,7 +95,7 @@ const Menu = () => {
         <img className="sidebar__logo" src={logo} alt="Chedul" />
 
         <ul className="sidebar__menu">
-          {navigation.map((item) => (
+          {navegacion.map((item) => (
             <li key={item.href}>
               <NavLink to={item.href} className={() => (activo(item) ? "nav-link activo" : "nav-link")}>
                 <span className="material-symbols-rounded">{item.icon}</span>

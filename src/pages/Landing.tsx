@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/1B-Chedul_Logo_Horizontal_Azul.svg";
 import inicioClaro from "../assets/landing/inicio-claro.jpg";
@@ -13,6 +14,7 @@ import comunidadesOscuro from "../assets/landing/comunidades-oscuro.jpg";
 import movilClaro from "../assets/landing/movil-claro.jpg";
 import movilOscuro from "../assets/landing/movil-oscuro.jpg";
 import useTema from "../hooks/useTema";
+import { getCantidadAlumnos } from "../features/admin/api";
 import fotoEduardo from "../assets/equipo/eduardo.jpg";
 import fotoLautaro from "../assets/equipo/lautaro.jpg";
 import fotoTobias from "../assets/equipo/tobias.jpg";
@@ -22,7 +24,8 @@ const FUNCIONES = [
   {
     icono: "school",
     titulo: "Estado académico",
-    texto: "Marcá cada materia como cursando, regular o aprobada, con su nota. Las electivas van aparte y calcula tu promedio.",
+    texto:
+      "Marcá cada materia como cursando, regular o aprobada, con su nota. Las electivas van aparte y calcula tu promedio.",
   },
   {
     icono: "account_tree",
@@ -73,7 +76,17 @@ const PASOS = [
 ];
 
 // Muestra la captura que corresponde al tema actual
-function Captura({ claro, oscuro, alt, className = "" }: { claro: string; oscuro: string; alt: string; className?: string }) {
+function Captura({
+  claro,
+  oscuro,
+  alt,
+  className = "",
+}: {
+  claro: string;
+  oscuro: string;
+  alt: string;
+  className?: string;
+}) {
   const { tema } = useTema();
   return (
     <img
@@ -89,7 +102,12 @@ function Captura({ claro, oscuro, alt, className = "" }: { claro: string; oscuro
 // Landing es la pagina publica que se ve antes de iniciar sesion
 // El equipo que hace Chedul, para Quiénes somos
 const EQUIPO: { nombre: string; rol: string; link: string; foto?: string }[] = [
-  { nombre: "Eduardo Ramírez", rol: "Idea, coordinación y fullstack", link: "https://eduramirez.dev", foto: fotoEduardo },
+  {
+    nombre: "Eduardo Ramírez",
+    rol: "Idea, coordinación y fullstack",
+    link: "https://eduramirez.dev",
+    foto: fotoEduardo,
+  },
   {
     nombre: "Lautaro Acosta Quintana",
     rol: "Backend e infraestructura",
@@ -104,8 +122,38 @@ const EQUIPO: { nombre: string; rol: string; link: string; foto?: string }[] = [
   },
 ];
 
+// Cuenta de 0 hasta el numero en un segundo, cuando llega de la API
+function useContador(objetivo: number) {
+  const [valor, setValor] = useState(0);
+  useEffect(() => {
+    if (!objetivo) return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      setValor(objetivo);
+      return;
+    }
+    const inicio = performance.now();
+    let cuadro = 0;
+    const paso = (ahora: number) => {
+      const avance = Math.min(1, (ahora - inicio) / 1000);
+      setValor(Math.round(objetivo * (1 - (1 - avance) ** 3)));
+      if (avance < 1) cuadro = requestAnimationFrame(paso);
+    };
+    cuadro = requestAnimationFrame(paso);
+    return () => cancelAnimationFrame(cuadro);
+  }, [objetivo]);
+  return valor;
+}
+
 function Landing() {
   const { tema, alternar } = useTema();
+  const [alumnos, setAlumnos] = useState(0);
+  const contador = useContador(alumnos);
+
+  useEffect(() => {
+    getCantidadAlumnos()
+      .then(setAlumnos)
+      .catch(() => {});
+  }, []);
 
   return (
     <div className="landing">
@@ -139,8 +187,8 @@ function Landing() {
               Tu carrera, <span className="landing-degradado">ordenada</span> en un solo lugar
             </h1>
             <p>
-              Llevá tu estado académico, mirá qué materias podés cursar, armá tu horario, medí lo que estudiás y encontrá
-              los apuntes y grupos de otros alumnos. En la compu y en el celu. Gratis.
+              Llevá tu estado académico, mirá qué materias podés cursar, armá tu horario, medí lo que estudiás y
+              encontrá los apuntes y grupos de otros alumnos. En la compu y en el celu. Gratis.
             </p>
             <div className="landing-hero__ctas">
               <Link to="/registro" className="btn btn-primario landing-cta">
@@ -151,6 +199,12 @@ function Landing() {
                 Ya tengo cuenta
               </Link>
             </div>
+            {alumnos > 0 && (
+              <p className="landing-usando">
+                <span className="landing-usando__punto" aria-hidden="true" />
+                <b>{contador.toLocaleString("es-AR")}</b> estudiantes ya usan Chedul
+              </p>
+            )}
             <ul className="landing-datos">
               <li>
                 <b>51</b> materias del plan
@@ -168,14 +222,13 @@ function Landing() {
                 <span />
                 <span />
               </div>
-              <Captura claro={inicioClaro} oscuro={inicioOscuro} alt="Pantalla de inicio de Chedul con el progreso de la carrera" />
+              <Captura
+                claro={inicioClaro}
+                oscuro={inicioOscuro}
+                alt="Pantalla de inicio de Chedul con el progreso de la carrera"
+              />
             </div>
-            <Captura
-              claro={movilClaro}
-              oscuro={movilOscuro}
-              alt="Chedul en el celular"
-              className="landing-movil"
-            />
+            <Captura claro={movilClaro} oscuro={movilOscuro} alt="Chedul en el celular" className="landing-movil" />
           </div>
         </section>
 
@@ -201,8 +254,8 @@ function Landing() {
           <div className="landing-muestra__texto">
             <h2>Sabé qué podés cursar el próximo cuatrimestre</h2>
             <p>
-              El mapa de correlativas se arma con tu estado: ves en verde lo aprobado, en amarillo lo regular y en violeta
-              lo que ya podés cursar. Tocás una materia y se marcan sus correlativas.
+              El mapa de correlativas se arma con tu estado: ves en verde lo aprobado, en amarillo lo regular y en
+              violeta lo que ya podés cursar. Tocás una materia y se marcan sus correlativas.
             </p>
           </div>
           <Captura claro={correlativasClaro} oscuro={correlativasOscuro} alt="Mapa de correlativas de Chedul" />
@@ -227,7 +280,11 @@ function Landing() {
               trofeos, y mirá cuánto falta para el próximo parcial.
             </p>
           </div>
-          <Captura claro={estudiarClaro} oscuro={estudiarOscuro} alt="Sección Estudiar de Chedul con el pomodoro y la meta diaria" />
+          <Captura
+            claro={estudiarClaro}
+            oscuro={estudiarOscuro}
+            alt="Sección Estudiar de Chedul con el pomodoro y la meta diaria"
+          />
         </section>
 
         <section className="landing-seccion landing-muestra landing-muestra--invertida">

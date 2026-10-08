@@ -18,6 +18,7 @@ import Electivas from "../pages/Electivas";
 import Comunidades from "../pages/Comunidades";
 import Ordenanza531 from "../pages/Ordenanza531";
 import Perfil from "../pages/Perfil";
+import Admin from "../pages/Admin";
 import ImportarSysacad from "../pages/ImportarSysacad";
 import Bienvenida from "../pages/Bienvenida";
 
@@ -52,6 +53,7 @@ export const AppRouter = () => {
             <Route path="/correlativas" element={<MapaCorrelativas />} />
             <Route path="/correos" element={<Mails />} />
             <Route path="/perfil" element={<Perfil />} />
+            <Route path="/admin" element={<Admin />} />
           </Route>
         </Route>
 

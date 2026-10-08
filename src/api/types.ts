@@ -3,6 +3,8 @@ export interface Alumno {
   nombre: string;
   email: string;
   carrera: number;
+  // Solo viene (en true) para los administradores
+  es_admin?: boolean;
 }
 
 export interface Carrera {
