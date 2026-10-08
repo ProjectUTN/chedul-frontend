@@ -13,6 +13,9 @@ import Horarios from "../pages/Horarios";
 import MapaCorrelativas from "../pages/MapaCorrelativas";
 import Landing from "../pages/Landing";
 import Estudiar from "../pages/Estudiar";
+import Herramientas from "../pages/Herramientas";
+import Electivas from "../pages/Electivas";
+import Ordenanza531 from "../pages/Ordenanza531";
 
 export const AppRouter = () => {
   return (
@@ -35,7 +38,10 @@ export const AppRouter = () => {
             <Route path="/aportes/:id/editar" element={<FormularioAporte />} />
             <Route path="/calendario" element={<Calendario />} />
             <Route path="/horarios" element={<Horarios />} />
-            <Route path="/estudiar" element={<Estudiar />} />
+            <Route path="/herramientas" element={<Herramientas />} />
+            <Route path="/herramientas/estudiar" element={<Estudiar />} />
+            <Route path="/herramientas/electivas" element={<Electivas />} />
+            <Route path="/herramientas/531" element={<Ordenanza531 />} />
             <Route path="/correlativas" element={<MapaCorrelativas />} />
             <Route path="/correos" element={<Mails />} />
           </Route>

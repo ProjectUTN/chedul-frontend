@@ -63,11 +63,6 @@ function Inicio() {
     .sort((a, b) => a.fecha.localeCompare(b.fecha))
     .slice(0, MAX_PROXIMAS);
 
-  const ordenanza = progreso?.ordenanza_531;
-  // Solo se muestra cuando ya puede o le falta poco; a los de primero no les sirve
-  const mostrar531 =
-    ordenanza && ordenanza.faltantes.length > 0 && ordenanza.horas_faltantes <= ordenanza.horas_limite * 2;
-
   const primerNombre = user?.nombre.split(" ")[0];
 
   return (
@@ -202,46 +197,6 @@ function Inicio() {
                   </li>
                 ))}
               </ul>
-            )}
-          </section>
-        )}
-
-        {mostrar531 && ordenanza && (
-          <section className={`card inicio-seccion ordenanza ${ordenanza.puede ? "ordenanza--puede" : ""}`}>
-            <div className="inicio-seccion__header">
-              <h2>Ordenanza 531</h2>
-              <span className={`chip ${ordenanza.puede ? "chip-verde" : ""}`}>
-                {ordenanza.puede ? "Podés pedirla" : "Todavía no"}
-              </span>
-            </div>
-            <p>
-              {ordenanza.puede
-                ? "Lo que te falta no supera la carga horaria de 5° año, así que podés pedir la excepción de correlativas: cursás estas materias sin correlativas, pero para rendir el final sí se piden."
-                : `Te faltan ${Math.round(ordenanza.horas_faltantes - ordenanza.horas_limite)} horas para llegar: se puede pedir cuando lo que te falta no supera la carga horaria de 5° año.`}
-            </p>
-            <div className="barra" role="progressbar" aria-label="Horas que faltan contra el límite">
-              <div
-                style={{ width: `${Math.min(100, (ordenanza.horas_limite / ordenanza.horas_faltantes) * 100)}%` }}
-              />
-            </div>
-            <span className="campo-ayuda">
-              Te faltan {Math.round(ordenanza.horas_faltantes)} h de {Math.round(ordenanza.horas_limite)} h permitidas.
-              No cuenta electivas ni la Práctica Supervisada.
-            </span>
-            <ul className="lista-materias">
-              {ordenanza.faltantes.map((m) => (
-                <li key={m.id}>
-                  <span className="chip">{m.nivel}°</span>
-                  <span>{m.nombre}</span>
-                  <span className="campo-ayuda ordenanza__estado">{m.estado_actual}</span>
-                </li>
-              ))}
-            </ul>
-            {ordenanza.puede && (
-              <span className="campo-ayuda">
-                Se pide con la nota "Solicitud de excepción transitoria al régimen de correlatividades (531)" en el
-                Departamento de Alumnos.
-              </span>
             )}
           </section>
         )}

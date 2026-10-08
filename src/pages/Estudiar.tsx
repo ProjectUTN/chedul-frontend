@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import SelectorMateria from "../components/SelectorMateria";
 import { useAuth } from "../context/authProvider";
@@ -10,6 +11,7 @@ import { DIAS_CORTOS, desdeISO, diaSemana } from "../features/calendario/fechas"
 import type { Materia, ModoEstudio, RankingEstudio, ResumenEstudio, SesionEstudio } from "../api/types";
 import "./inicio.css";
 import "../features/estudio/estudio.css";
+import "../features/herramientas/herramientas.css";
 
 // Estudiar: temporizador pomodoro o libre por materia, lo estudiado por dia y
 // por materia, y un ranking semanal en el que solo aparece quien se suma.
@@ -102,6 +104,10 @@ function Estudiar() {
     <>
       <div className="page-header">
         <div>
+          <Link to="/herramientas" className="volver">
+            <span className="material-symbols-rounded">arrow_back</span>
+            Herramientas
+          </Link>
           <h1>Estudiar</h1>
           <p>Medí lo que estudiás con pomodoros o con el cronómetro, y compará tu semana con la de otros.</p>
         </div>

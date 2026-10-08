@@ -20,9 +20,8 @@ const navigation: Item[] = [
   { title: "Aportes", href: "/aportes", icon: "library_books", principal: true },
   { title: "Horarios", href: "/horarios", icon: "schedule", principal: true },
   { title: "Calendario", corto: "Agenda", href: "/calendario", icon: "calendar_month", principal: true },
-  { title: "Estudiar", href: "/estudiar", icon: "timer" },
-  { title: "Mapa de correlativas", href: "/correlativas", icon: "account_tree" },
-  { title: "Mails de profesores", href: "/correos", icon: "mail" },
+  // Estudiar, electivas, 531, correlativas y mails: todo en una entrada
+  { title: "Herramientas", href: "/herramientas", icon: "apps" },
 ];
 
 const iniciales = (nombre?: string) =>
