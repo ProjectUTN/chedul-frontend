@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getClases, getEventos } from "../features/calendario/api";
 import { aISO, diaSemana, inicioSemana, MESES, sumarDias } from "../features/calendario/fechas";
 import VistaSemana from "../features/calendario/VistaSemana";
+import { seCursaEl } from "../features/calendario/comisiones";
 import Modal from "../features/calendario/Modal";
 import EventoForm from "../features/calendario/EventoForm";
 import ClaseForm from "../features/calendario/ClaseForm";
@@ -29,6 +30,10 @@ function Horarios() {
   const lunes = useMemo(() => inicioSemana(referencia), [referencia]);
   const domingo = sumarDias(lunes, 6);
   const esEstaSemana = aISO(lunes) === aISO(inicioSemana(new Date()));
+  // Cada clase se compara con la fecha de su dia en la semana que se ve, asi
+  // la semana del 1° de agosto ya muestra las del 2° cuatrimestre
+  const clasesDeLaSemana = clases.filter((c) => seCursaEl(c, sumarDias(lunes, c.dia - 1)));
+  const fueraDeCursada = clases.length > 0 && clasesDeLaSemana.length === 0;
 
   useEffect(() => {
     let cancelado = false;
@@ -118,9 +123,16 @@ function Horarios() {
         </p>
       )}
 
+      {fueraDeCursada && (
+        <p className="vacio">
+          Esta semana no hay cursada. Las materias del 1° cuatrimestre aparecen de marzo a julio y las del 2° de agosto
+          a diciembre.
+        </p>
+      )}
+
       <VistaSemana
         lunes={lunes}
-        clases={clases}
+        clases={clasesDeLaSemana}
         eventos={eventos}
         onClase={(clase) => setEdicion({ tipo: "clase", clase, dia: clase.dia })}
         onNuevaClase={(dia) => setEdicion({ tipo: "clase", clase: null, dia })}

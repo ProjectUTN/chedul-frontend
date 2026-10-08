@@ -121,6 +121,8 @@ export interface Clase {
   materia: MateriaResumen | null;
   // Comision de la que se cargo; null si se cargo a mano
   comision_id: number | null;
+  // Cuatrimestre de esa comision (1C, 2C); null si se cargo a mano
+  cuatrimestre?: string | null;
 }
 
 export interface HorarioComision {
