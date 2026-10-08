@@ -259,3 +259,15 @@
     width: 100%;
   }
 }
+
+/* Titulos de Obligatorias y Electivas */
+.estado-seccion {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+}
+
+.estado-seccion .campo-ayuda {
+  font-weight: 400;
+  font-size: 0.8125rem;
+}

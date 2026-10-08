@@ -12,7 +12,7 @@ import {
 import { useAuth } from "../context/authProvider";
 import { mensajeDeError } from "../api/client";
 import { confirmar } from "../components/confirmar";
-import { NO_ME_INTERESA } from "../features/estado_academico/condiciones";
+import { NO_ME_INTERESA, esElectiva } from "../features/estado_academico/condiciones";
 import { agregarVariasAlHorario, sacarVariasDelHorario } from "../features/calendario/horarioAutomatico";
 import type { Condicion, CondicionPorAlumno, Materia } from "../api/types";
 import "../styles.css";
@@ -55,16 +55,19 @@ function Estado() {
   const materiasDelNivel = materias
     .filter((m) => m.nivel === nivel)
     .sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
+  // Las electivas van aparte: se eligen, no hay que cursarlas todas
+  const obligatoriasDelNivel = materiasDelNivel.filter((m) => !esElectiva(m));
+  const electivasDelNivel = materiasDelNivel.filter(esElectiva);
   const aprobadas = misCondiciones.filter((c) => c.condicion === "Aprobada").length;
   // "No me interesa" se elige de a una y solo en electivas
   const estados = [PENDIENTE, ...condiciones.map((c) => c.condicion).filter((c) => c !== NO_ME_INTERESA)];
 
-  // Marca todas las materias del año que se esta viendo con el mismo estado.
-  // Las que ya estaban aprobadas conservan su nota.
+  // Marca todas las obligatorias del año que se esta viendo con el mismo
+  // estado; las electivas se marcan de a una.
   const marcarTodas = async (estado: string) => {
     const nombreNivel = NOMBRE_NIVEL[nivel] ?? `nivel ${nivel}`;
     // Las electivas descartadas no se tocan
-    const aCambiar = materiasDelNivel.filter((m) => {
+    const aCambiar = obligatoriasDelNivel.filter((m) => {
       const actual = misCondiciones.find((c) => c.materia_id === m.id)?.condicion ?? PENDIENTE;
       return actual !== estado && actual !== NO_ME_INTERESA;
     });
@@ -120,9 +123,9 @@ function Estado() {
 
       <YearSelector nivelActual={nivel} onChange={setNivel} />
 
-      {!cargando && materiasDelNivel.length > 0 && (
-        <div className="marcar-todas" role="group" aria-label="Marcar todas las materias del año">
-          <span className="marcar-todas__texto">Marcar todas como</span>
+      {!cargando && obligatoriasDelNivel.length > 0 && (
+        <div className="marcar-todas" role="group" aria-label="Marcar todas las obligatorias del año">
+          <span className="marcar-todas__texto">Marcar todas las obligatorias como</span>
           <div className="marcar-todas__opciones">
             {estados.map((estado) => (
               <button
@@ -143,12 +146,29 @@ function Estado() {
       {cargando ? (
         <p className="vacio">Cargando materias...</p>
       ) : (
-        <CondicionEnMaterias
-          materias={materiasDelNivel}
-          condiciones={condiciones}
-          misCondiciones={misCondiciones}
-          onCambio={recargarMisCondiciones}
-        />
+        <>
+          {electivasDelNivel.length > 0 && <h2 className="estado-seccion">Obligatorias</h2>}
+          <CondicionEnMaterias
+            materias={obligatoriasDelNivel}
+            condiciones={condiciones}
+            misCondiciones={misCondiciones}
+            onCambio={recargarMisCondiciones}
+          />
+          {electivasDelNivel.length > 0 && (
+            <>
+              <h2 className="estado-seccion">
+                Electivas
+                <span className="campo-ayuda"> · elegís cuáles cursar; las que no te interesan no aparecen en Inicio</span>
+              </h2>
+              <CondicionEnMaterias
+                materias={electivasDelNivel}
+                condiciones={condiciones}
+                misCondiciones={misCondiciones}
+                onCambio={recargarMisCondiciones}
+              />
+            </>
+          )}
+        </>
       )}
     </>
   );
