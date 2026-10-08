@@ -73,6 +73,8 @@ export interface Ordenanza531 {
   puede: boolean;
   // En horas semanales (carga horaria), no horas totales
   horas_faltantes: number;
+  // Parte de horas_faltantes que son electivas (lo que falta para las del plan)
+  horas_electivas_faltantes?: number;
   horas_limite: number;
   faltantes: MateriaProgreso[];
 }

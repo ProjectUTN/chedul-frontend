@@ -197,3 +197,11 @@
   font-size: 0.9375rem;
   margin-top: 0.5rem;
 }
+
+.ordenanza__que-es {
+  margin-bottom: 1rem;
+}
+
+.ordenanza__que-es p {
+  margin: 0.5rem 0;
+}
