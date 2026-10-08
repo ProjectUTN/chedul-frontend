@@ -1,0 +1,321 @@
+/* Ingreso y registro: pantalla partida en compu, una sola columna en el celu.
+   El body no scrollea (la app scrollea adentro del layout), asi que esta
+   pantalla tiene su propio scroll. */
+.auth {
+  height: 100dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  background: var(--bg);
+}
+
+/* ---------- Lado de la marca ---------- */
+
+.auth-marca {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  padding: 2.5rem 3rem 0;
+  overflow: hidden;
+  color: #fff;
+  background:
+    radial-gradient(40rem 24rem at 100% 0%, rgba(167, 139, 250, 0.55), transparent 60%),
+    radial-gradient(36rem 30rem at 0% 100%, rgba(56, 189, 248, 0.35), transparent 60%),
+    linear-gradient(150deg, #2f5bff, #6d4aff);
+}
+
+.auth-marca::after {
+  /* Una trama de puntos suave arriba del degradé */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(to bottom, #000, transparent 75%);
+  pointer-events: none;
+}
+
+.auth-marca__logo {
+  width: 132px;
+  filter: brightness(0) invert(1);
+}
+
+.auth-marca__texto {
+  position: relative;
+  z-index: 1;
+  max-width: 30rem;
+}
+
+.auth-marca h2 {
+  margin: 0 0 1.5rem;
+  font-size: clamp(2.25rem, 3.6vw, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  animation: auth-sube 600ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.auth-marca ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.875rem;
+}
+
+.auth-marca li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.0625rem;
+  animation: auth-sube 600ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.auth-marca li .material-symbols-rounded {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(6px);
+  font-size: 1.25rem;
+}
+
+.auth-marca__muestra {
+  position: relative;
+  margin-top: auto;
+  z-index: 1;
+}
+
+.auth-marca__muestra > img:first-child {
+  display: block;
+  width: 118%;
+  border-radius: 1rem 1rem 0 0;
+  box-shadow: 0 30px 80px rgba(15, 23, 80, 0.45);
+  transform: perspective(1400px) rotateX(8deg) rotateY(-10deg) translateY(12px);
+  transform-origin: left bottom;
+  animation: auth-muestra 900ms 200ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.auth-marca__mascota {
+  position: absolute;
+  top: -3.5rem;
+  right: 1rem;
+  width: 96px;
+  filter: brightness(0) invert(1) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.25));
+  animation: auth-flota 4s ease-in-out infinite;
+}
+
+/* ---------- Lado del formulario ---------- */
+
+.auth-lado {
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.5rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.375rem;
+  animation: auth-sube 500ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.auth-card__logo {
+  display: none;
+}
+
+.auth-card__logo img {
+  width: 120px;
+}
+
+.auth-card__cabecera h1 {
+  margin: 0 0 0.375rem;
+  font-size: 1.875rem;
+  letter-spacing: -0.03em;
+}
+
+.auth-card__cabecera p {
+  margin: 0;
+  color: var(--text-2);
+}
+
+.auth-card__cabecera a,
+.auth-pie a {
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+.auth .campo input,
+.auth .campo select {
+  padding: 0.75rem 0.875rem;
+  border-radius: 0.75rem;
+}
+
+.auth .btn-primario[type="submit"] {
+  padding: 0.8125rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+}
+
+.auth .btn-primario[type="submit"] .material-symbols-rounded {
+  transition: transform 200ms ease;
+}
+
+.auth .btn-primario[type="submit"]:hover:not(:disabled) .material-symbols-rounded {
+  transform: translateX(3px);
+}
+
+.campo-password {
+  position: relative;
+}
+
+.campo .campo-password input {
+  padding-right: 2.75rem;
+}
+
+.campo-password__ojo {
+  all: unset;
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  color: var(--text-3);
+  cursor: pointer;
+}
+
+.campo-password__ojo:hover {
+  color: var(--text);
+}
+
+.campo-password__ojo:focus-visible {
+  outline: 2px solid var(--accent);
+}
+
+.campo-password__ojo .material-symbols-rounded {
+  font-size: 1.25rem;
+}
+
+/* Barrita de que tan segura es la contraseña */
+.fuerza {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.25rem;
+  margin-top: 0.125rem;
+}
+
+.fuerza span {
+  height: 0.25rem;
+  border-radius: 999px;
+  background-color: var(--surface-3);
+  transition: background-color 250ms ease;
+}
+
+.fuerza[data-nivel="1"] span:nth-child(-n + 1) {
+  background-color: var(--red);
+}
+
+.fuerza[data-nivel="2"] span:nth-child(-n + 2) {
+  background-color: var(--yellow);
+}
+
+.fuerza[data-nivel="3"] span:nth-child(-n + 3),
+.fuerza[data-nivel="4"] span {
+  background-color: var(--green);
+}
+
+.auth-carrera {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 0.875rem;
+  border-radius: 0.75rem;
+  background-color: var(--accent-soft);
+  color: var(--accent-text);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.auth-pie {
+  margin: 0;
+  text-align: center;
+  color: var(--text-2);
+  font-size: 0.9375rem;
+}
+
+/* ---------- Animaciones ---------- */
+
+@keyframes auth-sube {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes auth-muestra {
+  from {
+    opacity: 0;
+    transform: perspective(1400px) rotateX(18deg) rotateY(-16deg) translateY(80px);
+  }
+}
+
+@keyframes auth-flota {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(3deg);
+  }
+}
+
+/* ---------- Tablet y celular ---------- */
+
+@media (max-width: 900px) {
+  .auth {
+    grid-template-columns: minmax(0, 1fr);
+    background:
+      radial-gradient(30rem 18rem at 50% -6rem, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
+      var(--bg);
+  }
+
+  .auth-marca {
+    display: none;
+  }
+
+  .auth-lado {
+    place-items: start center;
+    padding: 2rem 1.25rem 3rem;
+  }
+
+  .auth-card__logo {
+    display: block;
+    align-self: center;
+  }
+
+  .auth-card__cabecera {
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth *,
+  .auth *::before,
+  .auth *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -37,9 +37,15 @@ const cargarScript = () => {
   return cargaScript;
 };
 
-// BotonGoogle muestra "Continuar con Google". Si la API no tiene client ID
-// configurado no muestra nada.
-function BotonGoogle({ texto = "continue_with" }: { texto?: "continue_with" | "signup_with" | "signin_with" }) {
+interface Props {
+  texto?: "continue_with" | "signup_with" | "signin_with";
+  // Texto de la linea que lo separa del formulario de abajo
+  separador?: string;
+}
+
+// BotonGoogle muestra "Continuar con Google" arriba del formulario. Si la API
+// no tiene client ID configurado no muestra nada.
+function BotonGoogle({ texto = "continue_with", separador = "o" }: Props) {
   const { loginGoogle } = useAuth();
   const { tema } = useTema();
   const navigate = useNavigate();
@@ -97,11 +103,11 @@ function BotonGoogle({ texto = "continue_with" }: { texto?: "continue_with" | "s
 
   return (
     <div className="boton-google">
-      <div className="boton-google__separador">
-        <span>o</span>
-      </div>
       <div ref={contenedor} className="boton-google__contenedor" aria-busy={entrando} />
       {entrando && <p className="boton-google__estado">Entrando con Google...</p>}
+      <div className="boton-google__separador">
+        <span>{separador}</span>
+      </div>
     </div>
   );
 }

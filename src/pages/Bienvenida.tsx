@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { useNavigate } from "react-router-dom";
 import ImportarSysacad from "./ImportarSysacad";
 import { useAuth } from "../context/authProvider";
@@ -43,12 +43,28 @@ type Paso =
 
 const cantidad = (n: number, uno: string, varios: string) => `${n} ${n === 1 ? uno : varios}`;
 
+// Orden de los pasos, para saber si se avanza o se vuelve
+const orden = (p: Paso) =>
+  p.tipo === "inicio" ? 0 : p.tipo === "listo" ? 9 : p.tipo === "nivel" ? 2 + p.nivel / 10 : 1;
+
+// Papelitos del final: posiciones y colores al azar, una sola vez
+const PAPELITOS = Array.from({ length: 36 }, (_, i) => ({
+  izquierda: Math.random() * 100,
+  demora: Math.random() * 0.6,
+  duracion: 1.8 + Math.random() * 1.4,
+  giro: Math.round(Math.random() * 720 - 360),
+  color: ["#5b8cff", "#8b5cf6", "#22c55e", "#f59e0b", "#ec4899"][i % 5],
+}));
+
 const claseEstado = (estado: string) => `estado--${estado.toLowerCase()}`;
 
 function Bienvenida() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [paso, setPaso] = useState<Paso>({ tipo: "inicio" });
+  // Para animar: hacia adelante entra desde la derecha, hacia atras desde la izquierda
+  const [direccion, setDireccion] = useState<"adelante" | "atras">("adelante");
+  const pantalla = useRef<HTMLDivElement>(null);
   const [materias, setMaterias] = useState<Materia[]>([]);
   const [condiciones, setCondiciones] = useState<Condicion[]>([]);
   const [mis, setMis] = useState<CondicionPorAlumno[]>([]);
@@ -69,6 +85,12 @@ function Bienvenida() {
       .catch((err) => setError(mensajeDeError(err, "No se pudieron cargar las materias")));
   }, [user]);
 
+  const ir = (siguiente: Paso) => {
+    setDireccion(orden(siguiente) >= orden(paso) ? "adelante" : "atras");
+    setPaso(siguiente);
+    pantalla.current?.scrollTo({ top: 0 });
+  };
+
   const delNivel = (nivel: number) =>
     materias.filter((m) => m.nivel === nivel).sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
 
@@ -87,7 +109,7 @@ function Bienvenida() {
       propuesta[m.id] = m.nivel < nivel ? "Aprobada" : m.nivel === nivel ? "Cursando" : PENDIENTE;
     }
     setElegidos(propuesta);
-    setPaso({ tipo: "nivel", nivel: 1 });
+    ir({ tipo: "nivel", nivel: 1 });
   };
 
   const estadoDe = (id: number): Estado => elegidos[id] ?? PENDIENTE;
@@ -121,7 +143,7 @@ function Bienvenida() {
       );
       const cursando = materias.filter((m) => estadoDe(m.id) === "Cursando");
       if (cursando.length > 0) await agregarVariasAlHorario(cursando);
-      setPaso({ tipo: "listo" });
+      ir({ tipo: "listo" });
     } catch (err) {
       setError(mensajeDeError(err, "No se pudo guardar todo, probá de nuevo"));
     } finally {
@@ -129,10 +151,13 @@ function Bienvenida() {
     }
   };
 
-  const filaMateria = (m: Materia) => {
+  const filaMateria = (m: Materia, i: number) => {
     const actual = estadoDe(m.id);
     return (
-      <li key={m.id} className={`bienvenida-materia ${claseEstado(actual)}`}>
+      <li
+        key={m.id}
+        className={`bienvenida-materia ${claseEstado(actual)}`}
+        style={{ animationDelay: `${120 + i * 45}ms` }}>
         <span className="bienvenida-materia__nombre">{m.nombre}</span>
         <div className="estado-opciones" role="radiogroup" aria-label={`Estado de ${m.nombre}`}>
           {ESTADOS.map((estado) => (
@@ -162,13 +187,13 @@ function Bienvenida() {
               Contanos cómo vas y Chedul calcula qué podés cursar, tu progreso y tus horarios.
             </p>
             <div className="bienvenida-opciones">
-              <button type="button" className="bienvenida-opcion" onClick={() => setPaso({ tipo: "importar" })}>
+              <button type="button" className="bienvenida-opcion" onClick={() => ir({ tipo: "importar" })}>
                 <span className="material-symbols-rounded">bolt</span>
                 <strong>Importar de SysAcad</strong>
                 <span>Copiás tu estado académico y listo. Lo más rápido.</span>
                 <span className="chip chip-azul">Recomendado</span>
               </button>
-              <button type="button" className="bienvenida-opcion" onClick={() => setPaso({ tipo: "anio" })}>
+              <button type="button" className="bienvenida-opcion" onClick={() => ir({ tipo: "anio" })}>
                 <span className="material-symbols-rounded">checklist</span>
                 <strong>Completarlo a mano</strong>
                 <span>Te preguntamos año por año, con todo ya sugerido.</span>
@@ -190,10 +215,10 @@ function Bienvenida() {
           <>
             <h1>Importar de SysAcad</h1>
             <div className="bienvenida__importar">
-              <ImportarSysacad embebido alTerminar={() => setPaso({ tipo: "listo" })} />
+              <ImportarSysacad embebido alTerminar={() => ir({ tipo: "listo" })} />
             </div>
             <div className="bienvenida-navegacion">
-              <button type="button" className="btn btn-secundario" onClick={() => setPaso({ tipo: "inicio" })}>
+              <button type="button" className="btn btn-secundario" onClick={() => ir({ tipo: "inicio" })}>
                 Atrás
               </button>
             </div>
@@ -217,7 +242,7 @@ function Bienvenida() {
               ))}
             </div>
             <div className="bienvenida-navegacion">
-              <button type="button" className="btn btn-secundario" onClick={() => setPaso({ tipo: "inicio" })}>
+              <button type="button" className="btn btn-secundario" onClick={() => ir({ tipo: "inicio" })}>
                 Atrás
               </button>
             </div>
@@ -259,7 +284,7 @@ function Bienvenida() {
               <button
                 type="button"
                 className="btn btn-secundario"
-                onClick={() => setPaso(nivel === 1 ? { tipo: "anio" } : { tipo: "nivel", nivel: nivel - 1 })}>
+                onClick={() => ir(nivel === 1 ? { tipo: "anio" } : { tipo: "nivel", nivel: nivel - 1 })}>
                 Atrás
               </button>
               {ultimo ? (
@@ -270,7 +295,7 @@ function Bienvenida() {
                 <button
                   type="button"
                   className="btn btn-primario"
-                  onClick={() => setPaso({ tipo: "nivel", nivel: nivel + 1 })}>
+                  onClick={() => ir({ tipo: "nivel", nivel: nivel + 1 })}>
                   Siguiente: {NOMBRE_NIVEL[nivel + 1]}
                 </button>
               )}
@@ -281,7 +306,7 @@ function Bienvenida() {
                 className="bienvenida__despues"
                 onClick={() => {
                   setAnio(nivel + 1);
-                  setPaso({ tipo: "nivel", nivel: nivel + 1 });
+                  ir({ tipo: "nivel", nivel: nivel + 1 });
                 }}>
                 Tengo materias de {NOMBRE_NIVEL[nivel + 1]}
               </button>
@@ -293,6 +318,22 @@ function Bienvenida() {
       case "listo":
         return (
           <>
+            <div className="papelitos" aria-hidden="true">
+              {PAPELITOS.map((p, i) => (
+                <span
+                  key={i}
+                  style={
+                    {
+                      left: `${p.izquierda}%`,
+                      background: p.color,
+                      animationDelay: `${p.demora}s`,
+                      animationDuration: `${p.duracion}s`,
+                      "--giro": `${p.giro}deg`,
+                    } as CSSProperties
+                  }
+                />
+              ))}
+            </div>
             <span className="bienvenida__check material-symbols-rounded" aria-hidden="true">
               celebration
             </span>
@@ -318,11 +359,13 @@ function Bienvenida() {
   };
 
   return (
-    <div className="bienvenida">
+    <div className="bienvenida" ref={pantalla}>
       <header className="bienvenida__barra">
         <img src={logo} alt="Chedul" />
       </header>
-      <main className={`bienvenida__contenido bienvenida__contenido--${paso.tipo}`}>
+      <main
+        key={paso.tipo === "nivel" ? `nivel-${paso.nivel}` : paso.tipo}
+        className={`bienvenida__contenido bienvenida__contenido--${paso.tipo} bienvenida__contenido--${direccion}`}>
         {materias.length === 0 && !error ? <p className="vacio">Cargando...</p> : contenido()}
         {error && paso.tipo === "inicio" && <p className="form-error">{error}</p>}
       </main>

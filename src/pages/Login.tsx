@@ -1,10 +1,10 @@
 import { useState } from "react";
-import BotonGoogle from "../features/auth/BotonGoogle";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import AuthLayout from "../features/auth/AuthLayout";
+import BotonGoogle from "../features/auth/BotonGoogle";
+import CampoPassword from "../features/auth/CampoPassword";
 import { useAuth } from "../context/authProvider";
 import { mensajeDeError } from "../api/client";
-import logo from "../assets/1B-Chedul_Logo_Horizontal_Azul.svg";
-import "./auth.css";
 
 function Login() {
   const { login } = useAuth();
@@ -43,52 +43,42 @@ function Login() {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <Link to="/" aria-label="Volver al inicio de Chedul">
-          <img className="auth-logo" src={logo} alt="Chedul" />
-        </Link>
-        <div>
-          <h1 className="auth-title">Bienvenido nuevamente</h1>
-          <p className="auth-subtitle">
-            ¿Sos nuevo? <Link to="/registro">Registrate</Link>
-          </p>
-        </div>
+    <AuthLayout titulo="¡Hola de nuevo!" subtitulo="Entrá para ver cómo va tu carrera.">
+      <BotonGoogle texto="continue_with" separador="o con tu correo" />
 
-        <form onSubmit={handleSubmit} className="form">
-          <label className="campo">
-            <span>Correo electrónico</span>
-            <input
-              type="email"
-              name="email"
-              autoComplete="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </label>
-          <label className="campo">
-            <span>Contraseña</span>
-            <input
-              type="password"
-              name="password"
-              autoComplete="current-password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </label>
+      <form onSubmit={handleSubmit} className="form">
+        <label className="campo">
+          <span>Correo electrónico</span>
+          <input
+            type="email"
+            name="email"
+            autoComplete="email"
+            placeholder="tu@correo.com"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <CampoPassword
+          etiqueta="Contraseña"
+          name="password"
+          autoComplete="current-password"
+          value={formData.password}
+          onChange={handleChange}
+        />
 
-          {error && <p className="form-error">{error}</p>}
+        {error && <p className="form-error">{error}</p>}
 
-          <button type="submit" className="btn btn-primario" disabled={enviando}>
-            {enviando ? "Ingresando..." : "Iniciar sesión"}
-          </button>
-        </form>
+        <button type="submit" className="btn btn-primario" disabled={enviando}>
+          {enviando ? "Ingresando..." : "Ingresar"}
+          {!enviando && <span className="material-symbols-rounded">arrow_forward</span>}
+        </button>
+      </form>
 
-        <BotonGoogle texto="continue_with" />
-      </div>
-    </div>
+      <p className="auth-pie">
+        ¿Todavía no tenés cuenta? <Link to="/registro">Creala gratis</Link>
+      </p>
+    </AuthLayout>
   );
 }
 
