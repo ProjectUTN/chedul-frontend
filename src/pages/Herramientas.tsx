@@ -7,7 +7,13 @@ const HERRAMIENTAS = [
     href: "/herramientas/estudiar",
     icono: "timer",
     titulo: "Estudiar",
-    detalle: "Pomodoro o cronómetro por materia, tu racha y el ranking de la semana.",
+    detalle: "Pomodoro, meta diaria, medallas, trofeos, tareas y el ranking de la semana.",
+  },
+  {
+    href: "/herramientas/comunidades",
+    icono: "groups",
+    titulo: "Comunidades",
+    detalle: "Grupos de WhatsApp, Discord y más de la carrera y de cada materia.",
   },
   {
     href: "/herramientas/electivas",

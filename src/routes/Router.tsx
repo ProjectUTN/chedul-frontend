@@ -15,6 +15,7 @@ import Landing from "../pages/Landing";
 import Estudiar from "../pages/Estudiar";
 import Herramientas from "../pages/Herramientas";
 import Electivas from "../pages/Electivas";
+import Comunidades from "../pages/Comunidades";
 import Ordenanza531 from "../pages/Ordenanza531";
 
 export const AppRouter = () => {
@@ -42,6 +43,7 @@ export const AppRouter = () => {
             <Route path="/herramientas/estudiar" element={<Estudiar />} />
             <Route path="/herramientas/electivas" element={<Electivas />} />
             <Route path="/herramientas/531" element={<Ordenanza531 />} />
+            <Route path="/herramientas/comunidades" element={<Comunidades />} />
             <Route path="/correlativas" element={<MapaCorrelativas />} />
             <Route path="/correos" element={<Mails />} />
           </Route>

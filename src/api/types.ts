@@ -213,3 +213,17 @@ export interface RankingEstudio {
   participantes: number;
   puestos: PuestoRanking[];
 }
+
+export type PlataformaComunidad = "whatsapp" | "discord" | "telegram" | "instagram" | "otra";
+
+export interface Comunidad {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  plataforma: PlataformaComunidad;
+  link: string;
+  creada: string;
+  materia: MateriaResumen | null;
+  es_mia: boolean;
+  reportada: boolean;
+}
