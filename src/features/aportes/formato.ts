@@ -20,6 +20,7 @@ const EMOJI_TIPO: Record<string, string> = {
   ejercicios: "🧮",
   libro: "📚",
   video: "🎬",
+  drive: "🗂️",
   otro: "📎",
 };
 
