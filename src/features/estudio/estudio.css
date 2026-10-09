@@ -741,3 +741,158 @@
 .temporizador:fullscreen .temporizador__extras {
   display: none;
 }
+
+/* ---------- Detalle de una sesion ---------- */
+
+.sesion-fila {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sesion-fila:hover .sesion-fila__texto {
+  color: var(--accent);
+}
+
+.sesion-fila__texto {
+  min-width: 0;
+}
+
+.sesion-fila__flecha {
+  margin-left: auto;
+  color: var(--text-2);
+  font-size: 1.25rem;
+}
+
+.detalle-sesion__datos {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.detalle-sesion__datos > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--clr-bg-300);
+}
+
+.detalle-sesion__datos dt {
+  color: var(--text-2);
+}
+
+.detalle-sesion__datos dd {
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+}
+
+.detalle-sesion__datos dd::first-letter {
+  text-transform: uppercase;
+}
+
+/* ---------- Acceso directo a estudiar en Inicio ---------- */
+
+.estadisticas--tres {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.estudiar-ahora {
+  --fase: var(--accent);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.estudiar-ahora--descanso {
+  --fase: var(--green);
+}
+
+.estudiar-ahora__titulo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.estudiar-ahora__titulo h2 {
+  font-size: 1.125rem;
+}
+
+.estudiar-ahora__icono {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+  color: var(--accent);
+  background-color: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
+.estudiar-ahora__controles,
+.estudiar-ahora__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.estudiar-ahora__controles > :first-child {
+  min-width: 12rem;
+}
+
+.estudiar-ahora__reloj {
+  display: grid;
+}
+
+.estudiar-ahora__fase {
+  color: var(--fase);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.estudiar-ahora__tiempo {
+  font-family: var(--ff-titulos);
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 600px) {
+  .estadisticas--tres {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .estadisticas--tres > :first-child {
+    grid-column: 1 / -1;
+  }
+
+  .estudiar-ahora__controles,
+  .estudiar-ahora__acciones {
+    width: 100%;
+  }
+
+  .estudiar-ahora__controles > :first-child {
+    flex: 1 1 100%;
+  }
+
+  .estudiar-ahora__controles .btn-primario {
+    flex: 1;
+    justify-content: center;
+  }
+}

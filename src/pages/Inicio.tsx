@@ -9,9 +9,11 @@ import { conEmoji, formatearFecha, MATERIA_CARRERA, nombreMateriaAporte } from "
 import { getCalendarioAcademico, getEventos } from "../features/calendario/api";
 import { aISO, cuantoFalta, nombreTipo, sumarDias } from "../features/calendario/fechas";
 import EventosConfirmados from "../features/calendario/EventosConfirmados";
+import EstudioInicio from "../features/estudio/EstudioInicio";
 import { mensajeDeError } from "../api/client";
 import type { Aporte, Evento, FechaAcademica, Progreso } from "../api/types";
 import "../features/calendario/calendario.css";
+import "../features/estudio/estudio.css";
 import "./inicio.css";
 
 // En Proximas fechas, del calendario de la facultad solo van las mesas y el
@@ -97,14 +99,12 @@ function Inicio() {
       <EventosConfirmados onAgregado={recargarProximos} />
 
       {progreso && (
-        <section className="estadisticas" aria-label="Estadísticas">
+        <section className="estadisticas estadisticas--tres" aria-label="Estadísticas">
           <div className="card estadistica" style={{ "--tono": "var(--green)" } as React.CSSProperties}>
             <span className="estadistica__icono material-symbols-rounded" aria-hidden="true">
               trending_up
             </span>
-            <span className="estadistica__valor">
-              {Math.round(progreso.porcentaje_aprobadas)}%
-            </span>
+            <span className="estadistica__valor">{Math.round(progreso.porcentaje_aprobadas)}%</span>
             <span className="estadistica__titulo">de la carrera aprobada</span>
             <div
               className="barra"
@@ -134,17 +134,10 @@ function Inicio() {
             </span>
             <span className="estadistica__titulo">promedio</span>
           </div>
-          <div className="card estadistica" style={{ "--tono": "var(--orange)" } as React.CSSProperties}>
-            <span className="estadistica__icono material-symbols-rounded" aria-hidden="true">
-              pending_actions
-            </span>
-            <span className="estadistica__valor">
-              {progreso.materias_regularizadas.length}
-            </span>
-            <span className="estadistica__titulo">finales pendientes</span>
-          </div>
         </section>
       )}
+
+      <EstudioInicio />
 
       <div className="inicio-columnas">
         <section className="card inicio-seccion">
@@ -199,9 +192,7 @@ function Inicio() {
               </p>
             )}
             {progreso.materias_pendientes_disponibles.length === 0 ? (
-              <p className="campo-ayuda">
-                No hay materias disponibles. Cargá tu estado académico para verlas.
-              </p>
+              <p className="campo-ayuda">No hay materias disponibles. Cargá tu estado académico para verlas.</p>
             ) : (
               <ul className="lista-materias">
                 {progreso.materias_pendientes_disponibles.map((m) => (

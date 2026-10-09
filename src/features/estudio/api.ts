@@ -14,6 +14,12 @@ export const getSesiones = async () => {
   return response.data;
 };
 
+// Lo unico que se puede cambiar de una sesion ya guardada es su materia (0 = sin materia)
+export const editarMateriaSesion = async (id: number, materiaId: number) => {
+  const response = await api.put<SesionEstudio>(`/estudio/sesiones/${id}`, { materia_id: materiaId || null });
+  return response.data;
+};
+
 export const borrarSesion = async (id: number) => {
   await api.delete(`/estudio/sesiones/${id}`);
 };

@@ -193,6 +193,8 @@ export interface SesionEstudio {
   id: number;
   modo: ModoEstudio;
   minutos: number;
+  // Cuando empezo (fin menos duracion) y cuando termino, en ISO
+  inicio: string;
   fin: string;
   materia: MateriaResumen | null;
 }

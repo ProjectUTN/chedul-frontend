@@ -15,9 +15,12 @@ import CalendarioActividad from "../features/estudio/CalendarioActividad";
 import Cotizacion from "../features/estudio/Cotizacion";
 import Trofeos from "../features/estudio/Trofeos";
 import Tareas from "../features/estudio/Tareas";
+import DetalleSesion from "../features/estudio/DetalleSesion";
+import Modal from "../features/calendario/Modal";
 import ProximoExamen from "../features/estudio/ProximoExamen";
 import { mejorRacha } from "../features/estudio/logros";
 import type { Materia, RankingEstudio, ResumenEstudio, SesionEstudio } from "../api/types";
+import "../features/calendario/calendario.css";
 import "./inicio.css";
 import "../features/estudio/estudio.css";
 import "../features/herramientas/herramientas.css";
@@ -44,6 +47,7 @@ function Estudiar() {
   const [ranking, setRanking] = useState<RankingEstudio | null>(null);
   const [sesiones, setSesiones] = useState<SesionEstudio[]>([]);
   const [cambiandoRanking, setCambiandoRanking] = useState(false);
+  const [detalle, setDetalle] = useState<SesionEstudio | null>(null);
   const [error, setError] = useState("");
 
   const recargar = useCallback(() => {
@@ -391,11 +395,16 @@ function Estudiar() {
             <ul className="lista-materias">
               {sesiones.map((s) => (
                 <li key={s.id}>
-                  <span className="chip">{s.modo === "pomodoro" ? "Pomodoro" : "Cronómetro"}</span>
-                  <span>
-                    {s.materia?.nombre ?? "Sin materia"} · {formatoHoras(s.minutos)}
-                    <span className="campo-ayuda"> · {horaDe(s.fin)}</span>
-                  </span>
+                  <button type="button" className="sesion-fila" onClick={() => setDetalle(s)}>
+                    <span className="chip">{s.modo === "pomodoro" ? "Pomodoro" : "Cronómetro"}</span>
+                    <span className="sesion-fila__texto">
+                      {s.materia?.nombre ?? "Sin materia"} · {formatoHoras(s.minutos)}
+                      <span className="campo-ayuda"> · {horaDe(s.fin)}</span>
+                    </span>
+                    <span className="material-symbols-rounded sesion-fila__flecha" aria-hidden="true">
+                      chevron_right
+                    </span>
+                  </button>
                   <button
                     type="button"
                     className="btn btn-icono lista-materias__link"
@@ -410,6 +419,21 @@ function Estudiar() {
           </section>
         )}
       </div>
+
+      <Modal titulo="Detalle de la sesión" abierto={detalle !== null} onCerrar={() => setDetalle(null)}>
+        {detalle && (
+          <DetalleSesion
+            key={detalle.id}
+            sesion={detalle}
+            materias={materias}
+            onGuardada={(actualizada) => {
+              setSesiones((lista) => lista.map((s) => (s.id === actualizada.id ? actualizada : s)));
+              setDetalle(null);
+              recargar();
+            }}
+          />
+        )}
+      </Modal>
     </>
   );
 }
