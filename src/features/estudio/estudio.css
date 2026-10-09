@@ -896,3 +896,80 @@
     justify-content: center;
   }
 }
+
+/* Tocar el reloj pausa o sigue: al pasar el mouse crece un poco y aparece el icono */
+.temporizador__reloj--toque {
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 200ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.temporizador__reloj--toque:hover,
+.temporizador__reloj--toque:focus-visible {
+  transform: scale(1.04);
+}
+
+.temporizador__reloj--toque:active {
+  transform: scale(0.98);
+}
+
+.temporizador__toque {
+  position: absolute;
+  right: 12%;
+  bottom: 12%;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--fase);
+  color: #fff;
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+  pointer-events: none;
+}
+
+.temporizador__reloj--toque:hover .temporizador__toque,
+.temporizador__reloj--toque:focus-visible .temporizador__toque {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.temporizador:fullscreen .temporizador__toque {
+  width: 4rem;
+  height: 4rem;
+  font-size: 2.5rem;
+}
+
+.temporizador__confirmar {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* En Inicio el reloj en curso lleva a Estudiar */
+.estudiar-ahora__reloj--link {
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radio, 0.75rem);
+  transition: opacity 150ms ease;
+}
+
+.estudiar-ahora__reloj--link:hover {
+  opacity: 0.8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .temporizador__reloj--toque,
+  .temporizador__toque {
+    transition: none;
+  }
+}

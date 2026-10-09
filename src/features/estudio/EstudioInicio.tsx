@@ -72,13 +72,13 @@ function EstudioInicio() {
       <section className={`card estudiar-ahora estudiar-ahora--${t.fase}`} aria-label="Estudiar">
         {t.empezado ? (
           <>
-            <div className="estudiar-ahora__reloj">
+            <Link to="/herramientas/estudiar" className="estudiar-ahora__reloj estudiar-ahora__reloj--link">
               <span className="estudiar-ahora__fase">{etiqueta}</span>
               <span className="estudiar-ahora__tiempo" role="timer">
                 {formatoReloj(t.mostrarMs)}
               </span>
               <span className="campo-ayuda">{materiaActual?.nombre ?? "Sin materia"}</span>
-            </div>
+            </Link>
             <div className="estudiar-ahora__acciones">
               {t.corriendo ? (
                 <button type="button" className="btn btn-secundario" onClick={t.pausar}>

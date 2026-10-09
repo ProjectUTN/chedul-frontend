@@ -92,6 +92,15 @@ function Estudiar() {
     else reloj.current?.requestFullscreen().catch(() => toast.info("Tu navegador no deja usar pantalla completa"));
   };
 
+  // Descartar pierde lo que se lleva del bloque: pide confirmar antes
+  const [confirmandoDescarte, setConfirmandoDescarte] = useState(false);
+  useEffect(() => {
+    if (!t.empezado) setConfirmandoDescarte(false);
+  }, [t.empezado]);
+
+  // Tocar el reloj pausa o sigue (o empieza, si todavia no arrancó)
+  const alternarReloj = () => (t.corriendo ? t.pausar() : t.empezar());
+
   // Lo del bloque que esta corriendo cuenta para la meta aunque no se guardo
   const enCurso = t.empezado && t.fase === "foco" ? Math.floor(t.transcurridoMs / 60_000) : 0;
   const materiaActual = materias.find((m) => m.id === t.materiaId);
@@ -169,7 +178,18 @@ function Estudiar() {
               </button>
             </div>
 
-            <div className="temporizador__reloj">
+            <div
+              className="temporizador__reloj temporizador__reloj--toque"
+              role="button"
+              tabIndex={0}
+              aria-label={t.corriendo ? "Pausar" : t.empezado ? "Seguir" : "Empezar"}
+              onClick={alternarReloj}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  alternarReloj();
+                }
+              }}>
               <svg viewBox="0 0 200 200" aria-hidden="true">
                 <circle className="temporizador__pista" cx="100" cy="100" r={radio} />
                 <circle
@@ -192,6 +212,9 @@ function Estudiar() {
                   <span className="temporizador__materia-actual">{materiaActual.nombre}</span>
                 )}
               </div>
+              <span className="temporizador__toque material-symbols-rounded" aria-hidden="true">
+                {t.corriendo ? "pause" : "play_arrow"}
+              </span>
             </div>
 
             {t.modo === "pomodoro" && (
@@ -237,16 +260,40 @@ function Estudiar() {
                   Terminar y guardar
                 </button>
               )}
-              {t.empezado && (
-                <button
-                  type="button"
-                  className="btn btn-icono"
-                  onClick={t.descartar}
-                  aria-label="Descartar"
-                  title="Descartar sin guardar">
-                  <span className="material-symbols-rounded">restart_alt</span>
+              {t.modo === "pomodoro" && t.fase === "descanso" && (
+                <button type="button" className="btn btn-secundario" onClick={t.descartar}>
+                  <span className="material-symbols-rounded">stop</span>
+                  {t.empezado ? "Terminar descanso" : "Saltar descanso"}
                 </button>
               )}
+              {t.empezado &&
+                t.fase === "foco" &&
+                (confirmandoDescarte ? (
+                  <span className="temporizador__confirmar" role="alertdialog" aria-label="Confirmar descarte">
+                    <span>¿Descartar sin guardar?</span>
+                    <button
+                      type="button"
+                      className="btn btn-peligro btn-chico"
+                      onClick={() => {
+                        setConfirmandoDescarte(false);
+                        t.descartar();
+                      }}>
+                      Sí, descartar
+                    </button>
+                    <button type="button" className="btn btn-secundario btn-chico" onClick={() => setConfirmandoDescarte(false)}>
+                      Cancelar
+                    </button>
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn-icono"
+                    onClick={() => setConfirmandoDescarte(true)}
+                    aria-label="Descartar"
+                    title="Descartar sin guardar">
+                    <span className="material-symbols-rounded">restart_alt</span>
+                  </button>
+                ))}
             </div>
             <div className="temporizador__extras">
               {puedeFlotar && (
