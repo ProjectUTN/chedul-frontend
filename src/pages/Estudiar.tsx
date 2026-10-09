@@ -279,6 +279,7 @@ function Estudiar() {
               enCurso={enCurso}
               corriendo={t.corriendo && t.fase === "foco"}
               foco={t.ajustes.foco}
+              descanso={t.ajustes.descanso}
               onMetaCambiada={(meta) => setResumen((r) => (r ? { ...r, meta_diaria: meta } : r))}
             />
           )}

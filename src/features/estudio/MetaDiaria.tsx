@@ -13,6 +13,7 @@ interface Props {
   corriendo: boolean;
   // Minutos del pomodoro elegido, para estimar cuantos faltan
   foco: number;
+  descanso: number;
   onMetaCambiada: (meta: number) => void;
 }
 
@@ -25,6 +26,10 @@ const pomodoros = (minutos: number, foco: number) => {
   const cantidad = Math.ceil(minutos / foco);
   return cantidad === 1 ? `un pomodoro de ${foco}` : `unos ${cantidad} pomodoros de ${foco}`;
 };
+
+// Si arrancás ahora y no cortás: los pomodoros que faltan más los descansos entre ellos
+const minutosConDescansos = (minutos: number, foco: number, descanso: number) =>
+  minutos + (Math.ceil(minutos / foco) - 1) * descanso;
 
 const horaEn = (minutos: number) =>
   new Date(Date.now() + minutos * 60_000).toLocaleTimeString("es-AR", {
@@ -52,7 +57,7 @@ function Pildora({ titulo, minutos, objetivo }: { titulo: string; minutos: numbe
 
 // Meta diaria: cuanto llevás hoy, la medalla del dia, cuanto falta para la
 // proxima y como vas en la semana y el mes.
-function MetaDiaria({ resumen, enCurso, corriendo, foco, onMetaCambiada }: Props) {
+function MetaDiaria({ resumen, enCurso, corriendo, foco, descanso, onMetaCambiada }: Props) {
   const [editando, setEditando] = useState(false);
   const [guardando, setGuardando] = useState(false);
   const meta = resumen.meta_diaria;
@@ -113,7 +118,7 @@ function MetaDiaria({ resumen, enCurso, corriendo, foco, onMetaCambiada }: Props
               ? `Te faltan ${formatoHoras(proxima.faltan)} para ${proxima.medalla === "bronce" ? "cumplir la meta" : `la de ${NOMBRE_MEDALLA[proxima.medalla].toLowerCase()}`}${
                   corriendo
                     ? `: si seguís, llegás a las ${horaEn(proxima.faltan)}`
-                    : ` (${pomodoros(proxima.faltan, foco)})`
+                    : ` (${pomodoros(proxima.faltan, foco)}): si arrancás ahora, llegás a eso de las ${horaEn(minutosConDescansos(proxima.faltan, foco, descanso))}`
                 }.`
               : "Llegaste al oro, el máximo del día."}
           </p>
