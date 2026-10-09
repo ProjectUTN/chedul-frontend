@@ -73,7 +73,7 @@ function Estudiar() {
     return () => window.removeEventListener(SESION_GUARDADA, recargar);
   }, [recargar]);
 
-  const { t, flotante, alternarFlotante, flotanteAparte, avisar, setAvisar } = useTemporizadorGlobal();
+  const { t, flotante, alternarFlotante, puedeFlotar, avisar, setAvisar } = useTemporizadorGlobal();
 
   // Pantalla completa del temporizador, para dejarlo a la vista mientras estudiás
   const reloj = useRef<HTMLElement>(null);
@@ -245,19 +245,17 @@ function Estudiar() {
               )}
             </div>
             <div className="temporizador__extras">
-              <button
-                type="button"
-                className="btn btn-secundario"
-                aria-pressed={flotante}
-                onClick={alternarFlotante}
-                title={
-                  flotanteAparte
-                    ? "Una ventana con el reloj que queda por encima de todo, aunque cambies de pestaña o minimices"
-                    : "Una ventana con el reloj que podés mover mientras usás Chedul"
-                }>
-                <span className="material-symbols-rounded">picture_in_picture_alt</span>
-                {flotante ? "Cerrar ventana flotante" : "Ventana flotante"}
-              </button>
+              {puedeFlotar && (
+                <button
+                  type="button"
+                  className="btn btn-secundario"
+                  aria-pressed={flotante}
+                  onClick={alternarFlotante}
+                  title="Una ventana con el reloj que queda por encima de todo, aunque cambies de pestaña o minimices">
+                  <span className="material-symbols-rounded">picture_in_picture_alt</span>
+                  {flotante ? "Cerrar ventana flotante" : "Ventana flotante"}
+                </button>
+              )}
               {avisosSoportados() && (
                 <label className="temporizador__aviso">
                   <input type="checkbox" checked={avisar} onChange={(e) => setAvisar(e.target.checked)} />

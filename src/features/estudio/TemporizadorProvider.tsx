@@ -2,7 +2,6 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
 import { mensajeDeError } from "../../api/client";
-import { useAuth } from "../../context/authProvider";
 import { guardarSesion } from "./api";
 import {
   guardarPreferenciaAvisos,
@@ -12,13 +11,13 @@ import {
   permisoDeAvisos,
 } from "./avisosEstudio";
 import useTemporizador, { formatoHoras, formatoReloj } from "./useTemporizador";
-import VentanaFlotante, { Reloj } from "./VentanaFlotante";
+import { Reloj } from "./RelojFlotante";
 import { abrirVentanaAparte, ventanaAparteSoportada } from "./ventanaAparte";
 
 // El temporizador vive aca arriba (en el Layout) para que siga andando y se
-// pueda ver en una ventana flotante: en Chrome y Edge de escritorio queda por
-// encima de todo (aunque cambies de pestaña o minimices); en el resto, flotando
-// dentro de la app.
+// pueda ver en una ventana flotante que queda por encima de todo (aunque
+// cambies de pestaña o minimices). Solo existe donde el navegador la permite:
+// Chrome y Edge de escritorio, no en tablets ni celulares.
 
 export const SESION_GUARDADA = "chedul:sesion-guardada";
 
@@ -26,11 +25,11 @@ type Temporizador = ReturnType<typeof useTemporizador>;
 
 interface Contexto {
   t: Temporizador;
-  // Hay una ventana flotante abierta (dentro de la app o fuera de la pestaña)
+  // Hay una ventana flotante abierta
   flotante: boolean;
   alternarFlotante: () => Promise<void>;
-  // El navegador puede sacarla fuera de la pestaña
-  flotanteAparte: boolean;
+  // El navegador puede abrirla
+  puedeFlotar: boolean;
   avisar: boolean;
   setAvisar: (activo: boolean) => Promise<void>;
 }
@@ -44,51 +43,26 @@ export const useTemporizadorGlobal = () => {
   return contexto;
 };
 
-const CLAVE_FLOTANTE = "chedul.flotante";
-
-const leerFlotante = () => {
-  try {
-    return localStorage.getItem(CLAVE_FLOTANTE) === "1";
-  } catch {
-    return false;
-  }
-};
-
 export function TemporizadorProvider({ alumnoId, children }: { alumnoId: number; children: ReactNode }) {
-  const { user } = useAuth();
   const [avisar, setAvisarEstado] = useState(leerPreferenciaAvisos);
-  const [flotanteEnApp, setFlotanteEstado] = useState(leerFlotante);
   // Ventana siempre visible, fuera de la pestaña
   const [aparte, setAparte] = useState<Window | null>(null);
   const aparteRef = useRef<Window | null>(null);
   aparteRef.current = aparte;
-
-  const setFlotante = useCallback((abierta: boolean) => {
-    setFlotanteEstado(abierta);
-    try {
-      localStorage.setItem(CLAVE_FLOTANTE, abierta ? "1" : "0");
-    } catch {
-      // Sin storage solo se pierde el recuerdo
-    }
-  }, []);
 
   const alternarFlotante = useCallback(async () => {
     if (aparteRef.current) {
       aparteRef.current.close();
       return;
     }
-    if (ventanaAparteSoportada()) {
-      try {
-        const ventana = await abrirVentanaAparte();
-        ventana.addEventListener("pagehide", () => setAparte(null));
-        setAparte(ventana);
-        return;
-      } catch {
-        toast.info("Tu navegador no dejó abrir la ventana flotante fuera de la pestaña. La dejamos dentro de Chedul.");
-      }
+    try {
+      const ventana = await abrirVentanaAparte();
+      ventana.addEventListener("pagehide", () => setAparte(null));
+      setAparte(ventana);
+    } catch {
+      toast.info("Tu navegador no dejó abrir la ventana flotante");
     }
-    setFlotante(!flotanteEnApp);
-  }, [flotanteEnApp, setFlotante]);
+  }, []);
 
   // Al salir de la sesion se cierra la ventana que quedo afuera
   useEffect(() => () => aparteRef.current?.close(), []);
@@ -148,16 +122,15 @@ export function TemporizadorProvider({ alumnoId, children }: { alumnoId: number;
     };
   }, [t.empezado, t.mostrarMs, t.fase, t.modo]);
 
-  const flotante = aparte !== null || flotanteEnApp;
+  const flotante = aparte !== null;
   const valor = useMemo(
-    () => ({ t, flotante, alternarFlotante, flotanteAparte: ventanaAparteSoportada(), avisar, setAvisar }),
+    () => ({ t, flotante, alternarFlotante, puedeFlotar: ventanaAparteSoportada(), avisar, setAvisar }),
     [t, flotante, alternarFlotante, avisar, setAvisar]
   );
 
   return (
     <TemporizadorContext.Provider value={valor}>
       {children}
-      {flotanteEnApp && !aparte && user && <VentanaFlotante />}
       {aparte && createPortal(<Reloj enAparte />, aparte.document.body)}
     </TemporizadorContext.Provider>
   );
