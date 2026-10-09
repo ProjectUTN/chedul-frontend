@@ -86,7 +86,7 @@ function EstudioInicio() {
                   Pausar
                 </button>
               ) : (
-                <button type="button" className="btn btn-primario" onClick={t.empezar}>
+                <button type="button" className="btn btn-primario" onClick={empezarYAbrir}>
                   <span className="material-symbols-rounded">play_arrow</span>
                   Seguir
                 </button>
