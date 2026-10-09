@@ -1,3 +1,4 @@
+import { isAxiosError } from "axios";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import SelectorMateria from "../../components/SelectorMateria";
@@ -12,14 +13,20 @@ interface Props {
   onGuardada: (sesion: SesionEstudio) => void;
 }
 
-const cuando = (iso: string) =>
-  new Date(iso).toLocaleString("es-AR", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+const cuando = (fecha: Date) =>
+  Number.isNaN(fecha.getTime())
+    ? "–"
+    : fecha.toLocaleString("es-AR", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+// Si el servidor todavia no manda el inicio, es el fin menos lo que duro
+const inicioDe = (sesion: SesionEstudio) =>
+  sesion.inicio ? new Date(sesion.inicio) : new Date(new Date(sesion.fin).getTime() - sesion.minutos * 60_000);
 
 // Detalle de una sesion de estudio: cuando empezo y termino y cuanto duro son
 // fijos; lo unico que se puede corregir es la materia.
@@ -35,7 +42,11 @@ function DetalleSesion({ sesion, materias, onGuardada }: Props) {
       toast.success("Cambiamos la materia de la sesión");
       onGuardada(actualizada);
     } catch (err) {
-      toast.error(mensajeDeError(err, "No se pudo cambiar la materia"));
+      toast.error(
+        isAxiosError(err) && err.response?.status === 404
+          ? "El servidor todavía no se actualizó para editar sesiones. Probá en unos minutos."
+          : mensajeDeError(err, "No se pudo cambiar la materia")
+      );
     } finally {
       setGuardando(false);
     }
@@ -50,11 +61,11 @@ function DetalleSesion({ sesion, materias, onGuardada }: Props) {
         </div>
         <div>
           <dt>Empezó</dt>
-          <dd>{cuando(sesion.inicio)}</dd>
+          <dd>{cuando(inicioDe(sesion))}</dd>
         </div>
         <div>
           <dt>Terminó</dt>
-          <dd>{cuando(sesion.fin)}</dd>
+          <dd>{cuando(new Date(sesion.fin))}</dd>
         </div>
         <div>
           <dt>Duración</dt>

@@ -1,6 +1,6 @@
 import type React from "react";
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SelectorMateria from "../../components/SelectorMateria";
 import { useAuth } from "../../context/authProvider";
 import { getMaterias } from "../estado_academico/api";
@@ -15,6 +15,7 @@ import { AJUSTES_POMODORO, formatoHoras, formatoReloj } from "./useTemporizador"
 function EstudioInicio() {
   const { user } = useAuth();
   const { t } = useTemporizadorGlobal();
+  const navigate = useNavigate();
   const [materias, setMaterias] = useState<Materia[]>([]);
   const [resumen, setResumen] = useState<ResumenEstudio | null>(null);
 
@@ -48,6 +49,12 @@ function EstudioInicio() {
   const porcentaje = meta > 0 ? Math.min(100, Math.round((hoy / meta) * 100)) : 0;
   const materiaActual = materias.find((m) => m.id === t.materiaId);
   const etiqueta = t.modo === "libre" ? "Cronómetro" : t.fase === "foco" ? "Foco" : "Descanso";
+
+  // Arranca el reloj y lleva directo a la pantalla de estudio
+  const empezarYAbrir = () => {
+    t.empezar();
+    navigate("/herramientas/estudiar");
+  };
 
   const elegirDuracion = (opcion: "libre" | number) => {
     if (opcion === "libre") {
@@ -133,7 +140,7 @@ function EstudioInicio() {
                   Libre
                 </button>
               </div>
-              <button type="button" className="btn btn-primario" onClick={t.empezar}>
+              <button type="button" className="btn btn-primario" onClick={empezarYAbrir}>
                 <span className="material-symbols-rounded">play_arrow</span>
                 Empezar
               </button>

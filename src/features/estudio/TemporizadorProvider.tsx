@@ -88,9 +88,14 @@ export function TemporizadorProvider({ alumnoId, children }: { alumnoId: number;
   }, []);
 
   const alTerminarSesion = useCallback(
-    async (sesion: { modo: "pomodoro" | "libre"; minutos: number; materiaId: number }) => {
+    async (sesion: { modo: "pomodoro" | "libre"; minutos: number; materiaId: number; inicio: number | null }) => {
       try {
-        await guardarSesion({ modo: sesion.modo, minutos: sesion.minutos, materia_id: sesion.materiaId });
+        await guardarSesion({
+          modo: sesion.modo,
+          minutos: sesion.minutos,
+          materia_id: sesion.materiaId,
+          inicio: sesion.inicio ? new Date(sesion.inicio).toISOString() : undefined,
+        });
         toast.success(`Sumaste ${formatoHoras(sesion.minutos)} de estudio`);
         window.dispatchEvent(new Event(SESION_GUARDADA));
       } catch (err) {

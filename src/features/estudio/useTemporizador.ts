@@ -29,6 +29,8 @@ export interface Estado {
   acumulado: number;
   // Cuando arranco el tramo actual (hora del servidor); null si esta en pausa o sin empezar
   desde: number | null;
+  // Cuando empezo el bloque de foco en curso (el primer arranque, con las pausas incluidas)
+  inicio: number | null;
 }
 
 const INICIAL: Estado = {
@@ -38,6 +40,7 @@ const INICIAL: Estado = {
   materiaId: 0,
   acumulado: 0,
   desde: null,
+  inicio: null,
 };
 
 const SINCRONIZAR_CADA = 10_000;
@@ -52,6 +55,7 @@ const aApi = (e: Estado): EstadoTemporizadorApi => ({
   materia_id: e.materiaId,
   acumulado: Math.round(e.acumulado),
   desde: e.desde === null ? null : Math.round(e.desde),
+  inicio: e.inicio === null ? null : Math.round(e.inicio),
 });
 
 const deApi = (e: EstadoTemporizadorApi): Estado => ({
@@ -61,6 +65,7 @@ const deApi = (e: EstadoTemporizadorApi): Estado => ({
   materiaId: e.materia_id,
   acumulado: e.acumulado,
   desde: e.desde,
+  inicio: e.inicio ?? null,
 });
 
 interface Copia {
@@ -115,7 +120,7 @@ const pitar = () => {
 interface Opciones {
   alumnoId: number;
   // Se llama cuando termina un bloque de foco o el alumno corta: hay que guardarlo
-  onSesion: (sesion: { modo: ModoEstudio; minutos: number; materiaId: number }) => void;
+  onSesion: (sesion: { modo: ModoEstudio; minutos: number; materiaId: number; inicio: number | null }) => void;
   // Se llama cuando termina una fase del pomodoro (solo si se noto a tiempo)
   onFin?: (fase: Fase, ajustes: Ajustes) => void;
 }
@@ -286,13 +291,18 @@ export default function useTemporizador({ alumnoId, onSesion, onFin }: Opciones)
     const vigente = ahoraServidor() - finFase < AVISO_VIGENTE;
     const siguiente: Estado =
       fase === "foco"
-        ? { ...cerrando, fase: "descanso", acumulado: 0, desde: finFase }
-        : { ...cerrando, fase: "foco", acumulado: 0, desde: null };
+        ? { ...cerrando, fase: "descanso", acumulado: 0, desde: finFase, inicio: null }
+        : { ...cerrando, fase: "foco", acumulado: 0, desde: null, inicio: null };
     subir(siguiente).then((guardado) => {
       // Solo el dispositivo que logra guardar primero registra la sesion, pero
       // el aviso suena en todos los que lo tengan activado
       if (guardado && fase === "foco") {
-        onSesionRef.current({ modo: "pomodoro", minutos: cerrando.ajustes.foco, materiaId: cerrando.materiaId });
+        onSesionRef.current({
+          modo: "pomodoro",
+          minutos: cerrando.ajustes.foco,
+          materiaId: cerrando.materiaId,
+          inicio: cerrando.inicio,
+        });
       }
       if (vigente) {
         pitar();
@@ -301,7 +311,13 @@ export default function useTemporizador({ alumnoId, onSesion, onFin }: Opciones)
     });
   }, [estado, corriendo, ms, subir, ahoraServidor]);
 
-  const empezar = () => actualizar((e) => (e.desde ? e : { ...e, desde: ahoraServidor() }));
+  const empezar = () =>
+    actualizar((e) => {
+      if (e.desde) return e;
+      const ahora = ahoraServidor();
+      // El primer arranque de un foco es cuando empezo; las pausas no lo cambian
+      return { ...e, desde: ahora, inicio: e.fase === "foco" ? (e.inicio ?? ahora) : null };
+    });
 
   const pausar = () =>
     actualizar((e) => (e.desde ? { ...e, acumulado: transcurrido(e, ahoraServidor()), desde: null } : e));
@@ -310,16 +326,16 @@ export default function useTemporizador({ alumnoId, onSesion, onFin }: Opciones)
   const terminar = async () => {
     const actual = estadoRef.current;
     const minutos = Math.floor(transcurrido(actual, ahoraServidor()) / 60_000);
-    const guardado = await subir({ ...actual, fase: "foco", acumulado: 0, desde: null });
+    const guardado = await subir({ ...actual, fase: "foco", acumulado: 0, desde: null, inicio: null });
     if (guardado && actual.fase === "foco" && minutos >= 1) {
-      onSesionRef.current({ modo: actual.modo, minutos, materiaId: actual.materiaId });
+      onSesionRef.current({ modo: actual.modo, minutos, materiaId: actual.materiaId, inicio: actual.inicio });
     }
   };
 
-  const descartar = () => actualizar((e) => ({ ...e, fase: "foco", acumulado: 0, desde: null }));
+  const descartar = () => actualizar((e) => ({ ...e, fase: "foco", acumulado: 0, desde: null, inicio: null }));
 
   const elegirModo = (modo: ModoEstudio) =>
-    actualizar((e) => ({ ...e, modo, fase: "foco", acumulado: 0, desde: null }));
+    actualizar((e) => ({ ...e, modo, fase: "foco", acumulado: 0, desde: null, inicio: null }));
 
   const elegirAjustes = (ajustes: Ajustes) => actualizar((e) => ({ ...e, ajustes }));
 

@@ -1,7 +1,13 @@
 import { api } from "../../api/client";
 import type { ModoEstudio, RankingEstudio, ResumenEstudio, SesionEstudio, TareaEstudio } from "../../api/types";
 
-export const guardarSesion = async (datos: { modo: ModoEstudio; minutos: number; materia_id: number }) => {
+export const guardarSesion = async (datos: {
+  modo: ModoEstudio;
+  minutos: number;
+  materia_id: number;
+  // Cuando empezo de verdad (ISO), con las pausas incluidas
+  inicio?: string;
+}) => {
   const response = await api.post<SesionEstudio>("/estudio/sesiones", {
     ...datos,
     materia_id: datos.materia_id || null,
@@ -88,6 +94,8 @@ export interface EstadoTemporizadorApi {
   materia_id: number;
   acumulado: number;
   desde: number | null;
+  // Cuando empezo el bloque en curso
+  inicio?: number | null;
 }
 
 export interface RespuestaTemporizador {
