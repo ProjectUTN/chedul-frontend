@@ -42,10 +42,13 @@ function DetalleSesion({ sesion, materias, onGuardada }: Props) {
       toast.success("Cambiamos la materia de la sesión");
       onGuardada(actualizada);
     } catch (err) {
+      // Echo contesta "Not Found" cuando la ruta no existe (servidor viejo);
+      // si la ruta existe, el mensaje es el del propio servidor
+      const rutaInexistente = isAxiosError(err) && err.response?.status === 404 && err.response.data?.msg === "Not Found";
       toast.error(
-        isAxiosError(err) && err.response?.status === 404
+        rutaInexistente
           ? "El servidor todavía no se actualizó para editar sesiones. Probá en unos minutos."
-          : mensajeDeError(err, "No se pudo cambiar la materia")
+          : `${mensajeDeError(err, "No se pudo cambiar la materia")}${isAxiosError(err) && err.response ? ` (${err.response.status})` : ""}`
       );
     } finally {
       setGuardando(false);
